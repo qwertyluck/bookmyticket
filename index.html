@@ -4,324 +4,359 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Penerbangan Global Airways</title>
-    <!-- Memanggil pustaka generator QR Code (Diperbaiki) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Font modern yang identik dengan gambar -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Pustaka Generator QR Code dan Barcode -->
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
-        body { background-color: #f4f7f6; padding: 30px 10px; font-family: Arial, sans-serif; margin: 0; }
+        body { background-color: #f4f7f6; padding: 30px 10px; font-family: 'Inter', Arial, sans-serif; margin: 0; }
         .container { max-width: 550px; margin: auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; font-size: 14px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         .flex-group { display: flex; gap: 15px; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; color: white; }
-        .btn-primary { background-color: #1a2a6c; }
-        .btn-secondary { background-color: #275d8c; }
-        .btn-success { background-color: #28a745; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; color: white; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background-color: #dc2626; }
+        .btn-secondary { background-color: #1e293b; }
+        .btn-success { background-color: #059669; }
         .hidden { display: none !important; }
         .nav-box { max-width: 550px; margin: 0 auto 30px auto; text-align: center; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .nav-link { padding: 10px 15px; display: inline-block; text-decoration: none; color: #1a2a6c; font-weight: bold; cursor: pointer; margin: 0 10px; }
-        @media print { .no-print { display: none !important; } }
+        .nav-link { padding: 10px 15px; display: inline-block; text-decoration: none; font-weight: bold; cursor: pointer; margin: 0 10px; transition: 0.2s; }
+        .nav-link.active-beli { color: #dc2626; border-bottom: 2px solid #dc2626; }
+        .nav-link.active-ci { color: #1e293b; border-bottom: 2px solid #1e293b; }
+        
+        /* ================= CSS BOARDING PASS REPLIKA 100% ================= */
+        .mobile-bp {
+            width: 360px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            color: #0f172a;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        .bp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .bp-logo { display: flex; align-items: center; gap: 3px; font-size: 18px; font-style: italic; font-weight: 900; letter-spacing: -0.5px; }
+        .bp-logo-lion { color: #e11d48; }
+        .bp-logo-air { color: #1e293b; }
+        .bp-date { font-weight: 600; font-size: 15px; }
+
+        .bp-row2 { display: flex; justify-content: space-between; margin-bottom: 25px; align-items: flex-start; }
+        .bp-qr-container { width: 100px; height: 100px; }
+        #bp-qrcode-box img { width: 100%; height: 100%; }
+        .bp-pax { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+        .bp-pax-type { color: #64748b; font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        .bp-pax-name { font-weight: 600; font-size: 15px; max-width: 140px; text-transform: uppercase; line-height: 1.4; color: #334155; }
+
+        .bp-route-band { background: #f8fafc; margin: 0 -24px 24px -24px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .bp-route-left { text-align: left; }
+        .bp-route-right { text-align: right; }
+        .bp-code { font-size: 38px; font-weight: 800; letter-spacing: -1px; color: #0f172a; line-height: 1; margin-bottom: 6px; }
+        .bp-city { color: #64748b; font-size: 15px; font-weight: 500; margin-bottom: 12px; }
+        .bp-flight-seat { font-size: 17px; font-weight: 700; color: #334155; }
+        .bp-arrow svg { width: 28px; height: 28px; color: #1e293b; }
+
+        .bp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: y-gap 20px; row-gap: 20px; margin-bottom: 30px; }
+        .bp-grid-item.right { text-align: right; }
+        .bp-label { color: #64748b; font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+        .bp-value { font-size: 17px; font-weight: 700; color: #0f172a; }
+
+        .bp-barcode-container { text-align: center; margin-top: 20px; }
+        #barcode-svg { width: 100%; max-height: 75px; }
+
+        @media print { .no-print { display: none !important; } .mobile-bp { border: none; box-shadow: none; margin: 0; } }
     </style>
 </head>
 <body>
 
-    <!-- NAVIGASI MENU UTAMA -->
+    <!-- NAVIGASI -->
     <div class="nav-box no-print">
-        <span onclick="bukaMenu('beli')" class="nav-link" style="color: #1a2a6c;">🎟️ 1. Beli E-Ticket</span>
-        <span onclick="bukaMenu('checkin')" class="nav-link" style="color: #275d8c;">✈️ 2. Check-In Bandara</span>
+        <span onclick="bukaMenu('beli')" id="nav-beli" class="nav-link active-beli">🎟️ 1. Beli E-Ticket</span>
+        <span onclick="bukaMenu('checkin')" id="nav-ci" class="nav-link" style="color: #1e293b;">✈️ 2. Check-In Bandara</span>
     </div>
 
     <!-- ================= LAYOUT 1: FORMULIR INPUT E-TICKET ================= -->
     <div id="menu-beli-tiket" class="container no-print">
         <div style="text-align: center; margin-bottom: 25px;">
-            <h2 style="margin: 0; color: #1a2a6c;">Sistem Penerbitan E-Ticket</h2>
-            <small style="color: #7f8c8d;">Langkah 1: Masukkan Data Manifes Penumpang</small>
+            <h2 style="margin: 0; color: #dc2626;">Penerbitan E-Ticket</h2>
+            <small style="color: #64748b;">Langkah 1: Masukkan Data Penerbangan Anda</small>
         </div>
+        
         <div class="form-group">
-            <label>Nama Lengkap Penumpang:</label>
-            <input type="text" id="input-nama" class="form-control" placeholder="Contoh: JALO TUHAREA">
+            <label>Nama Penumpang (Sesuai ID):</label>
+            <input type="text" id="in-nama" class="form-control" value="MR JAKRIZAL B TUHAREA">
         </div>
         <div class="flex-group">
             <div class="form-group" style="flex:1;">
-                <label>Nama Maskapai:</label>
-                <input type="text" id="input-maskapai" class="form-control" placeholder="Contoh: WINGS AIR">
+                <label>Tanggal Penerbangan:</label>
+                <input type="text" id="in-tanggal" class="form-control" value="9 Agustus 2026">
             </div>
             <div class="form-group" style="flex:1;">
                 <label>No. Penerbangan:</label>
-                <input type="text" id="input-flight" class="form-control" placeholder="Contoh: GT-880">
+                <input type="text" id="in-flight" class="form-control" value="JT 880">
             </div>
         </div>
+        
         <div class="flex-group">
             <div class="form-group" style="flex:1;">
+                <label>Kode Asal (Cth: AMQ):</label>
+                <input type="text" id="in-asal-kode" class="form-control" value="AMQ">
+            </div>
+            <div class="form-group" style="flex:1;">
                 <label>Kota Asal:</label>
-                <input type="text" id="input-asal" class="form-control" placeholder="Contoh: AMQ">
+                <input type="text" id="in-asal-kota" class="form-control" value="Ambon">
+            </div>
+        </div>
+
+        <div class="flex-group">
+            <div class="form-group" style="flex:1;">
+                <label>Kode Tujuan (Cth: LUV):</label>
+                <input type="text" id="in-tujuan-kode" class="form-control" value="LUV">
             </div>
             <div class="form-group" style="flex:1;">
                 <label>Kota Tujuan:</label>
-                <input type="text" id="input-tujuan" class="form-control" placeholder="Contoh: LUV">
+                <input type="text" id="in-tujuan-kota" class="form-control" value="Langgur">
             </div>
         </div>
+
         <div class="flex-group">
             <div class="form-group" style="flex:1;">
-                <label>Tanggal & Waktu:</label>
-                <input type="text" id="input-waktu" class="form-control" placeholder="Contoh: 29 August 2026, 02:19">
+                <label>Waktu Berangkat:</label>
+                <input type="text" id="in-waktu-dep" class="form-control" value="09:45">
             </div>
             <div class="form-group" style="flex:1;">
-                <label>Harga Tiket (Rp):</label>
-                <input type="number" id="input-harga" class="form-control" placeholder="Contoh: 1200000">
+                <label>Waktu Tiba:</label>
+                <input type="text" id="in-waktu-arr" class="form-control" value="11:00">
             </div>
         </div>
-        <button onclick="terbitETicket()" class="btn btn-primary">🎟️ Terbitkan E-Ticket Resmi</button>
-    </div>
-
-    <!-- ================= LAYOUT 2: OUTPUT STRUKTURAL E-TICKET ================= -->
-    <div id="nota-e-ticket" class="hidden" style="max-width: 800px; margin: 30px auto; font-family: Arial, sans-serif; background: #ffffff; border: 1px solid #ccc; padding: 30px; box-shadow: 0 0 15px rgba(0,0,0,0.05); color: #333;">
-        <table style="width: 100%; border-bottom: 3px solid #1a2a6c; padding-bottom: 20px; margin-bottom: 20px;">
-            <tr>
-                <td style="display: flex; align-items: center; gap: 15px;">
-                    <svg width="45" height="45" viewBox="0 0 24 24" fill="none"><path d="M21 16V14L13 9V3.5C13 2.67 12.33 2 11.5 2C10.67 2 10 2.67 10 3.5V9L2 14V16L10 13.5V19L8 20.5V22L11.5 21L15 22V20.5L13 19V13.5L21 16Z" fill="#1a2a6c"/></svg>
-                    <div>
-                        <h1 id="etkt-header-maskapai" style="margin: 0; color: #1a2a6c; font-size: 26px; font-weight: 800;"></h1>
-                        <span style="color: #7f8c8d; font-size: 11px; letter-spacing: 2px; font-weight: bold;">ELECTRONIC TICKET / ITINERARY</span>
-                    </div>
-                </td>
-                <td style="text-align: right; vertical-align: bottom;">
-                    <div style="font-size: 13px; font-weight: bold; color: #d9534f;">BOOKING CODE (PNR)</div>
-                    <div id="etkt-pnr" style="font-size: 24px; font-weight: bold; color: #1a2a6c; font-family: monospace;"></div>
-                </td>
-            </tr>
-        </table>
-        <p style="font-size: 13px; color: #666;">*Harap simpan E-Ticket ini untuk melakukan Check-In guna mendapatkan Boarding Pass resmi.</p>
-        
-        <h3 style="background: #f4f7f6; padding: 8px 12px; color: #1a2a6c; border-left: 4px solid #1a2a6c;">1. INFORMASI PENUMPANG</h3>
-        <table style="width: 100%; font-size: 14px; margin-bottom: 20px;">
-            <tr style="border-bottom: 1px solid #eee;"><td style="padding:8px; color:#7f8c8d; width: 30%;">Nama Penumpang</td><td id="etkt-pax" style="font-weight:bold;"></td></tr>
-            <tr><td style="padding:8px; color:#7f8c8d;">Bagasi Gratis</td><td style="color:#28a745; font-weight:bold;">20 KG + 7 KG Cabin</td></tr>
-        </table>
-
-        <h3 style="background: #f4f7f6; padding: 8px 12px; color: #1a2a6c; border-left: 4px solid #1a2a6c;">2. RINCIAN PENERBANGAN</h3>
-        <table style="width: 100%; font-size: 14px; text-align: left; margin-bottom: 25px;">
-            <tr style="background:#1a2a6c; color:white;"><th style="padding:8px;">Flight No</th><th style="padding:8px;">Dari</th><th style="padding:8px;">Ke</th><th style="padding:8px;">Waktu</th></tr>
-            <tr style="background:#fafafa;"><td id="etkt-flight" style="padding:10px; font-weight:bold;"></td><td id="etkt-asal" style="padding:10px;"></td><td id="etkt-tujuan" style="padding:10px;"></td><td id="etkt-waktu" style="padding:10px;"></td></tr>
-        </table>
-
-        <div style="text-align: center; border-top: 1px dashed #ccc; padding-top: 20px;">
-            <div id="etkt-qrcode-box" style="display:inline-block; border: 1px solid #ddd; padding: 5px; background: white;"></div>
-        </div>
-
-        <div class="no-print" style="margin-top: 30px; background: #fff3cd; padding: 20px; border-radius: 8px; text-align: center;">
-            <p style="margin: 0 0 12px 0; color: #856404; font-weight: bold;">E-Ticket Sukses Dirilis! Silakan lanjut ke konter Check-In bandara.</p>
-            <button onclick="transferKeFormCheckin()" class="btn btn-primary" style="width:auto; padding:10px 25px;">✈️ Lanjut ke Proses Check-In (Dapatkan Boarding Pass)</button>
-        </div>
+        <button type="button" onclick="lanjutCheckin()" class="btn btn-primary">Lanjut ke Check-In Mandiri ➡️</button>
     </div>
 
     <!-- ================= LAYOUT 3: FORMULIR INTERAKTIF CHECK-IN ================= -->
     <div id="menu-checkin-tiket" class="container hidden no-print">
         <div style="text-align: center; margin-bottom: 25px;">
-            <h2 style="margin: 0; color: #275d8c;">Konter Check-In Mandiri</h2>
-            <small style="color: #7f8c8d;">Langkah 2: Tukarkan Kode Booking Menjadi Boarding Pass</small>
+            <h2 style="margin: 0; color: #1e293b;">Konter Check-In</h2>
+            <small style="color: #64748b;">Langkah 2: Tentukan Kursi & Boarding Time</small>
         </div>
-        <div class="form-group">
-            <label>Kode Booking (PNR Code):</label>
-            <input type="text" id="ci-pnr" class="form-control" style="font-family: monospace; font-weight: bold;">
-        </div>
-        <div class="form-group">
-            <label>Nama Lengkap Penumpang:</label>
-            <input type="text" id="ci-nama" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Nomor Penerbangan:</label>
-            <input type="text" id="ci-flight" class="form-control">
-        </div>
-        <div class="form-group">
-            <label style="color: #d9534f;">Pilih Nomor Kursi Pesawat (Seat):</label>
-            <input type="text" id="ci-kursi" class="form-control" placeholder="Contoh: 14A" style="border: 2px solid #d9534f; font-weight: bold; text-transform: uppercase;">
-        </div>
-        <button onclick="terbitBoardingPass()" class="btn btn-secondary">✈️ Cetak Official Boarding Pass</button>
-    </div>
-
-    <!-- ================= LAYOUT 4: OUTPUT BOARDING PASS RAMPING PREMIUM ================= -->
-    <div id="kartu-boarding-pass" class="hidden" style="max-width: 780px; margin: 30px auto; font-family: Arial, sans-serif; background: #ffffff; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; display: flex; border: 1px solid #d1d5db; min-height: 190px;">
         
-        <!-- Sisi Kiri (Utama) -->
-        <div style="flex: 2.3; padding: 15px 20px; background: #1a2a6c; color: white; display: flex; flex-direction: column; justify-content: space-between;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">
-                <h2 id="bp-maskapai" style="margin: 0; font-size: 20px;"></h2>
-                <span style="font-weight: bold; letter-spacing: 2px; font-size: 14px;">BOARDING PASS ✈</span>
+        <div class="flex-group">
+            <div class="form-group" style="flex:1;">
+                <label>Waktu Boarding (Pintu Dibuka):</label>
+                <input type="text" id="in-waktu-board" class="form-control" value="09 Agu, 09:15">
             </div>
-            
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <div>
-                    <div style="font-size: 10px; color: #a5b4fc;">PASSENGER NAME</div>
-                    <div id="bp-nama" style="font-size: 16px; font-weight: bold; text-transform: uppercase;"></div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 10px; color: #a5b4fc;">FLIGHT</div>
-                    <div id="bp-flight" style="font-size: 16px; font-weight: bold;"></div>
-                </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <div>
-                    <div id="bp-asal-lg" style="font-size: 32px; font-weight: bold;"></div>
-                    <div id="bp-asal-sm" style="font-size: 12px; color: #a5b4fc;"></div>
-                </div>
-                <div style="font-size: 24px; color: #a5b4fc;">✈</div>
-                <div style="text-align: right;">
-                    <div id="bp-tujuan-lg" style="font-size: 32px; font-weight: bold;"></div>
-                    <div id="bp-tujuan-sm" style="font-size: 12px; color: #a5b4fc;"></div>
-                </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                <div>
-                    <div style="font-size: 10px; color: #a5b4fc;">DATE / TIME</div>
-                    <div id="bp-waktu" style="font-size: 14px; font-weight: bold;"></div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 10px; color: #a5b4fc;">SEAT</div>
-                    <div id="bp-kursi" style="font-size: 24px; font-weight: bold; color: #facc15;"></div>
-                </div>
+            <div class="form-group" style="flex:1;">
+                <label>Pilih Kursi (Seat):</label>
+                <input type="text" id="in-kursi" class="form-control" value="9B" style="border: 2px solid #1e293b; font-weight: bold;">
             </div>
         </div>
 
-        <!-- Sisi Kanan (Stub) -->
-        <div style="flex: 1; padding: 15px 20px; background: #f8f9fa; color: #333; border-left: 2px dashed #ccc; display: flex; flex-direction: column; justify-content: space-between;">
-            <div style="text-align: right; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
-                <h3 id="bp-maskapai-stub" style="margin: 0; font-size: 16px; color: #1a2a6c;"></h3>
-                <span style="font-size: 10px; font-weight: bold; color: #666;">PASSENGER STUB</span>
+        <div class="flex-group">
+            <div class="form-group" style="flex:1;">
+                <label>Kelas Kabin:</label>
+                <input type="text" id="in-kelas" class="form-control" value="Ekonomi">
             </div>
+            <div class="form-group" style="flex:1;">
+                <label>Terminal / Pintu:</label>
+                <input type="text" id="in-gate" class="form-control" value="/">
+            </div>
+        </div>
+
+        <button type="button" onclick="terbitBoardingPass()" class="btn btn-secondary">Cetak Boarding Pass Resmi 🖨️</button>
+    </div>
+
+    <!-- ================= LAYOUT 4: BOARDING PASS REPLIKA (HASIL AKHIR) ================= -->
+    <div id="kartu-boarding-pass" class="hidden">
+        <div class="mobile-bp">
             
-            <div style="font-size: 11px; line-height: 1.8;">
-                <div><span style="color:#777;">PAX:</span> <strong id="bp-nama-stub"></strong></div>
-                <div><span style="color:#777;">FLIGHT:</span> <strong id="bp-flight-stub"></strong> | <span style="color:#777;">SEAT:</span> <strong id="bp-kursi-stub" style="color: #d9534f; font-size: 14px;"></strong></div>
-                <div><span style="color:#777;">ROUTE:</span> <strong id="bp-rute-stub"></strong></div>
-                <div><span style="color:#777;">PNR:</span> <strong id="bp-pnr-stub" style="font-family: monospace;"></strong></div>
+            <!-- HEADER -->
+            <div class="bp-header">
+                <div class="bp-logo">
+                    <span class="bp-logo-lion">Lion</span>
+                    <!-- Ikon Abstrak Sayap/Kepala Singa Berwarna Merah -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#e11d48">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.5 0-4.5-2-4.5-4.5S8.5 7.5 11 7.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5z"/>
+                        <circle cx="11" cy="12" r="2.5" fill="#ffffff"/>
+                    </svg>
+                    <span class="bp-logo-air">air</span>
+                </div>
+                <div class="bp-date" id="out-tanggal">9 Agustus 2026</div>
             </div>
-            
-            <div style="text-align: center; margin-top: 15px;">
-                <div id="bp-qrcode-box" style="display:inline-block; padding: 2px; background: white;"></div>
+
+            <!-- QR & PENUMPANG -->
+            <div class="bp-row2">
+                <div class="bp-qr-container" id="bp-qrcode-box"></div>
+                <div class="bp-pax">
+                    <div class="bp-pax-type">Dewasa</div>
+                    <div class="bp-pax-name" id="out-nama">MR JAKRIZAL B TUHAREA</div>
+                </div>
             </div>
+
+            <!-- RUTE PENERBANGAN -->
+            <div class="bp-route-band">
+                <div class="bp-route-left">
+                    <div class="bp-code" id="out-asal-kode">AMQ</div>
+                    <div class="bp-city" id="out-asal-kota">Ambon</div>
+                    <div class="bp-flight-seat" id="out-flight">JT 880</div>
+                </div>
+                <div class="bp-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+                <div class="bp-route-right">
+                    <div class="bp-code" id="out-tujuan-kode">LUV</div>
+                    <div class="bp-city" id="out-tujuan-kota">Langgur</div>
+                    <div class="bp-flight-seat">Kursi <span id="out-kursi">9B</span></div>
+                </div>
+            </div>
+
+            <!-- DETAIL GRID -->
+            <div class="bp-grid">
+                <div class="bp-grid-item">
+                    <div class="bp-label">Waktu Boarding</div>
+                    <div class="bp-value" id="out-waktu-board">09 Agu, 09:15</div>
+                </div>
+                <div class="bp-grid-item right">
+                    <div class="bp-label">Kelas</div>
+                    <div class="bp-value" id="out-kelas">Ekonomi</div>
+                </div>
+                
+                <div class="bp-grid-item">
+                    <div class="bp-label">Keberangkatan</div>
+                    <div class="bp-value" id="out-waktu-dep">09:45</div>
+                </div>
+                <div class="bp-grid-item right">
+                    <div class="bp-label">Zona</div>
+                    <div class="bp-value"></div>
+                </div>
+
+                <div class="bp-grid-item">
+                    <div class="bp-label">Kedatangan</div>
+                    <div class="bp-value" id="out-waktu-arr">11:00</div>
+                </div>
+                <div class="bp-grid-item right">
+                    <div class="bp-label">Terminal/Pintu</div>
+                    <div class="bp-value" id="out-gate">/</div>
+                </div>
+            </div>
+
+            <!-- BARCODE 1D BAWAH -->
+            <div class="bp-barcode-container">
+                <svg id="barcode-svg"></svg>
+            </div>
+
         </div>
     </div>
 
-    <!-- PANEL UTILITAS (Cetak / Buat Baru) -->
-    <div id="panel-utilitas" class="nav-box no-print hidden" style="margin-top: 20px;">
-        <button onclick="window.print()" class="btn btn-secondary" style="width:auto; display:inline-block; margin-right:10px;">🖨️ Cetak / Simpan PDF</button>
-        <button onclick="location.reload()" class="btn btn-success" style="width:auto; display:inline-block;">⬅️ Buat Baru</button>
+    <!-- PANEL UTILITAS -->
+    <div id="panel-utilitas" class="nav-box no-print hidden">
+        <button type="button" onclick="window.print()" class="btn btn-secondary" style="width:auto; margin-right:10px;">🖨️ Cetak / PDF</button>
+        <button type="button" onclick="location.reload()" class="btn btn-success" style="width:auto;">⬅️ Buat Baru</button>
     </div>
 
     <script>
-        // Objek lokal untuk menyimpan data estafet antar menu
-        let dataPenerbanganGlobal = {};
+        // Data Estafet
+        let dp = {};
 
         function bukaMenu(menu) {
             document.getElementById('menu-beli-tiket').classList.add('hidden');
             document.getElementById('menu-checkin-tiket').classList.add('hidden');
-            document.getElementById('nota-e-ticket').classList.add('hidden');
             document.getElementById('kartu-boarding-pass').classList.add('hidden');
-            
-            let panelUtilitas = document.getElementById('panel-utilitas');
-            if(panelUtilitas) panelUtilitas.classList.add('hidden');
+            document.getElementById('panel-utilitas').classList.add('hidden');
+
+            document.getElementById('nav-beli').classList.remove('active-beli');
+            document.getElementById('nav-ci').classList.remove('active-ci');
 
             if(menu === 'beli') {
                 document.getElementById('menu-beli-tiket').classList.remove('hidden');
+                document.getElementById('nav-beli').classList.add('active-beli');
             } else if(menu === 'checkin') {
                 document.getElementById('menu-checkin-tiket').classList.remove('hidden');
+                document.getElementById('nav-ci').classList.add('active-ci');
+                document.getElementById('nav-ci').style.color = "#1e293b";
+                document.getElementById('nav-ci').style.borderBottom = "2px solid #1e293b";
             }
         }
 
-        function terbitETicket() {
-            const nama = document.getElementById('input-nama').value;
-            const maskapai = document.getElementById('input-maskapai').value;
-            const flight = document.getElementById('input-flight').value;
-            const asal = document.getElementById('input-asal').value;
-            const tujuan = document.getElementById('input-tujuan').value;
-            const waktu = document.getElementById('input-waktu').value;
-            const pnr = "PNR-" + Math.floor(10000 + Math.random() * 90000);
+        function lanjutCheckin() {
+            // Simpan data Form 1 ke memori lokal
+            dp.nama = document.getElementById('in-nama').value;
+            dp.tanggal = document.getElementById('in-tanggal').value;
+            dp.flight = document.getElementById('in-flight').value;
+            dp.asalKode = document.getElementById('in-asal-kode').value;
+            dp.asalKota = document.getElementById('in-asal-kota').value;
+            dp.tujuanKode = document.getElementById('in-tujuan-kode').value;
+            dp.tujuanKota = document.getElementById('in-tujuan-kota').value;
+            dp.waktuDep = document.getElementById('in-waktu-dep').value;
+            dp.waktuArr = document.getElementById('in-waktu-arr').value;
 
-            if(!nama || !maskapai || !flight || !asal || !tujuan) {
-                alert("Mohon lengkapi formulir pendaftaran tiket!"); 
-                return;
-            }
-
-            dataPenerbanganGlobal = { nama, maskapai, flight, asal, tujuan, waktu, pnr };
-
-            document.getElementById('etkt-header-maskapai').innerText = maskapai.toUpperCase();
-            document.getElementById('etkt-pnr').innerText = pnr;
-            document.getElementById('etkt-pax').innerText = nama.toUpperCase();
-            document.getElementById('etkt-flight').innerText = flight.toUpperCase();
-            document.getElementById('etkt-asal').innerText = asal.toUpperCase();
-            document.getElementById('etkt-tujuan').innerText = tujuan.toUpperCase();
-            document.getElementById('etkt-waktu').innerText = waktu;
-
-            document.getElementById('etkt-qrcode-box').innerHTML = "";
-            new QRCode(document.getElementById("etkt-qrcode-box"), {
-                text: `OFFICIAL E-TICKET\nPNR: ${pnr}\nPAX: ${nama.toUpperCase()}\nSTATUS: CONFIRMED`,
-                width: 110, 
-                height: 110
-            });
-
-            document.getElementById('menu-beli-tiket').classList.add('hidden');
-            document.getElementById('nota-e-ticket').classList.remove('hidden');
-            document.getElementById('panel-utilitas').classList.remove('hidden');
-        }
-
-        function transferKeFormCheckin() {
-            document.getElementById('ci-pnr').value = dataPenerbanganGlobal.pnr || "";
-            document.getElementById('ci-nama').value = dataPenerbanganGlobal.nama || "";
-            document.getElementById('ci-flight').value = dataPenerbanganGlobal.flight || "";
-
-            document.getElementById('nota-e-ticket').classList.add('hidden');
-            document.getElementById('panel-utilitas').classList.add('hidden');
-            document.getElementById('menu-checkin-tiket').classList.remove('hidden');
+            // Buka menu check-in
+            bukaMenu('checkin');
         }
 
         function terbitBoardingPass() {
-            const pnr = document.getElementById('ci-pnr').value;
-            const nama = document.getElementById('ci-nama').value;
-            const flight = document.getElementById('ci-flight').value;
-            const kursi = document.getElementById('ci-kursi').value.toUpperCase();
+            // Ambil data dari form 2
+            dp.waktuBoard = document.getElementById('in-waktu-board').value;
+            dp.kursi = document.getElementById('in-kursi').value;
+            dp.kelas = document.getElementById('in-kelas').value;
+            dp.gate = document.getElementById('in-gate').value;
 
-            const asal = dataPenerbanganGlobal.asal || "JKT";
-            const tujuan = dataPenerbanganGlobal.tujuan || "MLY";
-            const waktu = dataPenerbanganGlobal.waktu || "-";
-            const maskapai = dataPenerbanganGlobal.maskapai || "GLOBAL AIRWAYS";
-
-            if(!kursi) { 
-                alert("Silakan masukkan pilihan nomor kursi Anda!"); 
-                return; 
-            }
-
-            document.getElementById('bp-maskapai').innerText = maskapai.toUpperCase();
-            document.getElementById('bp-maskapai-stub').innerText = maskapai.toUpperCase();
-            document.getElementById('bp-asal-lg').innerText = asal.substr(0,3).toUpperCase();
-            document.getElementById('bp-asal-sm').innerText = asal.toUpperCase();
-            document.getElementById('bp-tujuan-lg').innerText = tujuan.substr(0,3).toUpperCase();
-            document.getElementById('bp-tujuan-sm').innerText = tujuan.toUpperCase();
-            document.getElementById('bp-nama').innerText = nama.toUpperCase();
-            document.getElementById('bp-nama-stub').innerText = nama.toUpperCase();
-            document.getElementById('bp-flight').innerText = flight.toUpperCase();
-            document.getElementById('bp-flight-stub').innerText = flight.toUpperCase();
-            document.getElementById('bp-waktu').innerText = waktu;
-            document.getElementById('bp-kursi').innerText = kursi;
-            document.getElementById('bp-kursi-stub').innerText = kursi;
-            document.getElementById('bp-rute-stub').innerText = asal.substr(0,3).toUpperCase() + " TO " + tujuan.substr(0,3).toUpperCase();
-            document.getElementById('bp-pnr-stub').innerText = pnr;
-
-            document.getElementById('bp-qrcode-box').innerHTML = "";
-            const teksManifes = `BOARDING PASS VALIDATION\nPNR CODE : ${pnr}\nNAME     : ${nama.toUpperCase()}\nFLIGHT   : ${flight.toUpperCase()}\nSEAT     : ${kursi}\nSTATUS   : CONFIRMED`;
+            // Tulis ulang ke elemen visual Boarding Pass
+            document.getElementById('out-tanggal').innerText = dp.tanggal || '9 Agustus 2026';
+            document.getElementById('out-nama').innerText = dp.nama || 'MR JAKRIZAL B TUHAREA';
             
-            new QRCode(document.getElementById("bp-qrcode-box"), {
-                text: teksManifes, 
-                width: 68, 
-                height: 68, 
-                correctLevel : QRCode.CorrectLevel.M
-            });
+            document.getElementById('out-asal-kode').innerText = dp.asalKode || 'AMQ';
+            document.getElementById('out-asal-kota').innerText = dp.asalKota || 'Ambon';
+            document.getElementById('out-flight').innerText = dp.flight || 'JT 880';
+            
+            document.getElementById('out-tujuan-kode').innerText = dp.tujuanKode || 'LUV';
+            document.getElementById('out-tujuan-kota').innerText = dp.tujuanKota || 'Langgur';
+            document.getElementById('out-kursi').innerText = dp.kursi || '9B';
 
+            document.getElementById('out-waktu-board').innerText = dp.waktuBoard || '09 Agu, 09:15';
+            document.getElementById('out-kelas').innerText = dp.kelas || 'Ekonomi';
+            document.getElementById('out-waktu-dep').innerText = dp.waktuDep || '09:45';
+            document.getElementById('out-waktu-arr').innerText = dp.waktuArr || '11:00';
+            document.getElementById('out-gate').innerText = dp.gate || '/';
+
+            // Ganti Layout ke Hasil
             document.getElementById('menu-checkin-tiket').classList.add('hidden');
+            document.getElementById('nav-ci').classList.remove('active-ci');
+            document.getElementById('nav-ci').style.borderBottom = "none";
+            
             document.getElementById('kartu-boarding-pass').classList.remove('hidden');
             document.getElementById('panel-utilitas').classList.remove('hidden');
+
+            // 1. Generate QR Code (Menampilkan detail Itinerary Penuh)
+            try {
+                document.getElementById('bp-qrcode-box').innerHTML = "";
+                const teksItinerary = `ITINERARY DETAIL\nName: ${dp.nama}\nFlight: ${dp.flight}\nDate: ${dp.tanggal}\nRoute: ${dp.asalKode} -> ${dp.tujuanKode}\nBoarding: ${dp.waktuBoard}\nSeat: ${dp.kursi}`;
+                
+                new QRCode(document.getElementById("bp-qrcode-box"), {
+                    text: teksItinerary, 
+                    width: 100, 
+                    height: 100, 
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.L
+                });
+            } catch(e) { console.error("QR Code Gagal: ", e); }
+
+            // 2. Generate Barcode 1D Code128 di bagian bawah
+            try {
+                const barcodeData = (dp.flight + dp.asalKode + dp.tujuanKode + dp.kursi).replace(/\s+/g, '');
+                JsBarcode("#barcode-svg", barcodeData, {
+                    format: "CODE128",
+                    lineColor: "#000000",
+                    width: 2.5,
+                    height: 65,
+                    displayValue: false, // Disembunyikan agar mirip dengan gambar asli
+                    margin: 0
+                });
+            } catch(e) { console.error("Barcode Gagal: ", e); }
         }
     </script>
 </body>
