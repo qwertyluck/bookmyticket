@@ -77,7 +77,6 @@
             width: 380px; 
             margin: 0 auto; 
             background: #ffffff; 
-            /* Garis Pembatas Dalam Shape Rounded Square */
             border-radius: 24px; 
             border: 3px solid #cbd5e1; 
             padding: 24px; 
@@ -87,7 +86,6 @@
             position: relative; 
         }
         .bp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        /* Perbesaran Ukuran Logo Maskapai */
         .bp-logo-img { height: 50px; object-fit: contain; } 
         .bp-date { font-weight: 600; font-size: 15px; }
         .bp-row2 { display: flex; justify-content: space-between; margin-bottom: 25px; align-items: flex-start; }
@@ -192,6 +190,7 @@
             <div id="form-penumpang" class="hidden" style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px;">
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label>Nama Penumpang (Sesuai KTP/Paspor):</label>
+                    <!-- Nama default otomatis sesuai profil pengguna -->
                     <input type="text" id="inp-nama-pax" class="form-control" value="JAKRIZAL BAIHAQI TUHAREA">
                 </div>
                 <!-- Input Harga Manual -->
@@ -220,6 +219,7 @@
             </div>
             <div class="eticket-body">
                 <table class="detail-table">
+                    <tr><th>No. Invoice</th><td id="et-invoice" style="font-family: monospace;"></td></tr>
                     <tr><th>Nama Penumpang</th><td id="et-nama"></td></tr>
                     <tr><th>Rute Penerbangan</th><td id="et-rute"></td></tr>
                     <tr><th>Tanggal & Waktu</th><td id="et-waktu"></td></tr>
@@ -291,7 +291,6 @@
             <!-- HEADER (MENGGUNAKAN LOGO GAMBAR BESAR) -->
             <div class="bp-header">
                 <div>
-                    <!-- Logo maskapai (diperbesar sesuai permintaan) -->
                     <img src="Lion_Air-Logo.wine.png" alt="Lion Air Logo" class="bp-logo-img" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/id/thumb/0/03/Lion_Air_logo.svg/320px-Lion_Air_logo.svg.png';">
                 </div>
                 <div class="bp-date" id="bp-out-tanggal">9 Agustus 2026</div>
@@ -371,6 +370,7 @@
 <script>
     // Database Sementara (State Management)
     let appData = {
+        invoice: '',
         pnr: '',
         nama: '',
         asalKode: '', asalKota: '',
@@ -448,7 +448,11 @@
         for (let i = 0; i < 6; i++) { pnr += chars.charAt(Math.floor(Math.random() * chars.length)); }
         appData.pnr = pnr;
 
+        // Generate Invoice Number Acak (Penambahan Fitur Invoice)
+        appData.invoice = 'INV-' + Math.floor(10000000 + Math.random() * 90000000);
+
         // Tulis ke Layout E-Ticket
+        document.getElementById('et-invoice').innerText = appData.invoice;
         document.getElementById('et-pnr').innerText = appData.pnr;
         document.getElementById('et-nama').innerText = appData.nama;
         document.getElementById('et-rute').innerText = `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
@@ -456,11 +460,11 @@
         document.getElementById('et-flight').innerText = appData.flight;
         document.getElementById('et-harga').innerText = "Rp " + appData.price.toLocaleString('id-ID');
 
-        // Generate QR E-Ticket
+        // Generate QR E-Ticket (Dengan Data Tagihan Invoice)
         try {
             document.getElementById('eticket-qrcode').innerHTML = "";
             new QRCode(document.getElementById("eticket-qrcode"), {
-                text: `E-TICKET\nPNR: ${appData.pnr}\nNAMA: ${appData.nama}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
+                text: `E-TICKET VALIDATION\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.nama}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
                 width: 120, height: 120, colorDark: "#1e293b", correctLevel: QRCode.CorrectLevel.M
             });
         } catch(e) { console.log(e); }
@@ -499,11 +503,11 @@
         document.getElementById('bp-out-waktu-dep').innerText = appData.depTime;
         document.getElementById('bp-out-waktu-arr').innerText = appData.arrTime;
 
-        // Generate QR & Barcode Boarding Pass
+        // Generate QR & Barcode Boarding Pass (Dengan Penambahan Detail Waktu & Tanggal Lengkap)
         try {
             document.getElementById('bp-qrcode-box').innerHTML = "";
             new QRCode(document.getElementById("bp-qrcode-box"), {
-                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.nama}\nFLIGHT: ${appData.flight}\nSEAT: ${appData.kursi}`,
+                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.nama}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
                 width: 100, height: 100, colorDark: "#000000", correctLevel: QRCode.CorrectLevel.L
             });
         } catch(e) { console.log(e); }
