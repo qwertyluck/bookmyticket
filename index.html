@@ -1,1 +1,147 @@
-index
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Penerbangan Global Airways (HTML Version)</title>
+    <!-- Library QR Code offline via CDN browser -->
+    <script src="https://cloudflare.com"></script>
+    <style>
+        body { background-color: #f4f7f6; padding: 30px 10px; font-family: Arial, sans-serif; }
+        .container { max-width: 550px; margin: auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .flex-group { display: flex; gap: 15px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; color: white; }
+        .btn-primary { background-color: #1a2a6c; }
+        .btn-secondary { background-color: #275d8c; }
+        .btn-success { background-color: #28a745; }
+        .hidden { display: none !important; }
+        .nav-box { max-width: 550px; margin: 0 auto 30px auto; text-align: center; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .nav-link { padding: 10px 15px; display: inline-block; text-decoration: none; color: #1a2a6c; font-weight: bold; cursor: pointer; }
+        @media print { .no-print { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGASI ATAS -->
+    <div class="nav-box no-print">
+        <span onclick="bukaMenu('beli')" class="nav-link">🎟️ 1. Beli E-Ticket</span>
+        <span onclick="bukaMenu('checkin')" class="nav-link" style="color:#275d8c;">✈️ 2. Check-In Bandara</span>
+    </div>
+
+    <!-- ================= LAYOUT 1: FORMULIR BELI E-TIKET ================= -->
+    <div id="menu-beli-tiket" class="container no-print">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <h2 style="margin: 0; color: #1a2a6c;">Sistem Penerbitan E-Ticket</h2>
+            <small style="color: #7f8c8d;">Langkah 1: Masukkan Data Manifes Penumpang</small>
+        </div>
+        <div class="form-group">
+            <label>Nama Lengkap Penumpang:</label>
+            <input type="text" id="input-nama" class="form-control" placeholder="Contoh: JALO TUHAREA">
+        </div>
+        <div class="flex-group">
+            <div class="form-group" style="flex:1;">
+                <label>Nama Maskapai:</label>
+                <input type="text" id="input-maskapai" class="form-control" placeholder="Contoh: WINGS AIR">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>No. Penerbangan:</label>
+                <input type="text" id="input-flight" class="form-control" placeholder="Contoh: GT-880">
+            </div>
+        </div>
+        <div class="flex-group">
+            <div class="form-group" style="flex:1;">
+                <label>Kota Asal:</label>
+                <input type="text" id="input-asal" class="form-control" placeholder="Contoh: AMQ">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>Kota Tujuan:</label>
+                <input type="text" id="input-tujuan" class="form-control" placeholder="Contoh: LUV">
+            </div>
+        </div>
+        <div class="flex-group">
+            <div class="form-group" style="flex:1;">
+                <label>Tanggal & Waktu:</label>
+                <input type="text" id="input-waktu" class="form-control" placeholder="Contoh: 29 August 2026, 02:19">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>Harga Tiket (Rp):</label>
+                <input type="number" id="input-harga" class="form-control" placeholder="Contoh: 1200000">
+            </div>
+        </div>
+        <button onclick="terbitE-Ticket()" class="btn btn-primary">🎟️ Terbitkan E-Ticket Resmi</button>
+    </div>
+
+    <!-- ================= LAYOUT 2: TAMPILAN OUTPUT E-TICKET ================= -->
+    <div id="nota-e-ticket" class="hidden" style="max-width: 800px; margin: 30px auto; font-family: Arial, sans-serif; background: #ffffff; border: 1px solid #ccc; padding: 30px; box-shadow: 0 0 15px rgba(0,0,0,0.05); color: #333;">
+        <table style="width: 100%; border-bottom: 3px solid #1a2a6c; padding-bottom: 20px; margin-bottom: 20px;">
+            <tr>
+                <td style="display: flex; align-items: center; gap: 15px;">
+                    <svg width="45" height="45" viewBox="0 0 24 24" fill="none"><path d="M21 16V14L13 9V3.5C13 2.67 12.33 2 11.5 2C10.67 2 10 2.67 10 3.5V9L2 14V16L10 13.5V19L8 20.5V22L11.5 21L15 22V20.5L13 19V13.5L21 16Z" fill="#1a2a6c"/></svg>
+                    <div>
+                        <h1 id="etkt-header-maskapai" style="margin: 0; color: #1a2a6c; font-size: 26px; font-weight: 800;"></h1>
+                        <span style="color: #7f8c8d; font-size: 11px; letter-spacing: 2px; font-weight: bold;">ELECTRONIC TICKET / ITINERARY</span>
+                    </div>
+                </td>
+                <td style="text-align: right; vertical-align: bottom;">
+                    <div style="font-size: 13px; font-weight: bold; color: #d9534f;">BOOKING CODE (PNR)</div>
+                    <div id="etkt-pnr" style="font-size: 24px; font-weight: bold; color: #1a2a6c; font-family: monospace;"></div>
+                </td>
+            </tr>
+        </table>
+        <p style="font-size: 13px; color: #666;">*Harap simpan E-Ticket ini untuk melakukan Check-In guna mendapatkan Boarding Pass.</p>
+        
+        <h3 style="background: #f4f7f6; padding: 8px 12px; color: #1a2a6c; border-left: 4px solid #1a2a6c;">1. INFORMASI PENUMPANG</h3>
+        <table style="width: 100%; font-size: 14px; margin-bottom: 20px;">
+            <tr style="border-bottom: 1px solid #eee;"><td style="padding:8px; color:#7f8c8d;">Nama Penumpang</td><td id="etkt-pax" style="font-weight:bold;"></td></tr>
+            <tr><td style="padding:8px; color:#7f8c8d;">Bagasi Gratis</td><td style="color:#28a745; font-weight:bold;">20 KG + 7 KG Cabin</td></tr>
+        </table>
+
+        <h3 style="background: #f4f7f6; padding: 8px 12px; color: #1a2a6c; border-left: 4px solid #1a2a6c;">2. RINCIAN PENERBANGAN</h3>
+        <table style="width: 100%; font-size: 14px; text-align: left; margin-bottom: 25px;">
+            <tr style="background:#1a2a6c; color:white;"><th style="padding:8px;">Flight No</th><th style="padding:8px;">Dari</th><th style="padding:8px;">Ke</th><th style="padding:8px;">Waktu</th></tr>
+            <tr style="background:#fafafa;"><td id="etkt-flight" style="padding:10px; font-weight:bold;"></td><td id="etkt-asal" style="padding:10px;"></td><td id="etkt-tujuan" style="padding:10px;"></td><td id="etkt-waktu" style="padding:10px;"></td></tr>
+        </table>
+
+        <div style="text-align: center; border-top: 1px dashed #ccc; padding-top: 20px;">
+            <div id="etkt-qrcode-box" style="display:inline-block; border: 1px solid #ddd; padding: 5px; background: white;"></div>
+        </div>
+
+        <!-- TOMBOL LANJUTAN YANG SEBELUMNYA MATI, SEKARANG AKTIF -->
+        <div class="no-print" style="margin-top: 30px; background: #fff3cd; padding: 15px; border-radius: 8px; text-align: center;">
+            <p style="margin: 0 0 10px 0; color: #856404; font-weight: bold;">E-Ticket Sukses Dirilis! Silakan lanjut ke konter Check-In.</p>
+            <button onclick="transferKeFormCheckin()" class="btn btn-primary" style="width:auto; padding:10px 20px;">✈️ Lanjut ke Proses Check-In (Dapatkan Boarding Pass)</button>
+        </div>
+    </div>
+
+    <!-- ================= LAYOUT 3: FORMULIR CHECK-IN MANDIRI ================= -->
+    <div id="menu-checkin-tiket" class="container hidden no-print">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <h2 style="margin: 0; color: #275d8c;">Konter Check-In Mandiri</h2>
+            <small style="color: #7f8c8d;">Langkah 2: Tukarkan Kode Booking Menjadi Boarding Pass</small>
+        </div>
+        <div class="form-group">
+            <label>Kode Booking (PNR Code):</label>
+            <input type="text" id="ci-pnr" class="form-control" style="font-family: monospace; font-weight: bold;">
+        </div>
+        <div class="form-group">
+            <label>Nama Lengkap Penumpang:</label>
+            <input type="text" id="ci-nama" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Nomor Penerbangan:</label>
+            <input type="text" id="ci-flight" class="form-control">
+        </div>
+        <div class="form-group">
+            <label style="color: #d9534f;">Pilih Nomor Kursi Pesawat (Seat):</label>
+            <input type="text" id="ci-kursi" class="form-control" placeholder="Contoh: 14A" style="border: 2px solid #d9534f; font-weight: bold; text-transform: uppercase;">
+        </div>
+        <button onclick="terbitBoardingPass()" class="btn btn-secondary">✈️ Cetak Official Boarding Pass</button>
+    </div>
+
+    <!-- ================= LAYOUT 4: OUTPUT BOARDING PASS RAMPING ================= -->
+    <div id="kartu-boarding-pass" class="hidden" style="max-width: 780px; margin: 30px auto; font-family: Arial, sans-serif; background: #ffffff; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; display: flex; border: 1px solid #d1d5db; min-height: 190px;">
+        <div style="flex: 2.3; padding: 15px 20px; background: #1a2a6c; color: white; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+      
