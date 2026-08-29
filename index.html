@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book My Ticket</title>
+    <title>Global Airways - Booking & Boarding System</title>
     <!-- Font Inter untuk Tipografi Modern & Profesional -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Pustaka Generator QR Code dan Barcode -->
@@ -41,12 +41,12 @@
         .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--secondary); }
-        .form-control { padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; transition: 0.3s; }
+        .form-control { padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; transition: 0.3s; box-sizing: border-box; width: 100%; }
         .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1); }
         select.form-control { cursor: pointer; }
 
         /* BUTTONS */
-        .btn { padding: 14px 20px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn { padding: 14px 20px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; box-sizing: border-box; }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-primary { background: var(--primary); color: white; }
         .btn-secondary { background: var(--secondary); color: white; }
@@ -54,13 +54,13 @@
         /* HASIL PENCARIAN TIKET (FLIGHT CARDS) */
         .flight-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; background: #fff; }
         .flight-card:hover { border-color: var(--primary); box-shadow: 0 4px 15px rgba(220,38,38,0.1); }
-        .flight-card.selected { border-2px solid var(--primary); background: #fef2f2; }
+        .flight-card.selected { border: 2px solid var(--primary); background: #fef2f2; }
         .flight-time { font-size: 18px; font-weight: 700; color: var(--secondary); }
         .flight-route { font-size: 12px; color: var(--text-muted); font-weight: 500; }
         .flight-price { font-size: 18px; font-weight: 800; color: var(--primary); }
 
         /* TAMPILAN E-TICKET & ITINERARY */
-        .eticket-box { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 25px; }
+        .eticket-box { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .eticket-header { background: var(--secondary); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         .eticket-header h2 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
         .pnr-box { background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 6px; text-align: center; }
@@ -73,16 +73,29 @@
         .qr-eticket-container { display: flex; justify-content: center; padding: 20px 0; border-top: 1px dashed var(--border-color); }
 
         /* TAMPILAN BOARDING PASS (REPLIKA LION AIR) */
-        .mobile-bp { width: 360px; margin: 0 auto; background: #ffffff; border-radius: 20px; border: 1px solid var(--border-color); padding: 24px; color: #0f172a; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; }
+        .mobile-bp { 
+            width: 380px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            /* Garis Pembatas Dalam Shape Rounded Square */
+            border-radius: 24px; 
+            border: 3px solid #cbd5e1; 
+            padding: 24px; 
+            color: #0f172a; 
+            box-sizing: border-box; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            position: relative; 
+        }
         .bp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .bp-logo-img { height: 28px; object-fit: contain; } /* KELAS UNTUK LOGO GAMBAR EKSTERNAL */
+        /* Perbesaran Ukuran Logo Maskapai */
+        .bp-logo-img { height: 50px; object-fit: contain; } 
         .bp-date { font-weight: 600; font-size: 15px; }
         .bp-row2 { display: flex; justify-content: space-between; margin-bottom: 25px; align-items: flex-start; }
         .bp-qr-container { width: 100px; height: 100px; }
         .bp-pax { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
         .bp-pax-type { color: var(--text-muted); font-size: 13px; font-weight: 500; margin-bottom: 4px; }
         .bp-pax-name { font-weight: 600; font-size: 15px; max-width: 140px; text-transform: uppercase; line-height: 1.4; color: #334155; }
-        .bp-route-band { background: #f8fafc; margin: 0 -24px 24px -24px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .bp-route-band { background: #f8fafc; margin: 0 -24px 24px -24px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
         .bp-route-left { text-align: left; }
         .bp-route-right { text-align: right; }
         .bp-code { font-size: 38px; font-weight: 800; letter-spacing: -1px; color: var(--text-dark); line-height: 1; margin-bottom: 6px; }
@@ -105,7 +118,9 @@
         @media print { 
             body { padding: 0; background: white; }
             .no-print { display: none !important; } 
-            .app-container, .mobile-bp { box-shadow: none; border: none; margin: 0; padding: 0; }
+            .app-container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: 100%; }
+            .mobile-bp { box-shadow: none; margin: 0; }
+            .eticket-box { box-shadow: none; border: 2px solid #ccc; }
         }
     </style>
 </head>
@@ -175,9 +190,14 @@
             </div>
 
             <div id="form-penumpang" class="hidden" style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px;">
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom: 15px;">
                     <label>Nama Penumpang (Sesuai KTP/Paspor):</label>
                     <input type="text" id="inp-nama-pax" class="form-control" value="JAKRIZAL BAIHAQI TUHAREA">
+                </div>
+                <!-- Input Harga Manual -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Harga Tiket (Rp) - <i style="color:var(--text-muted); font-weight:normal;">Dapat disesuaikan secara manual</i></label>
+                    <input type="number" id="inp-harga-manual" class="form-control" value="0">
                 </div>
                 <button type="button" class="btn btn-primary" onclick="terbitkanETicket()">Pesan & Terbitkan E-Ticket 🎟️</button>
             </div>
@@ -185,7 +205,7 @@
     </div>
 
     <!-- ================= MODUL 2: ITINERARY & E-TICKET ================= -->
-    <div id="mod-eticket" class="module no-print">
+    <div id="mod-eticket" class="module">
         
         <div class="eticket-box">
             <div class="eticket-header">
@@ -204,6 +224,7 @@
                     <tr><th>Rute Penerbangan</th><td id="et-rute"></td></tr>
                     <tr><th>Tanggal & Waktu</th><td id="et-waktu"></td></tr>
                     <tr><th>No. Penerbangan</th><td id="et-flight"></td></tr>
+                    <tr><th>Total Harga Tiket</th><td id="et-harga" style="color: var(--primary);"></td></tr>
                     <tr><th>Status Pembayaran</th><td style="color: #059669;">LUNAS (CONFIRMED)</td></tr>
                 </table>
                 
@@ -216,7 +237,10 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="pindahKeCheckin()">Lanjut ke Proses Check-In ✈️</button>
+        <div class="no-print" style="display: flex; gap: 10px;">
+            <button type="button" class="btn btn-secondary" onclick="window.print()" style="flex: 1;">🖨️ Cetak Itinerary</button>
+            <button type="button" class="btn btn-primary" onclick="pindahKeCheckin()" style="flex: 1;">Lanjut Check-In ✈️</button>
+        </div>
     </div>
 
     <!-- ================= MODUL 3: CHECK-IN BANDARA ================= -->
@@ -257,18 +281,18 @@
             <label for="ci-aggrement">Saya menyatakan bahwa saya tidak membawa barang berbahaya (Dangerous Goods) seperti baterai lithium lepas, bahan mudah meledak, atau cairan korosif di dalam bagasi tercatat maupun kabin.</label>
         </div>
 
-        <button type="button" class="btn btn-secondary" onclick="terbitkanBoardingPass()">Cetak Boarding Pass Resmi 🖨️</button>
+        <button type="button" class="btn btn-secondary" onclick="terbitkanBoardingPass()">Terbitkan Boarding Pass 🖨️</button>
     </div>
 
     <!-- ================= MODUL 4: BOARDING PASS (REPLIKA FINAL) ================= -->
     <div id="mod-boardingpass" class="module" style="padding: 30px 10px;">
         
         <div class="mobile-bp">
-            <!-- HEADER (MENGGUNAKAN LOGO GAMBAR) -->
+            <!-- HEADER (MENGGUNAKAN LOGO GAMBAR BESAR) -->
             <div class="bp-header">
                 <div>
-                    <!-- IMPLEMENTASI LOGO GAMBAR SESUAI REQUEST -->
-                    <img src="Lion_Air-Logo.wine.png" alt="Lion Air Logo" class="bp-logo-img" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/id/thumb/0/03/Lion_Air_logo.svg/320px-Lion_Air_logo.svg.png'; this.style.height='24px';">
+                    <!-- Logo maskapai (diperbesar sesuai permintaan) -->
+                    <img src="Lion_Air-Logo.wine.png" alt="Lion Air Logo" class="bp-logo-img" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/id/thumb/0/03/Lion_Air_logo.svg/320px-Lion_Air_logo.svg.png';">
                 </div>
                 <div class="bp-date" id="bp-out-tanggal">9 Agustus 2026</div>
             </div>
@@ -336,8 +360,8 @@
         </div>
 
         <div class="no-print" style="margin-top: 30px; text-align: center; display: flex; gap: 10px; justify-content: center;">
-            <button class="btn btn-secondary" onclick="window.print()" style="width: auto;">🖨️ Cetak PDF</button>
-            <button class="btn btn-primary" onclick="location.reload()" style="width: auto;">🔄 Transaksi Baru</button>
+            <button class="btn btn-secondary" onclick="window.print()" style="flex: 1;">🖨️ Cetak BP PDF</button>
+            <button class="btn btn-primary" onclick="location.reload()" style="flex: 1;">🔄 Transaksi Baru</button>
         </div>
 
     </div>
@@ -377,8 +401,10 @@
         appData.flight = flight;
         appData.depTime = dep;
         appData.arrTime = arr;
-        appData.price = price;
-
+        
+        // Memasukkan harga ke input manual agar bisa diubah pengguna
+        document.getElementById('inp-harga-manual').value = price;
+        
         document.getElementById('form-penumpang').classList.remove('hidden');
     }
 
@@ -400,6 +426,10 @@
         
         const namaInput = document.getElementById('inp-nama-pax').value;
         if(namaInput.trim() === '') { alert("Nama penumpang harus diisi!"); return; }
+
+        // Mengambil input Harga dari form manual (jika diedit user)
+        let manualPrice = document.getElementById('inp-harga-manual').value;
+        appData.price = parseInt(manualPrice) || 0;
 
         // Set Data
         const asalVal = document.getElementById('sel-asal').value.split('-');
@@ -424,6 +454,7 @@
         document.getElementById('et-rute').innerText = `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
         document.getElementById('et-waktu').innerText = `${appData.formatTanggal} | ${appData.depTime} - ${appData.arrTime}`;
         document.getElementById('et-flight').innerText = appData.flight;
+        document.getElementById('et-harga').innerText = "Rp " + appData.price.toLocaleString('id-ID');
 
         // Generate QR E-Ticket
         try {
