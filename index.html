@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Penerbangan Global Airways (HTML Version)</title>
-    <!-- Library QR Code offline via CDN browser -->
-    <script src="https://cloudflare.com"></script>
+    <title>Sistem Penerbangan Global Airways</title>
+    <!-- Memanggil pustaka generator QR Code (Diperbaiki) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        body { background-color: #f4f7f6; padding: 30px 10px; font-family: Arial, sans-serif; }
+        body { background-color: #f4f7f6; padding: 30px 10px; font-family: Arial, sans-serif; margin: 0; }
         .container { max-width: 550px; margin: auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
@@ -19,19 +19,19 @@
         .btn-success { background-color: #28a745; }
         .hidden { display: none !important; }
         .nav-box { max-width: 550px; margin: 0 auto 30px auto; text-align: center; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .nav-link { padding: 10px 15px; display: inline-block; text-decoration: none; color: #1a2a6c; font-weight: bold; cursor: pointer; }
+        .nav-link { padding: 10px 15px; display: inline-block; text-decoration: none; color: #1a2a6c; font-weight: bold; cursor: pointer; margin: 0 10px; }
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body>
 
-    <!-- NAVIGASI ATAS -->
+    <!-- NAVIGASI MENU UTAMA -->
     <div class="nav-box no-print">
-        <span onclick="bukaMenu('beli')" class="nav-link">🎟️ 1. Beli E-Ticket</span>
-        <span onclick="bukaMenu('checkin')" class="nav-link" style="color:#275d8c;">✈️ 2. Check-In Bandara</span>
+        <span onclick="bukaMenu('beli')" class="nav-link" style="color: #1a2a6c;">🎟️ 1. Beli E-Ticket</span>
+        <span onclick="bukaMenu('checkin')" class="nav-link" style="color: #275d8c;">✈️ 2. Check-In Bandara</span>
     </div>
 
-    <!-- ================= LAYOUT 1: FORMULIR BELI E-TIKET ================= -->
+    <!-- ================= LAYOUT 1: FORMULIR INPUT E-TICKET ================= -->
     <div id="menu-beli-tiket" class="container no-print">
         <div style="text-align: center; margin-bottom: 25px;">
             <h2 style="margin: 0; color: #1a2a6c;">Sistem Penerbitan E-Ticket</h2>
@@ -71,10 +71,10 @@
                 <input type="number" id="input-harga" class="form-control" placeholder="Contoh: 1200000">
             </div>
         </div>
-        <button onclick="terbitE-Ticket()" class="btn btn-primary">🎟️ Terbitkan E-Ticket Resmi</button>
+        <button onclick="terbitETicket()" class="btn btn-primary">🎟️ Terbitkan E-Ticket Resmi</button>
     </div>
 
-    <!-- ================= LAYOUT 2: TAMPILAN OUTPUT E-TICKET ================= -->
+    <!-- ================= LAYOUT 2: OUTPUT STRUKTURAL E-TICKET ================= -->
     <div id="nota-e-ticket" class="hidden" style="max-width: 800px; margin: 30px auto; font-family: Arial, sans-serif; background: #ffffff; border: 1px solid #ccc; padding: 30px; box-shadow: 0 0 15px rgba(0,0,0,0.05); color: #333;">
         <table style="width: 100%; border-bottom: 3px solid #1a2a6c; padding-bottom: 20px; margin-bottom: 20px;">
             <tr>
@@ -91,11 +91,11 @@
                 </td>
             </tr>
         </table>
-        <p style="font-size: 13px; color: #666;">*Harap simpan E-Ticket ini untuk melakukan Check-In guna mendapatkan Boarding Pass.</p>
+        <p style="font-size: 13px; color: #666;">*Harap simpan E-Ticket ini untuk melakukan Check-In guna mendapatkan Boarding Pass resmi.</p>
         
         <h3 style="background: #f4f7f6; padding: 8px 12px; color: #1a2a6c; border-left: 4px solid #1a2a6c;">1. INFORMASI PENUMPANG</h3>
         <table style="width: 100%; font-size: 14px; margin-bottom: 20px;">
-            <tr style="border-bottom: 1px solid #eee;"><td style="padding:8px; color:#7f8c8d;">Nama Penumpang</td><td id="etkt-pax" style="font-weight:bold;"></td></tr>
+            <tr style="border-bottom: 1px solid #eee;"><td style="padding:8px; color:#7f8c8d; width: 30%;">Nama Penumpang</td><td id="etkt-pax" style="font-weight:bold;"></td></tr>
             <tr><td style="padding:8px; color:#7f8c8d;">Bagasi Gratis</td><td style="color:#28a745; font-weight:bold;">20 KG + 7 KG Cabin</td></tr>
         </table>
 
@@ -109,14 +109,13 @@
             <div id="etkt-qrcode-box" style="display:inline-block; border: 1px solid #ddd; padding: 5px; background: white;"></div>
         </div>
 
-        <!-- TOMBOL LANJUTAN YANG SEBELUMNYA MATI, SEKARANG AKTIF -->
-        <div class="no-print" style="margin-top: 30px; background: #fff3cd; padding: 15px; border-radius: 8px; text-align: center;">
-            <p style="margin: 0 0 10px 0; color: #856404; font-weight: bold;">E-Ticket Sukses Dirilis! Silakan lanjut ke konter Check-In.</p>
-            <button onclick="transferKeFormCheckin()" class="btn btn-primary" style="width:auto; padding:10px 20px;">✈️ Lanjut ke Proses Check-In (Dapatkan Boarding Pass)</button>
+        <div class="no-print" style="margin-top: 30px; background: #fff3cd; padding: 20px; border-radius: 8px; text-align: center;">
+            <p style="margin: 0 0 12px 0; color: #856404; font-weight: bold;">E-Ticket Sukses Dirilis! Silakan lanjut ke konter Check-In bandara.</p>
+            <button onclick="transferKeFormCheckin()" class="btn btn-primary" style="width:auto; padding:10px 25px;">✈️ Lanjut ke Proses Check-In (Dapatkan Boarding Pass)</button>
         </div>
     </div>
 
-    <!-- ================= LAYOUT 3: FORMULIR CHECK-IN MANDIRI ================= -->
+    <!-- ================= LAYOUT 3: FORMULIR INTERAKTIF CHECK-IN ================= -->
     <div id="menu-checkin-tiket" class="container hidden no-print">
         <div style="text-align: center; margin-bottom: 25px;">
             <h2 style="margin: 0; color: #275d8c;">Konter Check-In Mandiri</h2>
@@ -141,7 +140,189 @@
         <button onclick="terbitBoardingPass()" class="btn btn-secondary">✈️ Cetak Official Boarding Pass</button>
     </div>
 
-    <!-- ================= LAYOUT 4: OUTPUT BOARDING PASS RAMPING ================= -->
+    <!-- ================= LAYOUT 4: OUTPUT BOARDING PASS RAMPING PREMIUM ================= -->
     <div id="kartu-boarding-pass" class="hidden" style="max-width: 780px; margin: 30px auto; font-family: Arial, sans-serif; background: #ffffff; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; display: flex; border: 1px solid #d1d5db; min-height: 190px;">
-        <div style="flex: 2.3; padding: 15px 20px; background: #1a2a6c; color: white; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
-      
+        
+        <!-- Sisi Kiri (Utama) -->
+        <div style="flex: 2.3; padding: 15px 20px; background: #1a2a6c; color: white; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px;">
+                <h2 id="bp-maskapai" style="margin: 0; font-size: 20px;"></h2>
+                <span style="font-weight: bold; letter-spacing: 2px; font-size: 14px;">BOARDING PASS ✈</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <div>
+                    <div style="font-size: 10px; color: #a5b4fc;">PASSENGER NAME</div>
+                    <div id="bp-nama" style="font-size: 16px; font-weight: bold; text-transform: uppercase;"></div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 10px; color: #a5b4fc;">FLIGHT</div>
+                    <div id="bp-flight" style="font-size: 16px; font-weight: bold;"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <div id="bp-asal-lg" style="font-size: 32px; font-weight: bold;"></div>
+                    <div id="bp-asal-sm" style="font-size: 12px; color: #a5b4fc;"></div>
+                </div>
+                <div style="font-size: 24px; color: #a5b4fc;">✈</div>
+                <div style="text-align: right;">
+                    <div id="bp-tujuan-lg" style="font-size: 32px; font-weight: bold;"></div>
+                    <div id="bp-tujuan-sm" style="font-size: 12px; color: #a5b4fc;"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <div style="font-size: 10px; color: #a5b4fc;">DATE / TIME</div>
+                    <div id="bp-waktu" style="font-size: 14px; font-weight: bold;"></div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 10px; color: #a5b4fc;">SEAT</div>
+                    <div id="bp-kursi" style="font-size: 24px; font-weight: bold; color: #facc15;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sisi Kanan (Stub) -->
+        <div style="flex: 1; padding: 15px 20px; background: #f8f9fa; color: #333; border-left: 2px dashed #ccc; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="text-align: right; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
+                <h3 id="bp-maskapai-stub" style="margin: 0; font-size: 16px; color: #1a2a6c;"></h3>
+                <span style="font-size: 10px; font-weight: bold; color: #666;">PASSENGER STUB</span>
+            </div>
+            
+            <div style="font-size: 11px; line-height: 1.8;">
+                <div><span style="color:#777;">PAX:</span> <strong id="bp-nama-stub"></strong></div>
+                <div><span style="color:#777;">FLIGHT:</span> <strong id="bp-flight-stub"></strong> | <span style="color:#777;">SEAT:</span> <strong id="bp-kursi-stub" style="color: #d9534f; font-size: 14px;"></strong></div>
+                <div><span style="color:#777;">ROUTE:</span> <strong id="bp-rute-stub"></strong></div>
+                <div><span style="color:#777;">PNR:</span> <strong id="bp-pnr-stub" style="font-family: monospace;"></strong></div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <div id="bp-qrcode-box" style="display:inline-block; padding: 2px; background: white;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL UTILITAS (Cetak / Buat Baru) -->
+    <div id="panel-utilitas" class="nav-box no-print hidden" style="margin-top: 20px;">
+        <button onclick="window.print()" class="btn btn-secondary" style="width:auto; display:inline-block; margin-right:10px;">🖨️ Cetak / Simpan PDF</button>
+        <button onclick="location.reload()" class="btn btn-success" style="width:auto; display:inline-block;">⬅️ Buat Baru</button>
+    </div>
+
+    <script>
+        // Objek lokal untuk menyimpan data estafet antar menu
+        let dataPenerbanganGlobal = {};
+
+        function bukaMenu(menu) {
+            document.getElementById('menu-beli-tiket').classList.add('hidden');
+            document.getElementById('menu-checkin-tiket').classList.add('hidden');
+            document.getElementById('nota-e-ticket').classList.add('hidden');
+            document.getElementById('kartu-boarding-pass').classList.add('hidden');
+            
+            let panelUtilitas = document.getElementById('panel-utilitas');
+            if(panelUtilitas) panelUtilitas.classList.add('hidden');
+
+            if(menu === 'beli') {
+                document.getElementById('menu-beli-tiket').classList.remove('hidden');
+            } else if(menu === 'checkin') {
+                document.getElementById('menu-checkin-tiket').classList.remove('hidden');
+            }
+        }
+
+        function terbitETicket() {
+            const nama = document.getElementById('input-nama').value;
+            const maskapai = document.getElementById('input-maskapai').value;
+            const flight = document.getElementById('input-flight').value;
+            const asal = document.getElementById('input-asal').value;
+            const tujuan = document.getElementById('input-tujuan').value;
+            const waktu = document.getElementById('input-waktu').value;
+            const pnr = "PNR-" + Math.floor(10000 + Math.random() * 90000);
+
+            if(!nama || !maskapai || !flight || !asal || !tujuan) {
+                alert("Mohon lengkapi formulir pendaftaran tiket!"); 
+                return;
+            }
+
+            dataPenerbanganGlobal = { nama, maskapai, flight, asal, tujuan, waktu, pnr };
+
+            document.getElementById('etkt-header-maskapai').innerText = maskapai.toUpperCase();
+            document.getElementById('etkt-pnr').innerText = pnr;
+            document.getElementById('etkt-pax').innerText = nama.toUpperCase();
+            document.getElementById('etkt-flight').innerText = flight.toUpperCase();
+            document.getElementById('etkt-asal').innerText = asal.toUpperCase();
+            document.getElementById('etkt-tujuan').innerText = tujuan.toUpperCase();
+            document.getElementById('etkt-waktu').innerText = waktu;
+
+            document.getElementById('etkt-qrcode-box').innerHTML = "";
+            new QRCode(document.getElementById("etkt-qrcode-box"), {
+                text: `OFFICIAL E-TICKET\nPNR: ${pnr}\nPAX: ${nama.toUpperCase()}\nSTATUS: CONFIRMED`,
+                width: 110, 
+                height: 110
+            });
+
+            document.getElementById('menu-beli-tiket').classList.add('hidden');
+            document.getElementById('nota-e-ticket').classList.remove('hidden');
+            document.getElementById('panel-utilitas').classList.remove('hidden');
+        }
+
+        function transferKeFormCheckin() {
+            document.getElementById('ci-pnr').value = dataPenerbanganGlobal.pnr || "";
+            document.getElementById('ci-nama').value = dataPenerbanganGlobal.nama || "";
+            document.getElementById('ci-flight').value = dataPenerbanganGlobal.flight || "";
+
+            document.getElementById('nota-e-ticket').classList.add('hidden');
+            document.getElementById('panel-utilitas').classList.add('hidden');
+            document.getElementById('menu-checkin-tiket').classList.remove('hidden');
+        }
+
+        function terbitBoardingPass() {
+            const pnr = document.getElementById('ci-pnr').value;
+            const nama = document.getElementById('ci-nama').value;
+            const flight = document.getElementById('ci-flight').value;
+            const kursi = document.getElementById('ci-kursi').value.toUpperCase();
+
+            const asal = dataPenerbanganGlobal.asal || "JKT";
+            const tujuan = dataPenerbanganGlobal.tujuan || "MLY";
+            const waktu = dataPenerbanganGlobal.waktu || "-";
+            const maskapai = dataPenerbanganGlobal.maskapai || "GLOBAL AIRWAYS";
+
+            if(!kursi) { 
+                alert("Silakan masukkan pilihan nomor kursi Anda!"); 
+                return; 
+            }
+
+            document.getElementById('bp-maskapai').innerText = maskapai.toUpperCase();
+            document.getElementById('bp-maskapai-stub').innerText = maskapai.toUpperCase();
+            document.getElementById('bp-asal-lg').innerText = asal.substr(0,3).toUpperCase();
+            document.getElementById('bp-asal-sm').innerText = asal.toUpperCase();
+            document.getElementById('bp-tujuan-lg').innerText = tujuan.substr(0,3).toUpperCase();
+            document.getElementById('bp-tujuan-sm').innerText = tujuan.toUpperCase();
+            document.getElementById('bp-nama').innerText = nama.toUpperCase();
+            document.getElementById('bp-nama-stub').innerText = nama.toUpperCase();
+            document.getElementById('bp-flight').innerText = flight.toUpperCase();
+            document.getElementById('bp-flight-stub').innerText = flight.toUpperCase();
+            document.getElementById('bp-waktu').innerText = waktu;
+            document.getElementById('bp-kursi').innerText = kursi;
+            document.getElementById('bp-kursi-stub').innerText = kursi;
+            document.getElementById('bp-rute-stub').innerText = asal.substr(0,3).toUpperCase() + " TO " + tujuan.substr(0,3).toUpperCase();
+            document.getElementById('bp-pnr-stub').innerText = pnr;
+
+            document.getElementById('bp-qrcode-box').innerHTML = "";
+            const teksManifes = `BOARDING PASS VALIDATION\nPNR CODE : ${pnr}\nNAME     : ${nama.toUpperCase()}\nFLIGHT   : ${flight.toUpperCase()}\nSEAT     : ${kursi}\nSTATUS   : CONFIRMED`;
+            
+            new QRCode(document.getElementById("bp-qrcode-box"), {
+                text: teksManifes, 
+                width: 68, 
+                height: 68, 
+                correctLevel : QRCode.CorrectLevel.M
+            });
+
+            document.getElementById('menu-checkin-tiket').classList.add('hidden');
+            document.getElementById('kartu-boarding-pass').classList.remove('hidden');
+            document.getElementById('panel-utilitas').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
