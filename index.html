@@ -3,290 +3,1022 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Global Airways - Booking & Boarding System</title>
-    <!-- Font Inter untuk Tipografi Modern & Profesional -->
+
+    <!-- Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Pustaka Generator QR Code, Barcode, dan html2pdf -->
+
+    <!-- QR Code -->
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+
+    <!-- Barcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <!-- html2pdf + html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
+
     <style>
         :root {
-            --primary: #dc2626; /* Merah Maskapai */
+            --primary: #dc2626;
             --primary-hover: #b91c1c;
-            --secondary: #0f172a; /* Navy / Biru Gelap Premium */
+            --secondary: #0f172a;
             --bg-color: #f1f5f9;
             --text-dark: #1e293b;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             --surface: #ffffff;
+            --success: #059669;
+            --info: #0284c7;
+            --danger: #ef4444;
         }
 
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-dark); 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding: 40px 15px; 
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px 15px;
             -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
         }
-        
-        /* PEMBARUAN UI: Desain Dinamis untuk PC, Tablet, dan Mobile (Responsive) */
-        .app-container { 
-            max-width: 900px; 
-            width: 100%; 
-            margin: auto; 
-            background: var(--surface); 
-            border-radius: 20px; 
-            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0,0,0,0.05); 
-            overflow: hidden; 
-            box-sizing: border-box; 
+
+        button,
+        input,
+        select {
+            font: inherit;
         }
-        
-        /* HEADER & NAVIGASI MODUL */
-        .app-header { 
-            background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%); 
-            color: white; 
-            padding: 24px; 
-            text-align: center; 
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid rgba(220, 38, 38, 0.25);
+            outline-offset: 2px;
+        }
+
+        .app-container {
+            max-width: 900px;
+            width: 100%;
+            margin: auto;
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow:
+                0 20px 40px rgba(15, 23, 42, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        /* ================= HEADER ================= */
+
+        .app-header {
+            background: linear-gradient(
+                135deg,
+                var(--secondary) 0%,
+                #1e293b 100%
+            );
+            color: white;
+            padding: 24px;
+            text-align: center;
             border-bottom: 4px solid var(--primary);
         }
-        .app-header h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
-        
-        .stepper { 
-            display: flex; 
-            justify-content: space-between; 
-            background: #f8fafc; 
-            padding: 0; margin: 0; 
-            list-style: none; 
-            border-bottom: 1px solid var(--border-color); 
-            flex-wrap: wrap; 
+
+        .app-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
-        .stepper li { 
-            flex: 1; 
-            text-align: center; 
-            padding: 16px 10px; 
-            font-size: 14px; 
-            font-weight: 700; 
-            color: var(--text-muted); 
-            border-bottom: 3px solid transparent; 
-            transition: all 0.3s ease; 
-            min-width: 100px; 
+
+        /* ================= STEPPER ================= */
+
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .stepper li {
+            flex: 1;
+            text-align: center;
+            padding: 16px 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            min-width: 100px;
             cursor: default;
-        }
-        .stepper li.active { 
-            color: var(--primary); 
-            border-bottom: 3px solid var(--primary); 
-            background: var(--surface); 
+            user-select: none;
         }
 
-        .module { padding: 35px; display: none; }
-        .module.active { display: block; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(15px); } 
-            to { opacity: 1; transform: translateY(0); } 
+        .stepper li.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--surface);
         }
 
-        /* FORM & INPUT */
-        .form-row { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-        .form-group { flex: 1; display: flex; flex-direction: column; min-width: 200px; }
-        .form-group label { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control { 
-            padding: 14px 16px; 
-            border: 2px solid var(--border-color); 
-            border-radius: 10px; 
-            font-family: 'Inter', sans-serif; 
-            font-size: 15px; 
+        /* ================= MODULE ================= */
+
+        .module {
+            padding: 35px;
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ================= FORM ================= */
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
             font-weight: 500;
             color: var(--text-dark);
-            transition: all 0.2s ease; 
-            box-sizing: border-box; 
-            width: 100%; 
+            transition: all 0.2s ease;
+            width: 100%;
             background: #f8fafc;
         }
-        .form-control:focus { 
-            outline: none; 
-            border-color: var(--primary); 
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
             background: var(--surface);
-            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); 
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
         }
-        select.form-control { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; }
 
-        /* BUTTONS */
-        .btn { 
-            padding: 16px 24px; 
-            border: none; 
-            border-radius: 10px; 
-            font-size: 16px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            width: 100%; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 10px; 
-            box-sizing: border-box; 
+        .form-control:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .btn:active { transform: translateY(0); }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-secondary { background: var(--secondary); color: white; }
-        .btn-secondary:hover { background: #1e293b; }
-        
-        /* HASIL PENCARIAN TIKET (FLIGHT CARDS) */
-        .flight-card { 
-            border: 2px solid var(--border-color); 
-            border-radius: 14px; 
-            padding: 20px; 
-            margin-bottom: 16px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            background: var(--surface); 
-            flex-wrap: wrap; gap: 15px; 
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 45px;
         }
-        .flight-card:hover { border-color: #fca5a5; transform: scale(1.01); }
-        .flight-card.selected { border: 2px solid var(--primary); background: #fef2f2; box-shadow: 0 4px 20px rgba(220,38,38,0.15); }
-        .flight-time { font-size: 20px; font-weight: 800; color: var(--secondary); margin-bottom: 4px; }
-        .flight-route { font-size: 14px; color: var(--text-muted); font-weight: 600; }
-        .flight-price { font-size: 22px; font-weight: 900; color: var(--primary); }
 
-        /* TAMPILAN E-TICKET & ITINERARY */
-        .eticket-box { border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
-        .eticket-header { background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%); color: white; padding: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-        .eticket-header h2 { margin: 0 0 4px 0; font-size: 26px; font-weight: 900; letter-spacing: -0.5px; }
-        .pnr-box { background: rgba(255,255,255,0.15); padding: 16px 24px; border-radius: 12px; text-align: center; min-width: 160px; backdrop-filter: blur(10px); }
-        
-        .pnr-input-editable { background: rgba(255,255,255,0.2); border: 2px dashed rgba(255,255,255,0.6); color: white; font-size: 26px; font-weight: 900; font-family: 'Inter', monospace; letter-spacing: 3px; text-align: center; width: 100%; border-radius: 8px; padding: 6px; box-sizing: border-box; transition: 0.3s; margin-top: 8px; outline: none; }
-        .pnr-input-editable:focus { border-color: #fff; background: rgba(255,255,255,0.3); }
+        /* ================= BUTTON ================= */
 
-        .eticket-body { padding: 30px; background: var(--surface); }
-        .detail-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 15px; }
-        .detail-table th, .detail-table td { padding: 14px 10px; border-bottom: 1px solid #f1f5f9; text-align: left; vertical-align: top; }
-        .detail-table th { color: var(--text-muted); font-weight: 600; width: 35%; }
-        .detail-table td { font-weight: 700; color: var(--secondary); }
-        .qr-eticket-container { display: flex; justify-content: center; padding: 25px 0 10px 0; border-top: 2px dashed var(--border-color); }
-
-        /* TAMPILAN BOARDING PASS (REPLIKA LION AIR) */
-        .mobile-bp { 
-            width: 100%; 
-            max-width: 440px; 
-            margin: 0 auto; 
-            background: #ffffff; 
-            border-radius: 24px; 
-            border: 2px solid #cbd5e1; 
-            padding: 28px; 
-            color: #0f172a; 
-            box-sizing: border-box; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
-            position: relative; 
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition:
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
-        .bp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 10px; }
-        .bp-logo-img { height: 60px; object-fit: contain; } 
-        .bp-date { font-weight: 700; font-size: 16px; color: var(--secondary); }
-        .bp-row2 { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-start; gap: 20px;}
-        .bp-qr-container { width: 110px; height: 110px; background: #fff; padding: 5px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .bp-pax { text-align: right; display: flex; flex-direction: column; align-items: flex-end; flex: 1;}
-        .bp-pax-type { color: var(--text-muted); font-size: 13px; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
-        .bp-pax-name { font-weight: 800; font-size: 18px; max-width: 200px; text-transform: uppercase; line-height: 1.3; color: var(--secondary); }
-        .bp-route-band { background: #f8fafc; margin: 0 -28px 28px -28px; padding: 20px 28px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 10px; }
-        .bp-route-left { text-align: left; }
-        .bp-route-right { text-align: right; }
-        .bp-code { font-size: 42px; font-weight: 900; letter-spacing: -2px; color: var(--secondary); line-height: 1; margin-bottom: 6px; }
-        .bp-city { color: var(--text-muted); font-size: 15px; font-weight: 600; margin-bottom: 12px; }
-        .bp-flight-seat { font-size: 18px; font-weight: 800; color: var(--secondary); }
-        .bp-arrow svg { width: 32px; height: 32px; color: #cbd5e1; }
-        .bp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 16px; margin-bottom: 35px; }
-        .bp-grid-item.right { text-align: right; }
-        .bp-label { color: var(--text-muted); font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .bp-value { font-size: 18px; font-weight: 800; color: var(--secondary); }
-        .bp-barcode-container { text-align: center; margin-top: 20px; }
-        #barcode-svg { width: 100%; max-height: 70px; }
 
-        /* UTILITAS */
-        .hidden { display: none !important; }
-        .checkbox-group { display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; margin-bottom: 24px; }
-        .checkbox-group input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
-        .checkbox-group label { font-size: 14px; color: #92400e; font-weight: 500; line-height: 1.5; margin: 0; cursor: pointer; }
-        
-        /* RESPONSIVE MEDIA QUERIES */
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1e293b;
+        }
+
+        /* ================= FLIGHT CARD ================= */
+
+        .flight-card {
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--surface);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flight-card:hover {
+            border-color: #fca5a5;
+            transform: scale(1.01);
+        }
+
+        .flight-card.selected {
+            border: 2px solid var(--primary);
+            background: #fef2f2;
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.15);
+        }
+
+        .flight-time {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 4px;
+        }
+
+        .flight-route {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .flight-price {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        /* ================= E-TICKET ================= */
+
+        .eticket-box {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            background: #fff;
+        }
+
+        .eticket-header {
+            background: linear-gradient(
+                135deg,
+                var(--secondary) 0%,
+                #1e293b 100%
+            );
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .eticket-header h2 {
+            margin: 0 0 4px 0;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .pnr-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 160px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pnr-input-editable {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed rgba(255, 255, 255, 0.6);
+            color: white;
+            font-size: 26px;
+            font-weight: 900;
+            font-family: 'Inter', monospace;
+            letter-spacing: 3px;
+            text-align: center;
+            width: 100%;
+            border-radius: 8px;
+            padding: 6px;
+            transition: 0.3s;
+            margin-top: 8px;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        .pnr-input-editable:focus {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .eticket-body {
+            padding: 30px;
+            background: var(--surface);
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            padding: 14px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .detail-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            width: 35%;
+        }
+
+        .detail-table td {
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .qr-eticket-container {
+            display: flex;
+            justify-content: center;
+            padding: 25px 0 10px 0;
+            border-top: 2px dashed var(--border-color);
+        }
+
+        #eticket-qrcode img,
+        #eticket-qrcode canvas {
+            display: block;
+            margin: auto;
+        }
+
+        /* ================= BOARDING PASS ================= */
+
+        .mobile-bp {
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            border: 2px solid #cbd5e1;
+            padding: 28px;
+            color: #0f172a;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .bp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .bp-logo-img {
+            height: 60px;
+            max-width: 180px;
+            object-fit: contain;
+        }
+
+        .bp-date {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--secondary);
+        }
+
+        .bp-row2 {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .bp-qr-container {
+            width: 110px;
+            height: 110px;
+            background: #fff;
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .bp-qr-container img,
+        .bp-qr-container canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .bp-pax {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .bp-pax-type {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bp-pax-name {
+            font-weight: 800;
+            font-size: 18px;
+            max-width: 200px;
+            text-transform: uppercase;
+            line-height: 1.3;
+            color: var(--secondary);
+            word-break: break-word;
+        }
+
+        .bp-route-band {
+            background: #f8fafc;
+            margin: 0 -28px 28px -28px;
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .bp-route-left {
+            text-align: left;
+        }
+
+        .bp-route-right {
+            text-align: right;
+        }
+
+        .bp-code {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            color: var(--secondary);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .bp-city {
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .bp-flight-seat {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        .bp-arrow svg {
+            width: 32px;
+            height: 32px;
+            color: #cbd5e1;
+        }
+
+        .bp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px 16px;
+            margin-bottom: 35px;
+        }
+
+        .bp-grid-item.right {
+            text-align: right;
+        }
+
+        .bp-label {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bp-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        .bp-barcode-container {
+            text-align: center;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        #barcode-svg {
+            width: 100%;
+            max-height: 70px;
+            display: block;
+        }
+
+        /* ================= UTILITAS ================= */
+
+        .hidden {
+            display: none !important;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-group input {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            color: #92400e;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 0;
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .passenger-count-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 12px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
         @media (max-width: 650px) {
-            body { padding: 15px 10px; }
-            .app-container { border-radius: 16px; }
-            .stepper li { font-size: 12px; padding: 12px 5px; min-width: auto;}
-            .module { padding: 25px 20px; }
-            .eticket-header { flex-direction: column; text-align: center; padding: 20px;}
-            .pnr-box { width: 100%; }
-            .bp-route-band { flex-direction: column; text-align: center; }
-            .bp-route-left, .bp-route-right { text-align: center; width: 100%; }
-            .bp-arrow { transform: rotate(90deg); margin: 15px 0; }
-            .btn-group-responsive { flex-direction: column; gap: 15px; }
+
+            body {
+                padding: 15px 10px;
+            }
+
+            .app-container {
+                border-radius: 16px;
+            }
+
+            .app-header {
+                padding: 20px 15px;
+            }
+
+            .app-header h1 {
+                font-size: 20px;
+            }
+
+            .stepper {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stepper li {
+                font-size: 12px;
+                padding: 12px 5px;
+                min-width: 0;
+            }
+
+            .module {
+                padding: 25px 20px;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
+
+            .eticket-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .pnr-box {
+                width: 100%;
+            }
+
+            .eticket-body {
+                padding: 20px 15px;
+            }
+
+            .detail-table {
+                font-size: 13px;
+            }
+
+            .detail-table th {
+                width: 38%;
+            }
+
+            .detail-table th,
+            .detail-table td {
+                padding: 11px 6px;
+            }
+
+            .bp-route-band {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .bp-route-left,
+            .bp-route-right {
+                text-align: center;
+                width: 100%;
+            }
+
+            .bp-arrow {
+                transform: rotate(90deg);
+                margin: 15px 0;
+            }
+
+            .btn-group-responsive {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+
+            .mobile-bp {
+                padding: 22px;
+            }
+
+            .bp-route-band {
+                margin-left: -22px;
+                margin-right: -22px;
+                padding-left: 22px;
+                padding-right: 22px;
+            }
         }
 
-        /* PEMBARUAN: STANDAR UKURAN CETAK (PRINT) BOARDING PASS LION AIR (ATB 82.55mm x 203.2mm) */
-        @media print { 
-            @page {
-                size: 82.55mm 203.2mm; /* Standar Ukuran ATB Kiosk/Thermal Lion Air */
-                margin: 0; 
-            }
-            body { padding: 0; background: white; margin: 0; display: flex; justify-content: center; }
-            .no-print { display: none !important; } 
-            .app-container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: 100%; width: 100%; border-radius: 0; }
-            
-            /* Penyesuaian Ukuran Cetak Boarding Pass Standar Lion Air (82.55mm x 203.2mm) */
-            .mobile-bp { 
-                box-shadow: none !important; 
-                margin: 0 auto !important; 
-                width: 82.55mm !important; 
-                height: 203.2mm !important; 
-                max-width: 82.55mm !important; 
-                border: 2px solid #000 !important; /* Garis batas cetak jelas & kontras */
-                border-radius: 12px !important;
-                padding: 6mm !important;
-                box-sizing: border-box !important;
-                page-break-inside: avoid;
-            }
-            
-            /* Penyesuaian proporsi elemen agar pas di lebar cetak 82.55mm */
-            .bp-header { margin-bottom: 12px !important; }
-            .bp-logo-img { height: 26px !important; }
-            .bp-date { font-size: 11px !important; }
-            .bp-row2 { margin-bottom: 12px !important; gap: 10px !important;}
-            .bp-qr-container { width: 55px !important; height: 55px !important; padding: 2px !important; border-color: #000 !important;}
-            .bp-pax-type { font-size: 9px !important; margin-bottom: 2px !important; color: #000 !important; }
-            .bp-pax-name { font-size: 11px !important; line-height: 1.2 !important; max-width: 130px !important; color: #000 !important;}
-            
-            .bp-route-band { padding: 8px 6mm !important; margin: 0 -6mm 12px -6mm !important; gap: 5px !important; border-color: #000 !important;}
-            .bp-code { font-size: 26px !important; margin-bottom: 2px !important; color: #000 !important;}
-            .bp-city { font-size: 11px !important; margin-bottom: 6px !important; color: #000 !important;}
-            .bp-flight-seat { font-size: 12px !important; color: #000 !important;}
-            .bp-arrow svg { width: 18px !important; height: 18px !important; color: #000 !important;}
-            
-            .bp-grid { gap: 8px !important; margin-bottom: 12px !important; }
-            .bp-label { font-size: 9px !important; margin-bottom: 2px !important; color: #000 !important;}
-            .bp-value { font-size: 12px !important; color: #000 !important;}
-            
-            .bp-barcode-container { margin-top: 10px !important; }
-            #barcode-svg { max-height: 40px !important; width: 100% !important; }
+        @media (max-width: 420px) {
 
-            .eticket-box { box-shadow: none; border: 2px solid #000; width: 100%; border-radius: 0; }
-            .eticket-header, .eticket-body { color: #000 !important; background: #fff !important; }
+            .bp-code {
+                font-size: 34px;
+            }
+
+            .bp-value {
+                font-size: 15px;
+            }
+
+            .bp-label {
+                font-size: 11px;
+            }
+
+            .bp-pax-name {
+                font-size: 15px;
+            }
+
+            .pnr-input-editable {
+                font-size: 21px;
+            }
+        }
+
+        /* =========================================================
+           MODE CETAK
+           E-TICKET = A4
+           BOARDING PASS = 82.55mm x 203.2mm
+        ========================================================= */
+
+        @media print {
+
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+            }
+
+            body {
+                display: block !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .app-container {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+                width: 100% !important;
+                border-radius: 0 !important;
+                overflow: visible !important;
+            }
+
+            .module {
+                padding: 0 !important;
+            }
+
+            body.print-bp #mod-boardingpass {
+                display: block !important;
+            }
+
+            body.print-bp #mod-eticket,
+            body.print-bp #mod-booking,
+            body.print-bp #mod-checkin {
+                display: none !important;
+            }
+
+            body.print-eticket #mod-eticket {
+                display: block !important;
+            }
+
+            body.print-eticket #mod-booking,
+            body.print-eticket #mod-checkin,
+            body.print-eticket #mod-boardingpass {
+                display: none !important;
+            }
+
+            body.print-eticket .eticket-box {
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+                width: 100% !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+            }
+
+            body.print-eticket .eticket-header {
+                background: #fff !important;
+                color: #000 !important;
+                border-bottom: 2px solid #000 !important;
+            }
+
+            body.print-eticket .eticket-header * {
+                color: #000 !important;
+            }
+
+            body.print-eticket .pnr-box {
+                background: #fff !important;
+                border: 1px solid #000 !important;
+                backdrop-filter: none !important;
+            }
+
+            body.print-eticket .pnr-input-editable {
+                background: #fff !important;
+                color: #000 !important;
+                border: 1px solid #000 !important;
+            }
+
+            body.print-eticket .eticket-body {
+                background: #fff !important;
+            }
+
+            body.print-bp .mobile-bp {
+
+                box-shadow: none !important;
+
+                margin: 0 auto !important;
+
+                width: 82.55mm !important;
+                height: 203.2mm !important;
+
+                min-width: 82.55mm !important;
+                max-width: 82.55mm !important;
+
+                min-height: 203.2mm !important;
+                max-height: 203.2mm !important;
+
+                border: 2px solid #000 !important;
+                border-radius: 12px !important;
+
+                padding: 6mm !important;
+
+                box-sizing: border-box !important;
+
+                page-break-inside: avoid !important;
+
+                overflow: hidden !important;
+            }
+
+            body.print-bp .bp-header {
+                margin-bottom: 12px !important;
+            }
+
+            body.print-bp .bp-logo-img {
+                height: 26px !important;
+                max-width: 100px !important;
+            }
+
+            body.print-bp .bp-date {
+                font-size: 11px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-row2 {
+                margin-bottom: 12px !important;
+                gap: 10px !important;
+            }
+
+            body.print-bp .bp-qr-container {
+                width: 55px !important;
+                height: 55px !important;
+                padding: 2px !important;
+                border-color: #000 !important;
+            }
+
+            body.print-bp .bp-pax-type {
+                font-size: 9px !important;
+                margin-bottom: 2px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-pax-name {
+                font-size: 11px !important;
+                line-height: 1.2 !important;
+                max-width: 130px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-route-band {
+                padding: 8px 6mm !important;
+                margin: 0 -6mm 12px -6mm !important;
+                gap: 5px !important;
+                border-color: #000 !important;
+            }
+
+            body.print-bp .bp-code {
+                font-size: 26px !important;
+                margin-bottom: 2px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-city {
+                font-size: 11px !important;
+                margin-bottom: 6px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-flight-seat {
+                font-size: 12px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-arrow svg {
+                width: 18px !important;
+                height: 18px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-grid {
+                gap: 8px !important;
+                margin-bottom: 12px !important;
+            }
+
+            body.print-bp .bp-label {
+                font-size: 9px !important;
+                margin-bottom: 2px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-value {
+                font-size: 12px !important;
+                color: #000 !important;
+            }
+
+            body.print-bp .bp-barcode-container {
+                margin-top: 10px !important;
+            }
+
+            body.print-bp #barcode-svg {
+                max-height: 40px !important;
+                width: 100% !important;
+            }
+        }
+
+        @page {
+            margin: 5mm;
+        }
+
+        @page {
+            size: A4 portrait;
+        }
+
+        body.print-bp {
+            --print-width: 82.55mm;
+            --print-height: 203.2mm;
+        }
+
+        @media print {
+
+            body.print-bp {
+                width: 82.55mm !important;
+            }
+
+            body.print-bp,
+            body.print-bp @page {
+                margin: 0 !important;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="app-container">
-    
+
+    <!-- ================= HEADER ================= -->
+
     <div class="app-header no-print">
         <h1>✈️ Global Airways Systems</h1>
     </div>
 
-    <!-- INDIKATOR NAVIGASI -->
+    <!-- ================= STEPPER ================= -->
+
     <ul class="stepper no-print">
         <li id="tab-1" class="active">1. Pesan Tiket</li>
         <li id="tab-2">2. E-Ticket</li>
@@ -294,283 +1026,1156 @@
         <li id="tab-4">4. Boarding Pass</li>
     </ul>
 
-    <!-- ================= MODUL 1: PEMESANAN TIKET ================= -->
+    <!-- =========================================================
+         MODUL 1 : BOOKING
+    ========================================================== -->
+
     <div id="mod-booking" class="module active no-print">
-        <h3 style="margin-top:0; color: var(--secondary);">Pencarian & Pemesanan Rute</h3>
-        
+
+        <h3 style="margin-top:0; color:var(--secondary);">
+            Pencarian & Pemesanan Rute
+        </h3>
+
         <div class="form-row">
+
             <div class="form-group">
-                <label>Kota Asal (Kode - Kota)</label>
-                <input type="text" id="sel-asal" class="form-control" placeholder="Contoh: AMQ - Ambon" list="rute-asal-list" value="AMQ - Ambon">
+
+                <label for="sel-asal">
+                    Kota Asal (Kode - Kota)
+                </label>
+
+                <input
+                    type="text"
+                    id="sel-asal"
+                    class="form-control"
+                    placeholder="Contoh: AMQ - Ambon"
+                    list="rute-asal-list"
+                    value="AMQ - Ambon"
+                    autocomplete="off"
+                >
+
                 <datalist id="rute-asal-list">
                     <option value="AMQ - Ambon"></option>
                     <option value="CGK - Jakarta"></option>
                     <option value="SUB - Surabaya"></option>
                     <option value="DPS - Bali"></option>
                 </datalist>
+
             </div>
+
             <div class="form-group">
-                <label>Kota Tujuan (Kode - Kota)</label>
-                <input type="text" id="sel-tujuan" class="form-control" placeholder="Contoh: SUB - Surabaya" list="rute-tujuan-list" value="SUB - Surabaya">
+
+                <label for="sel-tujuan">
+                    Kota Tujuan (Kode - Kota)
+                </label>
+
+                <input
+                    type="text"
+                    id="sel-tujuan"
+                    class="form-control"
+                    placeholder="Contoh: SUB - Surabaya"
+                    list="rute-tujuan-list"
+                    value="SUB - Surabaya"
+                    autocomplete="off"
+                >
+
                 <datalist id="rute-tujuan-list">
                     <option value="SUB - Surabaya"></option>
                     <option value="LUV - Langgur"></option>
                     <option value="UPG - Makassar"></option>
                     <option value="YIA - Yogyakarta"></option>
                 </datalist>
+
             </div>
-        </div>
-        <div class="form-group" style="margin-bottom: 25px;">
-            <label>Tanggal Keberangkatan</label>
-            <input type="date" id="sel-tanggal" class="form-control" value="2026-08-09">
+
         </div>
 
-        <button type="button" class="btn btn-secondary" onclick="cariPenerbangan()" style="margin-bottom: 30px;">🔍 Cari Penerbangan</button>
+        <div class="form-group" style="margin-bottom:25px;">
 
-        <!-- Hasil Pencarian Mockup (Ditampilkan via JS) -->
+            <label for="sel-tanggal">
+                Tanggal Keberangkatan
+            </label>
+
+            <input
+                type="date"
+                id="sel-tanggal"
+                class="form-control"
+                value="2026-08-09"
+            >
+
+        </div>
+
+        <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="cariPenerbangan()"
+            style="margin-bottom:30px;"
+        >
+            🔍 Cari Penerbangan
+        </button>
+
+        <!-- HASIL PENERBANGAN -->
+
         <div id="flight-results" class="hidden">
-            <label style="font-size: 14px; font-weight: 700; color: var(--secondary); margin-bottom: 12px; display: block; text-transform: uppercase;">Pilih Jadwal Penerbangan:</label>
-            
-            <div class="flight-card" onclick="pilihPenerbangan(this, 'JT-880', '09:45', '11:00', 1250000)">
+
+            <label
+                style="
+                    font-size:14px;
+                    font-weight:700;
+                    color:var(--secondary);
+                    margin-bottom:12px;
+                    display:block;
+                    text-transform:uppercase;
+                "
+            >
+                Pilih Jadwal Penerbangan:
+            </label>
+
+            <div
+                class="flight-card"
+                tabindex="0"
+                onclick="pilihPenerbangan(this, 'JT-880', '09:45', '11:00', 1250000)"
+                onkeydown="if(event.key==='Enter' || event.key===' ') { event.preventDefault(); pilihPenerbangan(this, 'JT-880', '09:45', '11:00', 1250000); }"
+            >
+
                 <div>
-                    <div class="flight-time">09:45 - 11:00</div>
-                    <div class="flight-route">JT-880 • Penerbangan Langsung</div>
+                    <div class="flight-time">
+                        09:45 - 11:00
+                    </div>
+
+                    <div class="flight-route">
+                        JT-880 • Penerbangan Langsung
+                    </div>
                 </div>
-                <div class="flight-price">Rp 1.250.000</div>
+
+                <div class="flight-price">
+                    Rp 1.250.000
+                </div>
+
             </div>
 
-            <div class="flight-card" onclick="pilihPenerbangan(this, 'JT-774', '13:20', '14:40', 1100000)">
+            <div
+                class="flight-card"
+                tabindex="0"
+                onclick="pilihPenerbangan(this, 'JT-774', '13:20', '14:40', 1100000)"
+                onkeydown="if(event.key==='Enter' || event.key===' ') { event.preventDefault(); pilihPenerbangan(this, 'JT-774', '13:20', '14:40', 1100000); }"
+            >
+
                 <div>
-                    <div class="flight-time">13:20 - 14:40</div>
-                    <div class="flight-route">JT-774 • Penerbangan Langsung</div>
+                    <div class="flight-time">
+                        13:20 - 14:40
+                    </div>
+
+                    <div class="flight-route">
+                        JT-774 • Penerbangan Langsung
+                    </div>
                 </div>
-                <div class="flight-price">Rp 1.100.000</div>
+
+                <div class="flight-price">
+                    Rp 1.100.000
+                </div>
+
             </div>
 
-            <div id="form-penumpang" class="hidden" style="margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 25px;">
-                <!-- PEMBARUAN: Input Titel & Nama -->
+            <!-- FORM PENUMPANG -->
+
+            <div
+                id="form-penumpang"
+                class="hidden"
+                style="
+                    margin-top:30px;
+                    border-top:2px dashed var(--border-color);
+                    padding-top:25px;
+                "
+            >
+
                 <div class="form-row">
-                    <div class="form-group" style="flex: 0.3; min-width: 100px;">
-                        <label>Titel</label>
+
+                    <div
+                        class="form-group"
+                        style="flex:0.3;min-width:100px;"
+                    >
+
+                        <label for="inp-titel">
+                            Titel
+                        </label>
+
                         <select id="inp-titel" class="form-control">
                             <option value="MR">Mr.</option>
                             <option value="MS">Ms.</option>
                             <option value="MRS">Mrs.</option>
                         </select>
+
                     </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Nama Penumpang (Sesuai KTP/Paspor):</label>
-                        <input type="text" id="inp-nama-pax" class="form-control" value="JAKRIZAL BAIHAQI TUHAREA">
+
+                    <div class="form-group">
+
+                        <label for="inp-nama-pax">
+                            Nama Penumpang (Sesuai KTP/Paspor)
+                        </label>
+
+                        <input
+                            type="text"
+                            id="inp-nama-pax"
+                            class="form-control"
+                            value="JAKRIZAL BAIHAQI TUHAREA"
+                            autocomplete="name"
+                        >
+
                     </div>
+
                 </div>
 
-                <!-- PEMBARUAN: Fungsi Tambah Penumpang Multi-Pax -->
-                <div style="margin-bottom: 20px;">
-                    <button type="button" class="btn btn-secondary" onclick="tambahBarisPenumpang()" style="background: #0284c7; padding: 12px 20px; font-size: 14px;">➕ Tambah Penumpang Lain</button>
+                <div style="margin-bottom:20px;">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="tambahBarisPenumpang()"
+                        style="
+                            background:#0284c7;
+                            padding:12px 20px;
+                            font-size:14px;
+                        "
+                    >
+                        ➕ Tambah Penumpang Lain
+                    </button>
+
                 </div>
+
                 <div id="daftar-penumpang-tambahan"></div>
 
-                <!-- Input Harga Manual -->
-                <div class="form-group" style="margin-bottom: 25px;">
-                    <label>Harga Tiket (Rp) - <i style="color:var(--text-muted); font-weight:500; text-transform:none;">Harga Dasar (Dapat diubah manual)</i></label>
-                    <input type="number" id="inp-harga-manual" class="form-control" value="0">
+                <div
+                    id="jumlah-pax-info"
+                    class="hidden"
+                    style="margin-bottom:20px;"
+                >
+                    <span class="passenger-count-badge">
+                        👥 <span id="jumlah-pax-text">1 Penumpang</span>
+                    </span>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="terbitkanETicket()">Pesan & Terbitkan E-Ticket 🎟️</button>
+
+                <!-- HARGA -->
+
+                <div
+                    class="form-group"
+                    style="margin-bottom:25px;"
+                >
+
+                    <label for="inp-harga-manual">
+                        Harga Tiket (Rp) -
+                        <i
+                            style="
+                                color:var(--text-muted);
+                                font-weight:500;
+                                text-transform:none;
+                            "
+                        >
+                            Harga Dasar (Dapat diubah manual)
+                        </i>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="inp-harga-manual"
+                        class="form-control"
+                        value="0"
+                        min="0"
+                        step="1000"
+                    >
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="terbitkanETicket()"
+                >
+                    Pesan & Terbitkan E-Ticket 🎟️
+                </button>
+
             </div>
         </div>
     </div>
 
-    <!-- ================= MODUL 2: ITINERARY & E-TICKET ================= -->
+    <!-- =========================================================
+         MODUL 2 : E-TICKET
+    ========================================================== -->
+
     <div id="mod-eticket" class="module">
-        
+
         <div id="area-cetak-eticket" class="eticket-box">
+
             <div class="eticket-header">
+
                 <div>
                     <h2>ITINERARY RECEIPT</h2>
-                    <span style="font-size: 14px; font-weight: 500; color: #cbd5e1;">Dokumen E-Ticket Resmi</span>
+
+                    <span
+                        style="
+                            font-size:14px;
+                            font-weight:500;
+                            color:#cbd5e1;
+                        "
+                    >
+                        Dokumen E-Ticket Resmi
+                    </span>
                 </div>
+
                 <div class="pnr-box">
-                    <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; color: #94a3b8;">Booking Code (PNR)</div>
-                    <input type="text" id="et-pnr" class="pnr-input-editable" onkeyup="updateQRRealtime()">
-                    
-                    <div style="font-size: 11px; margin-top: 12px; color: #94a3b8; font-weight: 600;">Waktu Pemesanan:</div>
-                    <div id="et-booking-time" style="font-size: 13px; font-weight: 700; color: #fde047; margin-top: 4px;">(Tanggal, Waktu)</div>
+
+                    <div
+                        style="
+                            font-size:11px;
+                            text-transform:uppercase;
+                            font-weight:800;
+                            letter-spacing:1px;
+                            color:#94a3b8;
+                        "
+                    >
+                        Booking Code (PNR)
+                    </div>
+
+                    <input
+                        type="text"
+                        id="et-pnr"
+                        class="pnr-input-editable"
+                        maxlength="12"
+                        oninput="updateQRRealtime()"
+                        autocomplete="off"
+                    >
+
+                    <div
+                        style="
+                            font-size:11px;
+                            margin-top:12px;
+                            color:#94a3b8;
+                            font-weight:600;
+                        "
+                    >
+                        Waktu Pemesanan:
+                    </div>
+
+                    <div
+                        id="et-booking-time"
+                        style="
+                            font-size:13px;
+                            font-weight:700;
+                            color:#fde047;
+                            margin-top:4px;
+                        "
+                    >
+                        (Tanggal, Waktu)
+                    </div>
+
                 </div>
             </div>
+
             <div class="eticket-body">
-                <!-- INFORMASI AGENSI / TRAVEL PENERBIT -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f1f5f9; flex-wrap: wrap; gap: 15px;">
+
+                <!-- AGENSI -->
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        margin-bottom:20px;
+                        padding-bottom:15px;
+                        border-bottom:2px solid #f1f5f9;
+                        flex-wrap:wrap;
+                        gap:15px;
+                    "
+                >
+
                     <div>
-                        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Diterbitkan Oleh / Travel Partner:</div>
-                        <div style="font-size: 16px; font-weight: 800; color: var(--secondary);">GLOBAL AIRWAYS TICKETING & TOURS INDONESIA</div>
-                        <div style="font-size: 12px; color: var(--text-muted);">IATA License: 15-3 9921 0 • Call Center: +62 811 9900 888</div>
+
+                        <div
+                            style="
+                                font-size:12px;
+                                font-weight:700;
+                                color:var(--text-muted);
+                                text-transform:uppercase;
+                            "
+                        >
+                            Diterbitkan Oleh / Travel Partner:
+                        </div>
+
+                        <div
+                            style="
+                                font-size:16px;
+                                font-weight:800;
+                                color:var(--secondary);
+                            "
+                        >
+                            GLOBAL AIRWAYS TICKETING & TOURS INDONESIA
+                        </div>
+
+                        <div
+                            style="
+                                font-size:12px;
+                                color:var(--text-muted);
+                            "
+                        >
+                            IATA License: 15-3 9921 0 • Call Center: +62 811 9900 888
+                        </div>
+
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Tanda Terima / Authorized Stamp:</div>
-                        <div style="font-family: 'Courier New', monospace; font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 4px;">[ DIGITAL SIGNED & VERIFIED ]</div>
+
+                    <div style="text-align:right;">
+
+                        <div
+                            style="
+                                font-size:12px;
+                                font-weight:700;
+                                color:var(--text-muted);
+                            "
+                        >
+                            Tanda Terima / Authorized Stamp:
+                        </div>
+
+                        <div
+                            style="
+                                font-family:'Courier New',monospace;
+                                font-size:14px;
+                                font-weight:800;
+                                color:var(--primary);
+                                margin-top:4px;
+                            "
+                        >
+                            [ DIGITAL SIGNED & VERIFIED ]
+                        </div>
+
                     </div>
+
                 </div>
 
                 <table class="detail-table">
-                    <tr><th>No. Invoice</th><td id="et-invoice" style="font-family: 'Inter', monospace; font-size: 16px;"></td></tr>
-                    <tr><th>Nama Penumpang</th><td id="et-nama"></td></tr>
-                    <tr><th>Rute Penerbangan</th><td id="et-rute"></td></tr>
-                    <tr><th>Tanggal & Waktu</th><td id="et-waktu"></td></tr>
-                    <tr><th>Waktu Tiba (Arrival)</th><td id="et-waktu-tiba" style="color: #0284c7;"></td></tr>
-                    <tr><th>No. Penerbangan & Maskapai</th><td>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <span id="et-flight"></span>
-                            <!-- PEMBARUAN: Edit Nomor Penerbangan secara manual -->
-                            <input type="text" id="et-edit-flight" class="form-control" style="width: 140px; padding: 4px 8px; font-size: 13px;" onkeyup="updateFlightManual(this.value)" placeholder="Ubah No. Pesawat">
-                        </div>
-                    </td></tr>
-                    
-                    <tr><td colspan="2" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
-                        <div style="font-size: 14px; color: var(--secondary); font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian Transaksi Pembayaran</div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-muted); font-weight: 600;"><span>Harga Dasar Tiket</span><strong id="et-harga-dasar" style="color: var(--secondary);"></strong></div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-muted); font-weight: 600;"><span>Pajak & Biaya Lainnya (10%)</span><strong id="et-pajak" style="color: var(--secondary);"></strong></div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 15px; color: var(--text-muted); font-weight: 600;"><span>Pajak Ekstra (5%)</span><strong id="et-pajak-ekstra" style="color: var(--secondary);"></strong></div>
-                        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 900; color: var(--primary);"><span>Total Keseluruhan</span><strong id="et-harga-total"></strong></div>
-                    </td></tr>
 
-                    <tr><th>Status Pembayaran</th><td style="color: #059669; font-size: 16px; font-weight: 800;">LUNAS (CONFIRMED) ✓</td></tr>
+                    <tr>
+                        <th>No. Invoice</th>
+                        <td
+                            id="et-invoice"
+                            style="
+                                font-family:'Inter',monospace;
+                                font-size:16px;
+                            "
+                        ></td>
+                    </tr>
+
+                    <tr>
+                        <th>Nama Penumpang</th>
+                        <td id="et-nama"></td>
+                    </tr>
+
+                    <tr>
+                        <th>Rute Penerbangan</th>
+                        <td id="et-rute"></td>
+                    </tr>
+
+                    <tr>
+                        <th>Tanggal & Waktu</th>
+                        <td id="et-waktu"></td>
+                    </tr>
+
+                    <tr>
+                        <th>Waktu Tiba (Arrival)</th>
+                        <td
+                            id="et-waktu-tiba"
+                            style="color:#0284c7;"
+                        ></td>
+                    </tr>
+
+                    <tr>
+
+                        <th>
+                            No. Penerbangan & Maskapai
+                        </th>
+
+                        <td>
+
+                            <div
+                                style="
+                                    display:flex;
+                                    gap:10px;
+                                    align-items:center;
+                                    flex-wrap:wrap;
+                                "
+                            >
+
+                                <span id="et-flight"></span>
+
+                                <input
+                                    type="text"
+                                    id="et-edit-flight"
+                                    class="form-control"
+                                    style="
+                                        width:140px;
+                                        padding:4px 8px;
+                                        font-size:13px;
+                                    "
+                                    oninput="updateFlightManual(this.value)"
+                                    placeholder="Ubah No. Pesawat"
+                                >
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <!-- PENUMPANG TAMBAHAN -->
+
+                    <tr id="et-pax-list-row" class="hidden">
+
+                        <th>
+                            Daftar Penumpang
+                        </th>
+
+                        <td id="et-pax-list"></td>
+
+                    </tr>
+
+                    <!-- PEMBAYARAN -->
+
+                    <tr>
+
+                        <td
+                            colspan="2"
+                            style="
+                                background:#f8fafc;
+                                padding:20px;
+                                border-radius:12px;
+                                border:1px solid var(--border-color);
+                            "
+                        >
+
+                            <div
+                                style="
+                                    font-size:14px;
+                                    color:var(--secondary);
+                                    font-weight:800;
+                                    margin-bottom:15px;
+                                    text-transform:uppercase;
+                                    letter-spacing:0.5px;
+                                "
+                            >
+                                Rincian Transaksi Pembayaran
+                            </div>
+
+                            <div
+                                style="
+                                    display:flex;
+                                    justify-content:space-between;
+                                    margin-bottom:8px;
+                                    color:var(--text-muted);
+                                    font-weight:600;
+                                "
+                            >
+                                <span>Harga Dasar Tiket</span>
+                                <strong
+                                    id="et-harga-dasar"
+                                    style="color:var(--secondary);"
+                                ></strong>
+                            </div>
+
+                            <div
+                                style="
+                                    display:flex;
+                                    justify-content:space-between;
+                                    margin-bottom:8px;
+                                    color:var(--text-muted);
+                                    font-weight:600;
+                                "
+                            >
+                                <span>Pajak & Biaya Lainnya (10%)</span>
+                                <strong
+                                    id="et-pajak"
+                                    style="color:var(--secondary);"
+                                ></strong>
+                            </div>
+
+                            <div
+                                style="
+                                    display:flex;
+                                    justify-content:space-between;
+                                    margin-bottom:15px;
+                                    border-bottom:1px dashed #cbd5e1;
+                                    padding-bottom:15px;
+                                    color:var(--text-muted);
+                                    font-weight:600;
+                                "
+                            >
+                                <span>Pajak Ekstra (5%)</span>
+                                <strong
+                                    id="et-pajak-ekstra"
+                                    style="color:var(--secondary);"
+                                ></strong>
+                            </div>
+
+                            <div
+                                style="
+                                    display:flex;
+                                    justify-content:space-between;
+                                    font-size:18px;
+                                    font-weight:900;
+                                    color:var(--primary);
+                                "
+                            >
+                                <span>Total Keseluruhan</span>
+                                <strong id="et-harga-total"></strong>
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Status Pembayaran</th>
+
+                        <td
+                            style="
+                                color:#059669;
+                                font-size:16px;
+                                font-weight:800;
+                            "
+                        >
+                            LUNAS (CONFIRMED) ✓
+                        </td>
+
+                    </tr>
+
                 </table>
-                
+
                 <div class="qr-eticket-container">
                     <div id="eticket-qrcode"></div>
                 </div>
-                <p style="text-align: center; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-top: 15px;">
-                    Tunjukkan E-Ticket ini (atau Kode PNR) saat melakukan Check-in di bandara.
+
+                <p
+                    style="
+                        text-align:center;
+                        font-size:13px;
+                        font-weight:500;
+                        color:var(--text-muted);
+                        margin-top:15px;
+                    "
+                >
+                    Tunjukkan E-Ticket ini (atau Kode PNR)
+                    saat melakukan Check-in di bandara.
                 </p>
+
             </div>
         </div>
 
-        <!-- PEMBARUAN: Tombol Download PDF & PNG pada Menu Itinerary/E-Ticket -->
-        <div class="no-print btn-group-responsive" style="display: flex; gap: 15px; flex-wrap: wrap;">
-            <button type="button" class="btn btn-secondary" onclick="window.print()" style="flex: 1; min-width: 180px;">🖨️ Cetak Itinerary</button>
-            <button type="button" class="btn btn-primary" onclick="downloadPDF('area-cetak-eticket', 'Itinerary-ETicket.pdf')" style="flex: 1; min-width: 180px; background: #0284c7;">📥 Download PDF</button>
-            <button type="button" class="btn btn-primary" onclick="downloadPNG('area-cetak-eticket', 'Itinerary-ETicket.png')" style="flex: 1; min-width: 180px; background: #059669;">🖼️ Download PNG</button>
-            <button type="button" class="btn btn-primary" onclick="pindahKeCheckin()" style="flex: 1; min-width: 180px;">Lanjut Check-In ✈️</button>
+        <!-- BUTTON -->
+
+        <div
+            class="no-print btn-group-responsive"
+            style="
+                display:flex;
+                gap:15px;
+                flex-wrap:wrap;
+            "
+        >
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="printItinerary()"
+                style="flex:1;min-width:180px;"
+            >
+                🖨️ Cetak Itinerary
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="downloadPDF('area-cetak-eticket', 'Itinerary-ETicket.pdf')"
+                style="
+                    flex:1;
+                    min-width:180px;
+                    background:#0284c7;
+                "
+            >
+                📥 Download PDF
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="downloadPNG('area-cetak-eticket', 'Itinerary-ETicket.png')"
+                style="
+                    flex:1;
+                    min-width:180px;
+                    background:#059669;
+                "
+            >
+                🖼️ Download PNG
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="pindahKeCheckin()"
+                style="flex:1;min-width:180px;"
+            >
+                Lanjut Check-In ✈️
+            </button>
+
         </div>
+
     </div>
 
-    <!-- ================= MODUL 3: CHECK-IN BANDARA ================= -->
+    <!-- =========================================================
+         MODUL 3 : CHECK-IN
+    ========================================================== -->
+
     <div id="mod-checkin" class="module no-print">
-        <h3 style="margin-top:0; color: var(--secondary);">Web Check-In Mandiri</h3>
-        <p style="font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 25px;">Selesaikan proses check-in untuk memilih kursi dan mendapatkan Boarding Pass.</p>
-        
+
+        <h3 style="margin-top:0;color:var(--secondary);">
+            Web Check-In Mandiri
+        </h3>
+
+        <p
+            style="
+                font-size:14px;
+                font-weight:500;
+                color:var(--text-muted);
+                margin-bottom:25px;
+            "
+        >
+            Selesaikan proses check-in untuk memilih kursi
+            dan mendapatkan Boarding Pass.
+        </p>
+
         <div class="form-row">
+
             <div class="form-group">
-                <label>Kode Booking (PNR)</label>
-                <input type="text" id="ci-pnr" class="form-control" readonly style="background: #e2e8f0; font-weight: 800; text-align: center; font-size: 18px; letter-spacing: 2px;">
+
+                <label for="ci-pnr">
+                    Kode Booking (PNR)
+                </label>
+
+                <input
+                    type="text"
+                    id="ci-pnr"
+                    class="form-control"
+                    readonly
+                    style="
+                        background:#e2e8f0;
+                        font-weight:800;
+                        text-align:center;
+                        font-size:18px;
+                        letter-spacing:2px;
+                    "
+                >
+
             </div>
+
             <div class="form-group">
-                <label>Nama Penumpang</label>
-                <input type="text" id="ci-nama" class="form-control" readonly style="background: #e2e8f0; font-weight: 700;">
+
+                <label for="ci-nama">
+                    Nama Penumpang
+                </label>
+
+                <input
+                    type="text"
+                    id="ci-nama"
+                    class="form-control"
+                    readonly
+                    style="
+                        background:#e2e8f0;
+                        font-weight:700;
+                    "
+                >
+
             </div>
+
         </div>
 
         <div class="form-row">
+
             <div class="form-group">
-                <label>Pilih Kursi (Seat Map Ekspansi)</label>
-                <select id="ci-kursi" class="form-control" style="border-color: var(--primary); font-weight: 800; color: var(--primary);">
-                    <!-- Opsi dihasilkan otomatis melalui JavaScript -->
+
+                <label for="ci-kursi">
+                    Pilih Kursi (Seat Map Ekspansi)
+                </label>
+
+                <select
+                    id="ci-kursi"
+                    class="form-control"
+                    style="
+                        border-color:var(--primary);
+                        font-weight:800;
+                        color:var(--primary);
+                    "
+                >
                 </select>
+
             </div>
+
             <div class="form-group">
-                <label>Total Bagasi (Kg)</label>
-                <input type="number" id="ci-bagasi" class="form-control" value="15">
+
+                <label for="ci-bagasi">
+                    Total Bagasi (Kg)
+                </label>
+
+                <input
+                    type="number"
+                    id="ci-bagasi"
+                    class="form-control"
+                    value="15"
+                    min="0"
+                    max="100"
+                    step="1"
+                >
+
             </div>
+
         </div>
 
         <div class="checkbox-group">
-            <input type="checkbox" id="ci-aggrement">
-            <label for="ci-aggrement">Saya menyatakan bahwa saya tidak membawa barang berbahaya (Dangerous Goods) seperti baterai lithium lepas, bahan mudah meledak, atau cairan korosif di dalam bagasi tercatat maupun kabin.</label>
+
+            <input
+                type="checkbox"
+                id="ci-aggrement"
+            >
+
+            <label for="ci-aggrement">
+                Saya menyatakan bahwa saya tidak membawa
+                barang berbahaya (Dangerous Goods) seperti
+                baterai lithium lepas, bahan mudah meledak,
+                atau cairan korosif di dalam bagasi tercatat
+                maupun kabin.
+            </label>
+
         </div>
 
-        <button type="button" class="btn btn-secondary" onclick="terbitkanBoardingPass()">Terbitkan Boarding Pass 🖨️</button>
+        <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="terbitkanBoardingPass()"
+        >
+            Terbitkan Boarding Pass 🖨️
+        </button>
+
     </div>
 
-    <!-- ================= MODUL 4: BOARDING PASS (REPLIKA FINAL) ================= -->
-    <div id="mod-boardingpass" class="module" style="padding: 30px 10px;">
-        
+    <!-- =========================================================
+         MODUL 4 : BOARDING PASS
+    ========================================================== -->
+
+    <div
+        id="mod-boardingpass"
+        class="module"
+        style="padding:30px 10px;"
+    >
+
         <div id="area-cetak-bp" class="mobile-bp">
-            <!-- HEADER (MENGGUNAKAN LOGO GAMBAR BESAR) -->
+
+            <!-- HEADER -->
+
             <div class="bp-header">
+
                 <div>
-                    <img src="Lion_Air-Logo.wine.png" alt="Lion Air Logo" class="bp-logo-img" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/id/thumb/0/03/Lion_Air_logo.svg/320px-Lion_Air_logo.svg.png';">
+
+                    <img
+                        src="Lion_Air-Logo.wine.png"
+                        alt="Lion Air Logo"
+                        class="bp-logo-img"
+                        crossorigin="anonymous"
+                        onerror="
+                            this.onerror=null;
+                            this.src='https://upload.wikimedia.org/wikipedia/id/thumb/0/03/Lion_Air_logo.svg/320px-Lion_Air_logo.svg.png';
+                        "
+                    >
+
                 </div>
-                <div class="bp-date" id="bp-out-tanggal">9 Agustus 2026</div>
+
+                <div
+                    class="bp-date"
+                    id="bp-out-tanggal"
+                >
+                    9 Agustus 2026
+                </div>
+
             </div>
 
-            <!-- QR & PENUMPANG -->
+            <!-- QR + PENUMPANG -->
+
             <div class="bp-row2">
-                <div class="bp-qr-container" id="bp-qrcode-box"></div>
+
+                <div
+                    class="bp-qr-container"
+                    id="bp-qrcode-box"
+                ></div>
+
                 <div class="bp-pax">
-                    <div class="bp-pax-type">Dewasa</div>
-                    <div class="bp-pax-name" id="bp-out-nama">MR JAKRIZAL B TUHAREA</div>
+
+                    <div class="bp-pax-type">
+                        Dewasa
+                    </div>
+
+                    <div
+                        class="bp-pax-name"
+                        id="bp-out-nama"
+                    >
+                        MR JAKRIZAL B TUHAREA
+                    </div>
+
                 </div>
+
             </div>
 
-            <!-- RUTE PENERBANGAN -->
+            <!-- RUTE -->
+
             <div class="bp-route-band">
+
                 <div class="bp-route-left">
-                    <div class="bp-code" id="bp-out-asal-kode">AMQ</div>
-                    <div class="bp-city" id="bp-out-asal-kota">Ambon</div>
-                    <div class="bp-flight-seat" id="bp-out-flight">JT 880</div>
+
+                    <div
+                        class="bp-code"
+                        id="bp-out-asal-kode"
+                    >
+                        AMQ
+                    </div>
+
+                    <div
+                        class="bp-city"
+                        id="bp-out-asal-kota"
+                    >
+                        Ambon
+                    </div>
+
+                    <div
+                        class="bp-flight-seat"
+                        id="bp-out-flight"
+                    >
+                        JT 880
+                    </div>
+
                 </div>
+
                 <div class="bp-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <line
+                            x1="5"
+                            y1="12"
+                            x2="19"
+                            y2="12"
+                        ></line>
+
+                        <polyline
+                            points="12 5 19 12 12 19"
+                        ></polyline>
+
+                    </svg>
+
                 </div>
+
                 <div class="bp-route-right">
-                    <div class="bp-code" id="bp-out-tujuan-kode">LUV</div>
-                    <div class="bp-city" id="bp-out-tujuan-kota">Langgur</div>
-                    <div class="bp-flight-seat">Kursi <span id="bp-out-kursi" style="color: var(--primary);">9B</span></div>
+
+                    <div
+                        class="bp-code"
+                        id="bp-out-tujuan-kode"
+                    >
+                        LUV
+                    </div>
+
+                    <div
+                        class="bp-city"
+                        id="bp-out-tujuan-kota"
+                    >
+                        Langgur
+                    </div>
+
+                    <div class="bp-flight-seat">
+
+                        Kursi
+
+                        <span
+                            id="bp-out-kursi"
+                            style="color:var(--primary);"
+                        >
+                            9B
+                        </span>
+
+                    </div>
+
                 </div>
+
             </div>
 
-            <!-- DETAIL GRID -->
+            <!-- DETAIL -->
+
             <div class="bp-grid">
+
                 <div class="bp-grid-item">
-                    <div class="bp-label">Waktu Boarding</div>
-                    <div class="bp-value" id="bp-out-waktu-board" style="color: var(--primary);">09 Agu, 09:15</div>
+
+                    <div class="bp-label">
+                        Waktu Boarding
+                    </div>
+
+                    <div
+                        class="bp-value"
+                        id="bp-out-waktu-board"
+                        style="color:var(--primary);"
+                    >
+                        09 Agu, 09:15
+                    </div>
+
                 </div>
+
                 <div class="bp-grid-item right">
-                    <div class="bp-label">Kelas</div>
-                    <div class="bp-value">Ekonomi</div>
-                </div>
-                
-                <div class="bp-grid-item">
-                    <div class="bp-label">Keberangkatan</div>
-                    <div class="bp-value" id="bp-out-waktu-dep">09:45</div>
-                </div>
-                <div class="bp-grid-item right">
-                    <div class="bp-label">Zona</div>
-                    <div class="bp-value">3</div>
+
+                    <div class="bp-label">
+                        Kelas
+                    </div>
+
+                    <div class="bp-value">
+                        Ekonomi
+                    </div>
+
                 </div>
 
                 <div class="bp-grid-item">
-                    <div class="bp-label">Waktu Tiba</div>
-                    <div class="bp-value" id="bp-out-waktu-arr">11:00</div>
+
+                    <div class="bp-label">
+                        Keberangkatan
+                    </div>
+
+                    <div
+                        class="bp-value"
+                        id="bp-out-waktu-dep"
+                    >
+                        09:45
+                    </div>
+
                 </div>
+
                 <div class="bp-grid-item right">
-                    <div class="bp-label">Terminal/Pintu</div>
-                    <div class="bp-value">/</div>
+
+                    <div class="bp-label">
+                        Zona
+                    </div>
+
+                    <div class="bp-value">
+                        3
+                    </div>
+
                 </div>
+
+                <div class="bp-grid-item">
+
+                    <div class="bp-label">
+                        Waktu Tiba
+                    </div>
+
+                    <div
+                        class="bp-value"
+                        id="bp-out-waktu-arr"
+                    >
+                        11:00
+                    </div>
+
+                </div>
+
+                <div class="bp-grid-item right">
+
+                    <div class="bp-label">
+                        Terminal/Pintu
+                    </div>
+
+                    <div class="bp-value">
+                        /
+                    </div>
+
+                </div>
+
             </div>
 
-            <!-- BARCODE 1D BAWAH -->
+            <!-- BARCODE -->
+
             <div class="bp-barcode-container">
+
                 <svg id="barcode-svg"></svg>
+
             </div>
+
         </div>
 
-        <!-- PEMBARUAN: Tombol Cetak, Download PDF, dan Download PNG Boarding Pass -->
-        <div class="no-print btn-group-responsive" style="margin-top: 40px; text-align: center; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <button class="btn btn-secondary" onclick="window.print()" style="flex: 1; min-width: 150px;">🖨️ Cetak BP PDF</button>
-            <button class="btn btn-primary" onclick="downloadPDF('area-cetak-bp', 'Boarding-Pass.pdf')" style="flex: 1; min-width: 150px; background: #0284c7;">📥 Download PDF</button>
-            <button class="btn btn-primary" onclick="downloadPNG('area-cetak-bp', 'Boarding-Pass.png')" style="flex: 1; min-width: 150px; background: #059669;">🖼️ Download PNG</button>
-            <button class="btn btn-primary" onclick="location.reload()" style="flex: 1; min-width: 150px; background: var(--secondary);">🔄 Transaksi Baru</button>
+        <!-- BUTTON -->
+
+        <div
+            class="no-print btn-group-responsive"
+            style="
+                margin-top:40px;
+                text-align:center;
+                display:flex;
+                gap:15px;
+                justify-content:center;
+                flex-wrap:wrap;
+            "
+        >
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="printBoardingPass()"
+                style="flex:1;min-width:150px;"
+            >
+                🖨️ Cetak BP
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="downloadPDF('area-cetak-bp', 'Boarding-Pass.pdf')"
+                style="
+                    flex:1;
+                    min-width:150px;
+                    background:#0284c7;
+                "
+            >
+                📥 Download PDF
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="downloadPNG('area-cetak-bp', 'Boarding-Pass.png')"
+                style="
+                    flex:1;
+                    min-width:150px;
+                    background:#059669;
+                "
+            >
+                🖼️ Download PNG
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="transaksiBaru()"
+                style="
+                    flex:1;
+                    min-width:150px;
+                    background:var(--secondary);
+                "
+            >
+                🔄 Transaksi Baru
+            </button>
+
         </div>
 
     </div>
@@ -578,297 +2183,2010 @@
 </div>
 
 <script>
-    // State Management Global Database 
+
+    /* =========================================================
+       GLOBAL STATE
+    ========================================================== */
+
     let appData = {
-        invoice: '', pnr: '', 
-        titel: '', nama: '', namaLengkap: '', penumpangTambahan: [],
-        asalKode: '', asalKota: '',
-        tujuanKode: '', tujuanKota: '',
-        tanggal: '', formatTanggal: '',
-        flight: '', depTime: '', arrTime: '', 
-        basePrice: 0, taxPrice: 0, extraTaxPrice: 0, totalPrice: 0,
-        kursi: ''
+
+        invoice: '',
+        pnr: '',
+
+        titel: '',
+        nama: '',
+        namaLengkap: '',
+
+        penumpangTambahan: [],
+
+        asalKode: '',
+        asalKota: '',
+
+        tujuanKode: '',
+        tujuanKota: '',
+
+        tanggal: '',
+        formatTanggal: '',
+
+        flight: '',
+        depTime: '',
+        arrTime: '',
+
+        basePrice: 0,
+        taxPrice: 0,
+        extraTaxPrice: 0,
+        totalPrice: 0,
+
+        kursi: '',
+        bagasi: 15
+
     };
 
-    // Saat Website Dimuat: Isi Daftar Kursi (Seat Map) secara Dinamis
-    window.onload = function() {
-        const seatSelect = document.getElementById('ci-kursi');
-        seatSelect.innerHTML = '';
-        for(let i = 1; i <= 30; i++) {
-            ['A (Jendela)', 'B (Tengah)', 'C (Lorong)', 'D (Lorong)', 'E (Tengah)', 'F (Jendela)'].forEach(seatLabel => {
-                let opt = document.createElement('option');
-                let codeSeat = i + seatLabel.charAt(0);
-                opt.value = codeSeat;
-                opt.textContent = codeSeat + ' - ' + seatLabel.substring(2);
-                if(codeSeat === '9B') opt.selected = true;
-                seatSelect.appendChild(opt);
-            });
+
+    /* =========================================================
+       INITIALIZATION
+    ========================================================== */
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        initSeatMap();
+
+        const tanggalInput =
+            document.getElementById('sel-tanggal');
+
+        if (tanggalInput) {
+
+            /*
+             * Tidak mengubah tanggal bawaan pengguna,
+             * tetapi memastikan format valid.
+             */
+            if (!tanggalInput.value) {
+                tanggalInput.value = getLocalDateISO();
+            }
+
         }
-    };
 
-    // Navigasi Tab SPA (Single Page Application)
+        updatePassengerCount();
+
+    });
+
+
+    /* =========================================================
+       DATE UTILITIES
+    ========================================================== */
+
+    function getLocalDateISO(date = new Date()) {
+
+        const year = date.getFullYear();
+
+        const month =
+            String(date.getMonth() + 1).padStart(2, '0');
+
+        const day =
+            String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+
+    function parseLocalDate(dateStr) {
+
+        if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            return null;
+        }
+
+        const parts = dateStr.split('-');
+
+        const year = Number(parts[0]);
+        const month = Number(parts[1]) - 1;
+        const day = Number(parts[2]);
+
+        const date =
+            new Date(year, month, day);
+
+        if (
+            date.getFullYear() !== year ||
+            date.getMonth() !== month ||
+            date.getDate() !== day
+        ) {
+            return null;
+        }
+
+        return date;
+    }
+
+
+    function formatTanggalIndo(dateInput) {
+
+        const date =
+            dateInput instanceof Date
+                ? new Date(dateInput.getTime())
+                : parseLocalDate(dateInput);
+
+        if (!date || isNaN(date.getTime())) {
+            return String(dateInput || '');
+        }
+
+        return date.toLocaleDateString(
+            'id-ID',
+            {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }
+        );
+    }
+
+
+    function formatTanggalPendek(dateInput) {
+
+        const date =
+            dateInput instanceof Date
+                ? new Date(dateInput.getTime())
+                : parseLocalDate(dateInput);
+
+        if (!date || isNaN(date.getTime())) {
+            return String(dateInput || '');
+        }
+
+        return date.toLocaleDateString(
+            'id-ID',
+            {
+                day: '2-digit',
+                month: 'short'
+            }
+        );
+    }
+
+
+    /* =========================================================
+       ROUTE PARSER
+    ========================================================== */
+
+    function parseRuteManual(inputValue) {
+
+        const value =
+            String(inputValue || '').trim();
+
+        if (!value) {
+            return {
+                kode: '',
+                kota: ''
+            };
+        }
+
+        const separatorIndex =
+            value.indexOf('-');
+
+        if (separatorIndex !== -1) {
+
+            const kode =
+                value
+                    .substring(0, separatorIndex)
+                    .trim()
+                    .toUpperCase();
+
+            const kota =
+                value
+                    .substring(separatorIndex + 1)
+                    .trim();
+
+            return {
+                kode,
+                kota
+            };
+        }
+
+        const kode =
+            value
+                .substring(0, 3)
+                .toUpperCase();
+
+        return {
+            kode,
+            kota: value
+        };
+    }
+
+
+    function validasiRute(route) {
+
+        if (!route.kode || route.kode.length < 3) {
+            return false;
+        }
+
+        if (!route.kota) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /* =========================================================
+       SEAT MAP
+    ========================================================== */
+
+    function initSeatMap() {
+
+        const seatSelect =
+            document.getElementById('ci-kursi');
+
+        if (!seatSelect) {
+            return;
+        }
+
+        seatSelect.innerHTML = '';
+
+        for (let i = 1; i <= 30; i++) {
+
+            [
+                'A (Jendela)',
+                'B (Tengah)',
+                'C (Lorong)',
+                'D (Lorong)',
+                'E (Tengah)',
+                'F (Jendela)'
+            ].forEach(function (seatLabel) {
+
+                const opt =
+                    document.createElement('option');
+
+                const seatCode =
+                    i + seatLabel.charAt(0);
+
+                opt.value = seatCode;
+
+                opt.textContent =
+                    seatCode +
+                    ' - ' +
+                    seatLabel.substring(2);
+
+                if (seatCode === '9B') {
+                    opt.selected = true;
+                }
+
+                seatSelect.appendChild(opt);
+
+            });
+
+        }
+
+    }
+
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================== */
+
     function switchTab(tabIndex) {
-        document.querySelectorAll('.module').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.stepper li').forEach(el => el.classList.remove('active'));
-        
-        document.getElementById(`mod-${['booking','eticket','checkin','boardingpass'][tabIndex-1]}`).classList.add('active');
-        document.getElementById(`tab-${tabIndex}`).classList.add('active');
+
+        const modules = [
+            'booking',
+            'eticket',
+            'checkin',
+            'boardingpass'
+        ];
+
+        if (
+            tabIndex < 1 ||
+            tabIndex > modules.length
+        ) {
+            return;
+        }
+
+        document
+            .querySelectorAll('.module')
+            .forEach(function (el) {
+                el.classList.remove('active');
+            });
+
+        document
+            .querySelectorAll('.stepper li')
+            .forEach(function (el) {
+                el.classList.remove('active');
+            });
+
+        const module =
+            document.getElementById(
+                `mod-${modules[tabIndex - 1]}`
+            );
+
+        const tab =
+            document.getElementById(
+                `tab-${tabIndex}`
+            );
+
+        if (module) {
+            module.classList.add('active');
+        }
+
+        if (tab) {
+            tab.classList.add('active');
+        }
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
     }
 
-    // [MODUL 1] Fungsi Cari & Pilih Penerbangan
+
+    /* =========================================================
+       CARI PENERBANGAN
+    ========================================================== */
+
     function cariPenerbangan() {
-        document.getElementById('flight-results').classList.remove('hidden');
+
+        const asal =
+            parseRuteManual(
+                document.getElementById('sel-asal').value
+            );
+
+        const tujuan =
+            parseRuteManual(
+                document.getElementById('sel-tujuan').value
+            );
+
+        const tanggal =
+            document.getElementById('sel-tanggal').value;
+
+        if (!validasiRute(asal)) {
+            alert(
+                'Kota asal belum valid.\nGunakan format: AMQ - Ambon'
+            );
+            return;
+        }
+
+        if (!validasiRute(tujuan)) {
+            alert(
+                'Kota tujuan belum valid.\nGunakan format: SUB - Surabaya'
+            );
+            return;
+        }
+
+        if (asal.kode === tujuan.kode) {
+            alert(
+                'Kota asal dan tujuan tidak boleh sama.'
+            );
+            return;
+        }
+
+        if (!parseLocalDate(tanggal)) {
+            alert(
+                'Tanggal keberangkatan belum valid.'
+            );
+            return;
+        }
+
+        document
+            .getElementById('flight-results')
+            .classList.remove('hidden');
+
+        document
+            .getElementById('form-penumpang')
+            .classList.add('hidden');
+
+        appData.flight = '';
+
     }
 
-    function pilihPenerbangan(element, flight, dep, arr, price) {
-        document.querySelectorAll('.flight-card').forEach(el => el.classList.remove('selected'));
-        element.classList.add('selected');
-        
-        appData.flight = flight;
+
+    /* =========================================================
+       PILIH PENERBANGAN
+    ========================================================== */
+
+    function pilihPenerbangan(
+        element,
+        flight,
+        dep,
+        arr,
+        price
+    ) {
+
+        document
+            .querySelectorAll('.flight-card')
+            .forEach(function (el) {
+                el.classList.remove('selected');
+            });
+
+        if (element) {
+            element.classList.add('selected');
+        }
+
+        appData.flight = String(flight).toUpperCase();
         appData.depTime = dep;
         appData.arrTime = arr;
-        
-        document.getElementById('inp-harga-manual').value = price;
-        document.getElementById('form-penumpang').classList.remove('hidden');
+
+        document
+            .getElementById('inp-harga-manual')
+            .value = price;
+
+        document
+            .getElementById('form-penumpang')
+            .classList.remove('hidden');
+
+        updatePassengerCount();
+
     }
 
-    // PEMBARUAN: Fungsi Tambah Baris Penumpang (Multi-Passenger)
+
+    /* =========================================================
+       TAMBAH PENUMPANG
+    ========================================================== */
+
     function tambahBarisPenumpang() {
-        const container = document.getElementById('daftar-penumpang-tambahan');
-        const divId = 'pax-row-' + Date.now();
-        const html = `
-            <div id="${divId}" class="form-row" style="align-items: flex-end; margin-bottom: 15px; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid var(--border-color);">
-                <div class="form-group" style="flex: 0.3; min-width: 90px;">
-                    <label>Titel</label>
-                    <select class="form-control pax-titel">
-                        <option value="MR">Mr.</option>
-                        <option value="MS">Ms.</option>
-                        <option value="MRS">Mrs.</option>
-                    </select>
-                </div>
-                <div class="form-group" style="flex: 1;">
-                    <label>Nama Penumpang Tambahan</label>
-                    <input type="text" class="form-control pax-nama" placeholder="Nama Sesuai KTP/Paspor">
-                </div>
-                <button type="button" class="btn" style="background: #ef4444; color: #fff; width: auto; padding: 14px 18px;" onclick="document.getElementById('${divId}').remove()">✕</button>
-            </div>
+
+        const container =
+            document.getElementById(
+                'daftar-penumpang-tambahan'
+            );
+
+        if (!container) {
+            return;
+        }
+
+        const divId =
+            'pax-row-' +
+            Date.now() +
+            '-' +
+            Math.floor(Math.random() * 1000);
+
+        const wrapper =
+            document.createElement('div');
+
+        wrapper.id = divId;
+        wrapper.className = 'form-row';
+
+        wrapper.style.cssText = `
+            align-items:flex-end;
+            margin-bottom:15px;
+            background:#f8fafc;
+            padding:15px;
+            border-radius:10px;
+            border:1px solid var(--border-color);
         `;
-        container.insertAdjacentHTML('beforeend', html);
-    }
 
-    // Formatter Tanggal 
-    function formatTanggalIndo(dateStr) {
-        const date = new Date(dateStr);
-        if (isNaN(date)) return dateStr;
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        return date.toLocaleDateString('id-ID', options);
-    }
-    function formatTanggalPendek(dateStr) {
-        const date = new Date(dateStr);
-        if (isNaN(date)) return dateStr;
-        const options = { day: '2-digit', month: 'short' };
-        return date.toLocaleDateString('id-ID', options);
-    }
+        wrapper.innerHTML = `
 
-    // Ekstraktor Input Rute Manual (Mengolah format: KODE - KOTA)
-    function parseRuteManual(inputValue) {
-        if(inputValue.includes('-')) {
-            let parts = inputValue.split('-');
-            return { kode: parts[0].trim().toUpperCase(), kota: parts[1].trim() };
-        }
-        return { kode: inputValue.substring(0,3).toUpperCase(), kota: inputValue };
-    }
+            <div
+                class="form-group"
+                style="flex:0.3;min-width:90px;"
+            >
 
-    // [MODUL 2] Terbitkan E-Ticket
-    function terbitkanETicket() {
-        if(!appData.flight) { alert("Pilih jadwal penerbangan terlebih dahulu!"); return; }
-        
-        const namaInput = document.getElementById('inp-nama-pax').value;
-        const titelInput = document.getElementById('inp-titel').value;
-        if(namaInput.trim() === '') { alert("Nama penumpang utama harus diisi!"); return; }
+                <label>Titel</label>
 
-        // Kumpulkan penumpang tambahan jika ada
-        appData.penumpangTambahan = [];
-        document.querySelectorAll('#daftar-penumpang-tambahan > div').forEach(row => {
-            let t = row.querySelector('.pax-titel').value;
-            let n = row.querySelector('.pax-nama').value;
-            if(n.trim() !== '') {
-                appData.penumpangTambahan.push({ titel: t, nama: n.toUpperCase() });
+                <select class="form-control pax-titel">
+
+                    <option value="MR">
+                        Mr.
+                    </option>
+
+                    <option value="MS">
+                        Ms.
+                    </option>
+
+                    <option value="MRS">
+                        Mrs.
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div
+                class="form-group"
+                style="flex:1;"
+            >
+
+                <label>
+                    Nama Penumpang Tambahan
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control pax-nama"
+                    placeholder="Nama Sesuai KTP/Paspor"
+                    autocomplete="off"
+                >
+
+            </div>
+
+            <button
+                type="button"
+                class="btn"
+                aria-label="Hapus penumpang"
+                style="
+                    background:#ef4444;
+                    color:#fff;
+                    width:auto;
+                    padding:14px 18px;
+                "
+            >
+                ✕
+            </button>
+        `;
+
+        const removeButton =
+            wrapper.querySelector('button');
+
+        removeButton.addEventListener(
+            'click',
+            function () {
+
+                wrapper.remove();
+
+                updatePassengerCount();
+
             }
-        });
+        );
 
-        // Menghitung Rincian Harga (dikalikan total penumpang)
-        let totalPaxCount = 1 + appData.penumpangTambahan.length;
-        let baseUnit = parseInt(document.getElementById('inp-harga-manual').value) || 0;
-        appData.basePrice = baseUnit * totalPaxCount;
-        appData.taxPrice = appData.basePrice * 0.10; 
-        appData.extraTaxPrice = appData.basePrice * 0.05; 
-        appData.totalPrice = appData.basePrice + appData.taxPrice + appData.extraTaxPrice;
+        container.appendChild(wrapper);
 
-        const asalObj = parseRuteManual(document.getElementById('sel-asal').value);
-        const tujuanObj = parseRuteManual(document.getElementById('sel-tujuan').value);
-        const tglInput = document.getElementById('sel-tanggal').value;
+        updatePassengerCount();
 
-        appData.titel = titelInput;
-        appData.nama = namaInput.toUpperCase();
-        appData.namaLengkap = `${appData.titel} ${appData.nama}` + (appData.penumpangTambahan.length > 0 ? ` & ${appData.penumpangTambahan.length} Penumpang Lain` : '');
-        
-        appData.asalKode = asalObj.kode; appData.asalKota = asalObj.kota;
-        appData.tujuanKode = tujuanObj.kode; appData.tujuanKota = tujuanObj.kota;
-        appData.tanggal = tglInput;
-        appData.formatTanggal = formatTanggalIndo(tglInput);
-        
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const newNameInput =
+            wrapper.querySelector('.pax-nama');
+
+        if (newNameInput) {
+            newNameInput.focus();
+        }
+
+    }
+
+
+    function updatePassengerCount() {
+
+        const container =
+            document.getElementById(
+                'daftar-penumpang-tambahan'
+            );
+
+        const info =
+            document.getElementById(
+                'jumlah-pax-info'
+            );
+
+        const text =
+            document.getElementById(
+                'jumlah-pax-text'
+            );
+
+        if (!container || !info || !text) {
+            return;
+        }
+
+        const count =
+            container.querySelectorAll(
+                '.pax-nama'
+            ).length + 1;
+
+        text.textContent =
+            count +
+            (count === 1
+                ? ' Penumpang'
+                : ' Penumpang');
+
+        info.classList.remove('hidden');
+
+    }
+
+
+    /* =========================================================
+       GENERATE PNR
+    ========================================================== */
+
+    function generatePNR() {
+
+        const chars =
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
         let pnr = '';
-        for (let i = 0; i < 6; i++) { pnr += chars.charAt(Math.floor(Math.random() * chars.length)); }
-        appData.pnr = pnr;
-        appData.invoice = 'INV-' + Math.floor(10000000 + Math.random() * 90000000);
 
-        // Algoritma Penentuan Waktu Booking H-2
-        let depDateObj = new Date(tglInput);
-        if(!isNaN(depDateObj)) {
-            depDateObj.setDate(depDateObj.getDate() - 2);
-            let h2Tanggal = formatTanggalIndo(depDateObj.toISOString());
-            let jamAcak = Math.floor(Math.random() * 8 + 8).toString().padStart(2, '0');
-            let menitAcak = Math.floor(Math.random() * 59).toString().padStart(2, '0');
-            document.getElementById('et-booking-time').innerText = `(${h2Tanggal}, ${jamAcak}:${menitAcak} WITA)`;
+        for (let i = 0; i < 6; i++) {
+
+            pnr +=
+                chars.charAt(
+                    Math.floor(
+                        Math.random() *
+                        chars.length
+                    )
+                );
+
         }
 
-        // Kalkulasi Waktu Tiba Otomatis berdasarkan durasi rata-rata / tempuh rute
-        let arrCalculated = hitungWaktuTibaOtomatis(appData.depTime, appData.asalKode, appData.tujuanKode);
-        appData.arrTime = arrCalculated;
+        return pnr;
 
-        // Penulisan ke Layout E-Ticket
-        document.getElementById('et-invoice').innerText = appData.invoice;
-        document.getElementById('et-pnr').value = appData.pnr; 
-        document.getElementById('et-nama').innerText = appData.namaLengkap;
-        document.getElementById('et-rute').innerText = `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
-        document.getElementById('et-waktu').innerText = `${appData.formatTanggal} | Berangkat: ${appData.depTime}`;
-        document.getElementById('et-waktu-tiba').innerText = `${appData.formatTanggal} | Tiba (Estimasi): ${appData.arrTime}`;
-        document.getElementById('et-flight').innerText = appData.flight;
-        document.getElementById('et-edit-flight').value = appData.flight;
-        
-        document.getElementById('et-harga-dasar').innerText = "Rp " + appData.basePrice.toLocaleString('id-ID');
-        document.getElementById('et-pajak').innerText = "Rp " + appData.taxPrice.toLocaleString('id-ID');
-        document.getElementById('et-pajak-ekstra').innerText = "Rp " + appData.extraTaxPrice.toLocaleString('id-ID');
-        document.getElementById('et-harga-total').innerText = "Rp " + appData.totalPrice.toLocaleString('id-ID');
+    }
 
-        updateQRRealtime(); 
+
+    /* =========================================================
+       GENERATE INVOICE
+    ========================================================== */
+
+    function generateInvoice() {
+
+        return (
+            'INV-' +
+            Math.floor(
+                10000000 +
+                Math.random() * 90000000
+            )
+        );
+
+    }
+
+
+    /* =========================================================
+       FORMAT RUPIAH
+    ========================================================== */
+
+    function formatRupiah(value) {
+
+        const number =
+            Number(value) || 0;
+
+        return (
+            'Rp ' +
+            number.toLocaleString('id-ID')
+        );
+
+    }
+
+
+    /* =========================================================
+       MODUL 2 : TERBITKAN E-TICKET
+    ========================================================== */
+
+    function terbitkanETicket() {
+
+        if (!appData.flight) {
+
+            alert(
+                'Pilih jadwal penerbangan terlebih dahulu!'
+            );
+
+            return;
+        }
+
+        const namaInput =
+            document
+                .getElementById('inp-nama-pax')
+                .value
+                .trim();
+
+        const titelInput =
+            document
+                .getElementById('inp-titel')
+                .value;
+
+        const hargaInput =
+            document
+                .getElementById('inp-harga-manual')
+                .value;
+
+        const tanggal =
+            document
+                .getElementById('sel-tanggal')
+                .value;
+
+        const asal =
+            parseRuteManual(
+                document
+                    .getElementById('sel-asal')
+                    .value
+            );
+
+        const tujuan =
+            parseRuteManual(
+                document
+                    .getElementById('sel-tujuan')
+                    .value
+            );
+
+        /* VALIDASI */
+
+        if (!namaInput) {
+
+            alert(
+                'Nama penumpang utama harus diisi!'
+            );
+
+            return;
+        }
+
+        if (!validasiRute(asal)) {
+
+            alert(
+                'Kota asal tidak valid.'
+            );
+
+            return;
+        }
+
+        if (!validasiRute(tujuan)) {
+
+            alert(
+                'Kota tujuan tidak valid.'
+            );
+
+            return;
+        }
+
+        if (asal.kode === tujuan.kode) {
+
+            alert(
+                'Kota asal dan tujuan tidak boleh sama.'
+            );
+
+            return;
+        }
+
+        if (!parseLocalDate(tanggal)) {
+
+            alert(
+                'Tanggal keberangkatan tidak valid.'
+            );
+
+            return;
+        }
+
+        const baseUnit =
+            Number(hargaInput);
+
+        if (
+            !Number.isFinite(baseUnit) ||
+            baseUnit < 0
+        ) {
+
+            alert(
+                'Harga tiket tidak valid.'
+            );
+
+            return;
+        }
+
+        /* PENUMPANG TAMBAHAN */
+
+        appData.penumpangTambahan = [];
+
+        document
+            .querySelectorAll(
+                '#daftar-penumpang-tambahan > div'
+            )
+            .forEach(function (row) {
+
+                const titel =
+                    row.querySelector(
+                        '.pax-titel'
+                    );
+
+                const nama =
+                    row.querySelector(
+                        '.pax-nama'
+                    );
+
+                if (!titel || !nama) {
+                    return;
+                }
+
+                const namaValue =
+                    nama.value.trim();
+
+                if (namaValue) {
+
+                    appData.penumpangTambahan.push({
+
+                        titel: titel.value,
+
+                        nama:
+                            namaValue.toUpperCase()
+
+                    });
+
+                }
+
+            });
+
+        /* TOTAL PENUMPANG */
+
+        const totalPaxCount =
+            1 +
+            appData.penumpangTambahan.length;
+
+        /* PERHITUNGAN HARGA */
+
+        appData.basePrice =
+            Math.round(
+                baseUnit *
+                totalPaxCount
+            );
+
+        appData.taxPrice =
+            Math.round(
+                appData.basePrice * 0.10
+            );
+
+        appData.extraTaxPrice =
+            Math.round(
+                appData.basePrice * 0.05
+            );
+
+        appData.totalPrice =
+            appData.basePrice +
+            appData.taxPrice +
+            appData.extraTaxPrice;
+
+        /* DATA UTAMA */
+
+        appData.titel =
+            titelInput;
+
+        appData.nama =
+            namaInput.toUpperCase();
+
+        appData.namaLengkap =
+            `${appData.titel} ${appData.nama}`;
+
+        if (
+            appData.penumpangTambahan.length > 0
+        ) {
+
+            appData.namaLengkap +=
+                ` & ${appData.penumpangTambahan.length} Penumpang Lain`;
+
+        }
+
+        appData.asalKode =
+            asal.kode;
+
+        appData.asalKota =
+            asal.kota;
+
+        appData.tujuanKode =
+            tujuan.kode;
+
+        appData.tujuanKota =
+            tujuan.kota;
+
+        appData.tanggal =
+            tanggal;
+
+        appData.formatTanggal =
+            formatTanggalIndo(tanggal);
+
+        /* PNR + INVOICE */
+
+        appData.pnr =
+            generatePNR();
+
+        appData.invoice =
+            generateInvoice();
+
+        /* =====================================================
+           WAKTU BOOKING H-2
+           DIPERBAIKI AGAR TIDAK TERKENA UTC SHIFT
+        ====================================================== */
+
+        const depDateObj =
+            parseLocalDate(tanggal);
+
+        if (depDateObj) {
+
+            const bookingDate =
+                new Date(
+                    depDateObj.getTime()
+                );
+
+            bookingDate.setDate(
+                bookingDate.getDate() - 2
+            );
+
+            const jamAcak =
+                Math.floor(
+                    Math.random() * 8 + 8
+                )
+                .toString()
+                .padStart(2, '0');
+
+            const menitAcak =
+                Math.floor(
+                    Math.random() * 60
+                )
+                .toString()
+                .padStart(2, '0');
+
+            document
+                .getElementById(
+                    'et-booking-time'
+                )
+                .innerText =
+                `(${formatTanggalIndo(bookingDate)}, ${jamAcak}:${menitAcak} WITA)`;
+
+        }
+
+        /* =====================================================
+           WAKTU TIBA
+        ====================================================== */
+
+        appData.arrTime =
+            hitungWaktuTibaOtomatis(
+                appData.depTime,
+                appData.asalKode,
+                appData.tujuanKode
+            );
+
+        /* =====================================================
+           E-TICKET
+        ====================================================== */
+
+        document
+            .getElementById('et-invoice')
+            .innerText =
+            appData.invoice;
+
+        document
+            .getElementById('et-pnr')
+            .value =
+            appData.pnr;
+
+        document
+            .getElementById('et-nama')
+            .innerText =
+            appData.namaLengkap;
+
+        document
+            .getElementById('et-rute')
+            .innerText =
+            `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
+
+        document
+            .getElementById('et-waktu')
+            .innerText =
+            `${appData.formatTanggal} | Berangkat: ${appData.depTime}`;
+
+        document
+            .getElementById('et-waktu-tiba')
+            .innerText =
+            `${appData.formatTanggal} | Tiba (Estimasi): ${appData.arrTime}`;
+
+        document
+            .getElementById('et-flight')
+            .innerText =
+            appData.flight;
+
+        document
+            .getElementById('et-edit-flight')
+            .value =
+            appData.flight;
+
+        document
+            .getElementById('et-harga-dasar')
+            .innerText =
+            formatRupiah(
+                appData.basePrice
+            );
+
+        document
+            .getElementById('et-pajak')
+            .innerText =
+            formatRupiah(
+                appData.taxPrice
+            );
+
+        document
+            .getElementById('et-pajak-ekstra')
+            .innerText =
+            formatRupiah(
+                appData.extraTaxPrice
+            );
+
+        document
+            .getElementById('et-harga-total')
+            .innerText =
+            formatRupiah(
+                appData.totalPrice
+            );
+
+        /* DAFTAR PENUMPANG */
+
+        renderPassengerList();
+
+        /* QR */
+
+        updateQRRealtime();
+
+        /* PINDAH */
+
         switchTab(2);
+
     }
 
-    // Fungsi Update Nomor Penerbangan Manual
-    function updateFlightManual(val) {
-        if(val.trim() !== '') {
-            appData.flight = val.toUpperCase();
-            document.getElementById('et-flight').innerText = appData.flight;
+
+    /* =========================================================
+       DAFTAR PENUMPANG PADA E-TICKET
+    ========================================================== */
+
+    function renderPassengerList() {
+
+        const row =
+            document.getElementById(
+                'et-pax-list-row'
+            );
+
+        const list =
+            document.getElementById(
+                'et-pax-list'
+            );
+
+        if (!row || !list) {
+            return;
         }
+
+        if (
+            appData.penumpangTambahan.length === 0
+        ) {
+
+            row.classList.add('hidden');
+
+            list.innerHTML = '';
+
+            return;
+        }
+
+        row.classList.remove('hidden');
+
+        const allPassengers = [
+
+            {
+                titel: appData.titel,
+                nama: appData.nama
+            },
+
+            ...appData.penumpangTambahan
+
+        ];
+
+        list.innerHTML =
+            allPassengers
+                .map(function (pax, index) {
+
+                    return `
+                        <div
+                            style="
+                                margin-bottom:6px;
+                                font-weight:700;
+                            "
+                        >
+                            ${index + 1}. ${escapeHTML(pax.titel)} ${escapeHTML(pax.nama)}
+                        </div>
+                    `;
+
+                })
+                .join('');
+
     }
 
-    // Fungsi Kalkulasi Waktu Tiba Otomatis Berdasarkan Durasi
-    function hitungWaktuTibaOtomatis(depStr, asal, tujuan) {
-        let parts = depStr.split(':');
-        let d = new Date();
-        d.setHours(parseInt(parts[0]), parseInt(parts[1]), 0);
-        // Default durasi penerbangan domestik misal 1 jam 45 menit
-        d.setMinutes(d.getMinutes() + 105);
-        return d.toTimeString().substring(0,5);
+
+    /* =========================================================
+       ESCAPE HTML
+    ========================================================== */
+
+    function escapeHTML(value) {
+
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
     }
 
-    // Fungsi Generator QR Real-time untuk Form Edit PNR E-Ticket
+
+    /* =========================================================
+       UPDATE FLIGHT MANUAL
+    ========================================================== */
+
+    function updateFlightManual(val) {
+
+        const clean =
+            String(val || '')
+                .trim()
+                .toUpperCase();
+
+        if (clean !== '') {
+
+            appData.flight = clean;
+
+            const etFlight =
+                document.getElementById(
+                    'et-flight'
+                );
+
+            if (etFlight) {
+                etFlight.innerText =
+                    appData.flight;
+            }
+
+        }
+
+    }
+
+
+    /* =========================================================
+       HITUNG WAKTU TIBA
+    ========================================================== */
+
+    function hitungWaktuTibaOtomatis(
+        depStr,
+        asal,
+        tujuan
+    ) {
+
+        if (!/^\d{1,2}:\d{2}$/.test(depStr)) {
+            return '';
+        }
+
+        const parts =
+            depStr.split(':');
+
+        let hours =
+            parseInt(parts[0], 10);
+
+        let minutes =
+            parseInt(parts[1], 10);
+
+        if (
+            isNaN(hours) ||
+            isNaN(minutes) ||
+            hours < 0 ||
+            hours > 23 ||
+            minutes < 0 ||
+            minutes > 59
+        ) {
+            return '';
+        }
+
+        /*
+         * Default durasi penerbangan:
+         * 1 jam 45 menit.
+         *
+         * Fungsi tetap menerima asal & tujuan
+         * agar dapat dikembangkan menjadi
+         * database durasi rute.
+         */
+
+        let duration = 105;
+
+        /*
+         * Beberapa contoh durasi rute.
+         * Jika rute tidak ditemukan,
+         * otomatis menggunakan 105 menit.
+         */
+
+        const routeKey =
+            `${String(asal).toUpperCase()}-${String(tujuan).toUpperCase()}`;
+
+        const routeDurations = {
+
+            'AMQ-SUB': 165,
+            'AMQ-UPG': 180,
+            'AMQ-CGK': 195,
+            'AMQ-LUV': 120,
+            'SUB-AMQ': 165,
+            'UPG-AMQ': 180,
+            'CGK-AMQ': 195,
+            'LUV-AMQ': 120
+
+        };
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                routeDurations,
+                routeKey
+            )
+        ) {
+            duration =
+                routeDurations[routeKey];
+        }
+
+        let totalMinutes =
+            hours * 60 +
+            minutes +
+            duration;
+
+        totalMinutes =
+            totalMinutes % 1440;
+
+        const finalHour =
+            Math.floor(
+                totalMinutes / 60
+            )
+            .toString()
+            .padStart(2, '0');
+
+        const finalMinute =
+            (totalMinutes % 60)
+                .toString()
+                .padStart(2, '0');
+
+        return `${finalHour}:${finalMinute}`;
+
+    }
+
+
+    /* =========================================================
+       QR CODE E-TICKET
+    ========================================================== */
+
     function updateQRRealtime() {
-        appData.pnr = document.getElementById('et-pnr').value.toUpperCase();
+
+        const pnrInput =
+            document.getElementById(
+                'et-pnr'
+            );
+
+        const qrContainer =
+            document.getElementById(
+                'eticket-qrcode'
+            );
+
+        if (!pnrInput || !qrContainer) {
+            return;
+        }
+
+        appData.pnr =
+            pnrInput.value
+                .toUpperCase()
+                .replace(/[^A-Z0-9]/g, '');
+
+        pnrInput.value =
+            appData.pnr;
+
+        qrContainer.innerHTML = '';
+
+        if (
+            typeof QRCode === 'undefined'
+        ) {
+
+            qrContainer.innerHTML =
+                '<span style="color:#dc2626;font-size:12px;">QR Code library gagal dimuat.</span>';
+
+            return;
+        }
+
         try {
-            document.getElementById('eticket-qrcode').innerHTML = "";
-            new QRCode(document.getElementById("eticket-qrcode"), {
-                text: `E-TICKET VALIDATION\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.namaLengkap}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
-                width: 130, height: 130, colorDark: "#0f172a", correctLevel: QRCode.CorrectLevel.M
-            });
-        } catch(e) { console.log(e); }
+
+            new QRCode(
+                qrContainer,
+                {
+                    text:
+                        `E-TICKET VALIDATION\n` +
+                        `INV: ${appData.invoice}\n` +
+                        `PNR: ${appData.pnr}\n` +
+                        `NAMA: ${appData.namaLengkap}\n` +
+                        `RUTE: ${appData.asalKode}-${appData.tujuanKode}`,
+
+                    width: 130,
+                    height: 130,
+
+                    colorDark: '#0f172a',
+
+                    colorLight: '#ffffff',
+
+                    correctLevel:
+                        QRCode.CorrectLevel.M
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                'QR Code Error:',
+                error
+            );
+
+            qrContainer.innerHTML =
+                '<span style="color:#dc2626;font-size:12px;">QR Code gagal dibuat.</span>';
+
+        }
+
     }
 
-    // [MODUL 3] Transisi ke Check-In
+
+    /* =========================================================
+       PINDAH KE CHECK-IN
+    ========================================================== */
+
     function pindahKeCheckin() {
-        appData.pnr = document.getElementById('et-pnr').value.toUpperCase();
-        document.getElementById('ci-pnr').value = appData.pnr;
-        document.getElementById('ci-nama').value = `${appData.titel} ${appData.nama}`;
+
+        if (!appData.pnr) {
+
+            alert(
+                'E-Ticket belum diterbitkan.'
+            );
+
+            return;
+        }
+
+        appData.pnr =
+            document
+                .getElementById('et-pnr')
+                .value
+                .toUpperCase();
+
+        if (!appData.pnr) {
+
+            alert(
+                'Kode PNR tidak boleh kosong.'
+            );
+
+            return;
+        }
+
+        document
+            .getElementById('ci-pnr')
+            .value =
+            appData.pnr;
+
+        document
+            .getElementById('ci-nama')
+            .value =
+            `${appData.titel} ${appData.nama}`;
+
         switchTab(3);
+
     }
 
-    // [MODUL 4] Cetak Boarding Pass
+
+    /* =========================================================
+       TERBITKAN BOARDING PASS
+    ========================================================== */
+
     function terbitkanBoardingPass() {
-        const isSetuju = document.getElementById('ci-aggrement').checked;
-        if(!isSetuju) { alert("Anda harus menyetujui aturan barang berbahaya (Dangerous Goods) untuk melanjutkan Check-in."); return; }
 
-        appData.kursi = document.getElementById('ci-kursi').value;
-        const waktuBoardingPendek = formatTanggalPendek(appData.tanggal) + ", " + hitungWaktuBoarding(appData.depTime);
+        if (!appData.pnr) {
 
-        document.getElementById('bp-out-tanggal').innerText = appData.formatTanggal;
-        document.getElementById('bp-out-nama').innerText = `${appData.titel} ${appData.nama}`;
-        
-        document.getElementById('bp-out-asal-kode').innerText = appData.asalKode;
-        document.getElementById('bp-out-asal-kota').innerText = appData.asalKota;
-        document.getElementById('bp-out-tujuan-kode').innerText = appData.tujuanKode;
-        document.getElementById('bp-out-tujuan-kota').innerText = appData.tujuanKota;
-        
-        document.getElementById('bp-out-flight').innerText = appData.flight;
-        document.getElementById('bp-out-kursi').innerText = appData.kursi;
-        
-        document.getElementById('bp-out-waktu-board').innerText = waktuBoardingPendek;
-        document.getElementById('bp-out-waktu-dep').innerText = appData.depTime;
-        document.getElementById('bp-out-waktu-arr').innerText = appData.arrTime;
+            alert(
+                'E-Ticket belum diterbitkan.'
+            );
 
-        try {
-            document.getElementById('bp-qrcode-box').innerHTML = "";
-            new QRCode(document.getElementById("bp-qrcode-box"), {
-                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.titel} ${appData.nama}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
-                width: 110, height: 110, colorDark: "#000000", correctLevel: QRCode.CorrectLevel.L
-            });
-        } catch(e) { console.log(e); }
+            return;
+        }
 
-        try {
-            const barcodeData = (appData.flight + appData.asalKode + appData.tujuanKode + appData.kursi).replace(/\s+/g, '');
-            JsBarcode("#barcode-svg", barcodeData, {
-                format: "CODE128", lineColor: "#000000", width: 2.5, height: 60, displayValue: false, margin: 0
-            });
-        } catch(e) { console.log(e); }
+        const isSetuju =
+            document
+                .getElementById('ci-aggrement')
+                .checked;
+
+        if (!isSetuju) {
+
+            alert(
+                'Anda harus menyetujui aturan barang berbahaya (Dangerous Goods) untuk melanjutkan Check-in.'
+            );
+
+            return;
+        }
+
+        const seat =
+            document
+                .getElementById('ci-kursi')
+                .value;
+
+        const bagasi =
+            Number(
+                document
+                    .getElementById('ci-bagasi')
+                    .value
+            );
+
+        if (!seat) {
+
+            alert(
+                'Silakan pilih kursi terlebih dahulu.'
+            );
+
+            return;
+        }
+
+        if (
+            !Number.isFinite(bagasi) ||
+            bagasi < 0
+        ) {
+
+            alert(
+                'Jumlah bagasi tidak valid.'
+            );
+
+            return;
+        }
+
+        appData.kursi =
+            seat;
+
+        appData.bagasi =
+            bagasi;
+
+        const waktuBoarding =
+            formatTanggalPendek(
+                appData.tanggal
+            ) +
+            ', ' +
+            hitungWaktuBoarding(
+                appData.depTime
+            );
+
+        /* DATA BOARDING PASS */
+
+        document
+            .getElementById('bp-out-tanggal')
+            .innerText =
+            appData.formatTanggal;
+
+        document
+            .getElementById('bp-out-nama')
+            .innerText =
+            `${appData.titel} ${appData.nama}`;
+
+        document
+            .getElementById('bp-out-asal-kode')
+            .innerText =
+            appData.asalKode;
+
+        document
+            .getElementById('bp-out-asal-kota')
+            .innerText =
+            appData.asalKota;
+
+        document
+            .getElementById('bp-out-tujuan-kode')
+            .innerText =
+            appData.tujuanKode;
+
+        document
+            .getElementById('bp-out-tujuan-kota')
+            .innerText =
+            appData.tujuanKota;
+
+        document
+            .getElementById('bp-out-flight')
+            .innerText =
+            appData.flight;
+
+        document
+            .getElementById('bp-out-kursi')
+            .innerText =
+            appData.kursi;
+
+        document
+            .getElementById('bp-out-waktu-board')
+            .innerText =
+            waktuBoarding;
+
+        document
+            .getElementById('bp-out-waktu-dep')
+            .innerText =
+            appData.depTime;
+
+        document
+            .getElementById('bp-out-waktu-arr')
+            .innerText =
+            appData.arrTime;
+
+        /* QR BOARDING PASS */
+
+        generateBoardingPassQR();
+
+        /* BARCODE */
+
+        generateBoardingPassBarcode();
 
         switchTab(4);
+
     }
 
-    // Kalkulasi hitung waktu boarding otomatis (H-30 menit dari Jam Keberangkatan)
-    function hitungWaktuBoarding(depTimeStr) {
-        let parts = depTimeStr.split(':');
-        let d = new Date();
-        d.setHours(parseInt(parts[0]), parseInt(parts[1]), 0);
-        d.setMinutes(d.getMinutes() - 30);
-        return d.toTimeString().substring(0,5);
+
+    /* =========================================================
+       QR BOARDING PASS
+    ========================================================== */
+
+    function generateBoardingPassQR() {
+
+        const container =
+            document.getElementById(
+                'bp-qrcode-box'
+            );
+
+        if (!container) {
+            return;
+        }
+
+        container.innerHTML = '';
+
+        if (
+            typeof QRCode === 'undefined'
+        ) {
+
+            container.innerHTML =
+                '<span style="font-size:10px;color:#dc2626;text-align:center;">QR gagal dimuat</span>';
+
+            return;
+        }
+
+        try {
+
+            new QRCode(
+                container,
+                {
+                    text:
+                        `BOARDING PASS\n` +
+                        `PNR: ${appData.pnr}\n` +
+                        `NAME: ${appData.titel} ${appData.nama}\n` +
+                        `FLIGHT: ${appData.flight}\n` +
+                        `DATE: ${appData.formatTanggal}\n` +
+                        `TIME: ${appData.depTime}\n` +
+                        `SEAT: ${appData.kursi}`,
+
+                    width: 100,
+                    height: 100,
+
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+
+                    correctLevel:
+                        QRCode.CorrectLevel.L
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                'Boarding Pass QR Error:',
+                error
+            );
+
+        }
+
     }
 
-    // PEMBARUAN: Fungsi Otomatis Unduh PDF Mandiri tanpa bergantung pada Dialog Browser Print
-    function downloadPDF(elementId, filename) {
-        const element = document.getElementById(elementId);
-        const options = {
-            margin:       5,
-            filename:     filename,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: false },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().from(element).set(options).save();
+
+    /* =========================================================
+       BARCODE BOARDING PASS
+    ========================================================== */
+
+    function generateBoardingPassBarcode() {
+
+        const svg =
+            document.getElementById(
+                'barcode-svg'
+            );
+
+        if (!svg) {
+            return;
+        }
+
+        svg.innerHTML = '';
+
+        if (
+            typeof JsBarcode === 'undefined'
+        ) {
+
+            console.error(
+                'JsBarcode library gagal dimuat.'
+            );
+
+            return;
+        }
+
+        try {
+
+            const barcodeData =
+                (
+                    appData.pnr +
+                    appData.flight +
+                    appData.asalKode +
+                    appData.tujuanKode +
+                    appData.kursi
+                )
+                .replace(
+                    /\s+/g,
+                    ''
+                )
+                .toUpperCase();
+
+            JsBarcode(
+                '#barcode-svg',
+                barcodeData,
+                {
+                    format: 'CODE128',
+                    lineColor: '#000000',
+                    width: 2.5,
+                    height: 60,
+                    displayValue: false,
+                    margin: 0
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                'Barcode Error:',
+                error
+            );
+
+        }
+
     }
 
-    // PEMBARUAN: Fungsi Otomatis Unduh Format Gambar (PNG) Mandiri
-    function downloadPNG(elementId, filename) {
-        const element = document.getElementById(elementId);
-        // Menggunakan html2canvas yang terbawa dari pustaka html2pdf untuk render gambar mandiri
-        html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = filename;
-            link.href = canvas.toDataURL('image/png');
+
+    /* =========================================================
+       HITUNG WAKTU BOARDING
+    ========================================================== */
+
+    function hitungWaktuBoarding(
+        depTimeStr
+    ) {
+
+        if (!/^\d{1,2}:\d{2}$/.test(depTimeStr)) {
+            return '';
+        }
+
+        const parts =
+            depTimeStr.split(':');
+
+        let hours =
+            parseInt(parts[0], 10);
+
+        let minutes =
+            parseInt(parts[1], 10);
+
+        if (
+            isNaN(hours) ||
+            isNaN(minutes)
+        ) {
+            return '';
+        }
+
+        let totalMinutes =
+            hours * 60 +
+            minutes -
+            30;
+
+        /*
+         * Menangani penerbangan
+         * yang waktu boarding-nya
+         * jatuh pada hari sebelumnya.
+         */
+
+        if (totalMinutes < 0) {
+            totalMinutes += 1440;
+        }
+
+        totalMinutes %= 1440;
+
+        const finalHour =
+            Math.floor(
+                totalMinutes / 60
+            )
+            .toString()
+            .padStart(2, '0');
+
+        const finalMinute =
+            (totalMinutes % 60)
+                .toString()
+                .padStart(2, '0');
+
+        return `${finalHour}:${finalMinute}`;
+
+    }
+
+
+    /* =========================================================
+       CETAK ITINERARY
+    ========================================================== */
+
+    function printItinerary() {
+
+        document.body.classList.remove(
+            'print-bp'
+        );
+
+        document.body.classList.add(
+            'print-eticket'
+        );
+
+        const cleanup =
+            function () {
+
+                document.body.classList.remove(
+                    'print-eticket'
+                );
+
+                window.removeEventListener(
+                    'afterprint',
+                    cleanup
+                );
+
+            };
+
+        window.addEventListener(
+            'afterprint',
+            cleanup
+        );
+
+        window.print();
+
+    }
+
+
+    /* =========================================================
+       CETAK BOARDING PASS
+    ========================================================== */
+
+    function printBoardingPass() {
+
+        document.body.classList.remove(
+            'print-eticket'
+        );
+
+        document.body.classList.add(
+            'print-bp'
+        );
+
+        const cleanup =
+            function () {
+
+                document.body.classList.remove(
+                    'print-bp'
+                );
+
+                window.removeEventListener(
+                    'afterprint',
+                    cleanup
+                );
+
+            };
+
+        window.addEventListener(
+            'afterprint',
+            cleanup
+        );
+
+        window.print();
+
+    }
+
+
+    /* =========================================================
+       DOWNLOAD PDF
+    ========================================================== */
+
+    async function downloadPDF(
+        elementId,
+        filename
+    ) {
+
+        const element =
+            document.getElementById(
+                elementId
+            );
+
+        if (!element) {
+
+            alert(
+                'Elemen dokumen tidak ditemukan.'
+            );
+
+            return;
+        }
+
+        if (
+            typeof html2pdf === 'undefined'
+        ) {
+
+            alert(
+                'Library PDF belum berhasil dimuat. Periksa koneksi internet.'
+            );
+
+            return;
+        }
+
+        try {
+
+            const isBoardingPass =
+                elementId === 'area-cetak-bp';
+
+            const options = {
+
+                margin:
+                    isBoardingPass
+                        ? 0
+                        : 5,
+
+                filename:
+                    filename,
+
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: false,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                },
+
+                jsPDF: {
+
+                    unit: 'mm',
+
+                    format:
+                        isBoardingPass
+                            ? [82.55, 203.2]
+                            : 'a4',
+
+                    orientation:
+                        isBoardingPass
+                            ? 'portrait'
+                            : 'portrait'
+                }
+
+            };
+
+            await html2pdf()
+                .from(element)
+                .set(options)
+                .save();
+
+        } catch (error) {
+
+            console.error(
+                'PDF Error:',
+                error
+            );
+
+            alert(
+                'PDF gagal dibuat. Silakan coba kembali.'
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       DOWNLOAD PNG
+    ========================================================== */
+
+    async function downloadPNG(
+        elementId,
+        filename
+    ) {
+
+        const element =
+            document.getElementById(
+                elementId
+            );
+
+        if (!element) {
+
+            alert(
+                'Elemen dokumen tidak ditemukan.'
+            );
+
+            return;
+        }
+
+        /*
+         * html2canvas tersedia dari bundle html2pdf.
+         */
+
+        if (
+            typeof html2canvas === 'undefined'
+        ) {
+
+            alert(
+                'Library PNG belum berhasil dimuat. Periksa koneksi internet.'
+            );
+
+            return;
+        }
+
+        try {
+
+            const canvas =
+                await html2canvas(
+                    element,
+                    {
+                        scale: 3,
+                        useCORS: true,
+                        allowTaint: false,
+                        backgroundColor: '#ffffff',
+                        logging: false
+                    }
+                );
+
+            const link =
+                document.createElement('a');
+
+            link.download =
+                filename;
+
+            link.href =
+                canvas.toDataURL(
+                    'image/png'
+                );
+
+            document.body.appendChild(
+                link
+            );
+
             link.click();
-        });
+
+            link.remove();
+
+        } catch (error) {
+
+            console.error(
+                'PNG Error:',
+                error
+            );
+
+            alert(
+                'PNG gagal dibuat. Jika menggunakan logo dari server eksternal, browser mungkin memblokir gambar karena CORS.'
+            );
+
+        }
+
     }
+
+
+    /* =========================================================
+       TRANSAKSI BARU
+    ========================================================== */
+
+    function transaksiBaru() {
+
+        const konfirmasi =
+            confirm(
+                'Apakah Anda yakin ingin memulai transaksi baru? Data transaksi saat ini akan dihapus dari halaman.'
+            );
+
+        if (!konfirmasi) {
+            return;
+        }
+
+        /*
+         * Fungsi reload tetap dipertahankan
+         * seperti fungsi transaksi baru sebelumnya.
+         */
+
+        window.location.reload();
+
+    }
+
+
+    /* =========================================================
+       GLOBAL ERROR HANDLING
+    ========================================================== */
+
+    window.addEventListener(
+        'error',
+        function (event) {
+
+            console.error(
+                'Application Error:',
+                event.error || event.message
+            );
+
+        }
+    );
+
 </script>
 
 </body>
