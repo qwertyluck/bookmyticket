@@ -13,122 +13,217 @@
     <style>
         :root {
             --primary: #dc2626; /* Merah Maskapai */
-            --secondary: #1e293b; /* Navy / Biru Gelap */
-            --bg-color: #f8fafc;
-            --text-dark: #0f172a;
+            --primary-hover: #b91c1c;
+            --secondary: #0f172a; /* Navy / Biru Gelap Premium */
+            --bg-color: #f1f5f9;
+            --text-dark: #1e293b;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
+            --surface: #ffffff;
         }
 
-        body { background-color: var(--bg-color); color: var(--text-dark); font-family: 'Inter', sans-serif; margin: 0; padding: 20px 10px; }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-dark); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 40px 15px; 
+            -webkit-font-smoothing: antialiased;
+        }
         
-        /* PEMBARUAN: Desain Dinamis untuk PC, Tablet, dan Mobile (Responsive) */
-        .app-container { max-width: 850px; width: 100%; margin: auto; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); overflow: hidden; box-sizing: border-box; }
+        /* PEMBARUAN UI: Desain Dinamis untuk PC, Tablet, dan Mobile (Responsive) */
+        .app-container { 
+            max-width: 900px; 
+            width: 100%; 
+            margin: auto; 
+            background: var(--surface); 
+            border-radius: 20px; 
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0,0,0,0.05); 
+            overflow: hidden; 
+            box-sizing: border-box; 
+        }
         
         /* HEADER & NAVIGASI MODUL */
-        .app-header { background: var(--secondary); color: white; padding: 20px; text-align: center; }
-        .app-header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+        .app-header { 
+            background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%); 
+            color: white; 
+            padding: 24px; 
+            text-align: center; 
+            border-bottom: 4px solid var(--primary);
+        }
+        .app-header h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
         
-        .stepper { display: flex; justify-content: space-between; background: #f1f5f9; padding: 0; margin: 0; list-style: none; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
-        .stepper li { flex: 1; text-align: center; padding: 15px 10px; font-size: 14px; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; transition: 0.3s; min-width: 100px; }
-        .stepper li.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: #ffffff; }
+        .stepper { 
+            display: flex; 
+            justify-content: space-between; 
+            background: #f8fafc; 
+            padding: 0; margin: 0; 
+            list-style: none; 
+            border-bottom: 1px solid var(--border-color); 
+            flex-wrap: wrap; 
+        }
+        .stepper li { 
+            flex: 1; 
+            text-align: center; 
+            padding: 16px 10px; 
+            font-size: 14px; 
+            font-weight: 700; 
+            color: var(--text-muted); 
+            border-bottom: 3px solid transparent; 
+            transition: all 0.3s ease; 
+            min-width: 100px; 
+            cursor: default;
+        }
+        .stepper li.active { 
+            color: var(--primary); 
+            border-bottom: 3px solid var(--primary); 
+            background: var(--surface); 
+        }
 
-        .module { padding: 30px; display: none; }
-        .module.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        .module { padding: 35px; display: none; }
+        .module.active { display: block; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
         /* FORM & INPUT */
-        .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
-        .form-group { flex: 1; display: flex; flex-direction: column; min-width: 250px; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--secondary); }
-        .form-control { padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; transition: 0.3s; box-sizing: border-box; width: 100%; }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1); }
-        select.form-control { cursor: pointer; }
+        .form-row { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+        .form-group { flex: 1; display: flex; flex-direction: column; min-width: 200px; }
+        .form-group label { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control { 
+            padding: 14px 16px; 
+            border: 2px solid var(--border-color); 
+            border-radius: 10px; 
+            font-family: 'Inter', sans-serif; 
+            font-size: 15px; 
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: all 0.2s ease; 
+            box-sizing: border-box; 
+            width: 100%; 
+            background: #f8fafc;
+        }
+        .form-control:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            background: var(--surface);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); 
+        }
+        select.form-control { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; }
 
         /* BUTTONS */
-        .btn { padding: 14px 20px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; box-sizing: border-box; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn { 
+            padding: 16px 24px; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 16px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 10px; 
+            box-sizing: border-box; 
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .btn:active { transform: translateY(0); }
         .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
         .btn-secondary { background: var(--secondary); color: white; }
+        .btn-secondary:hover { background: #1e293b; }
         
         /* HASIL PENCARIAN TIKET (FLIGHT CARDS) */
-        .flight-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; background: #fff; flex-wrap: wrap; gap: 10px; }
-        .flight-card:hover { border-color: var(--primary); box-shadow: 0 4px 15px rgba(220,38,38,0.1); }
-        .flight-card.selected { border: 2px solid var(--primary); background: #fef2f2; }
-        .flight-time { font-size: 18px; font-weight: 700; color: var(--secondary); }
-        .flight-route { font-size: 13px; color: var(--text-muted); font-weight: 500; }
-        .flight-price { font-size: 18px; font-weight: 800; color: var(--primary); }
+        .flight-card { 
+            border: 2px solid var(--border-color); 
+            border-radius: 14px; 
+            padding: 20px; 
+            margin-bottom: 16px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            background: var(--surface); 
+            flex-wrap: wrap; gap: 15px; 
+        }
+        .flight-card:hover { border-color: #fca5a5; transform: scale(1.01); }
+        .flight-card.selected { border: 2px solid var(--primary); background: #fef2f2; box-shadow: 0 4px 20px rgba(220,38,38,0.15); }
+        .flight-time { font-size: 20px; font-weight: 800; color: var(--secondary); margin-bottom: 4px; }
+        .flight-route { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+        .flight-price { font-size: 22px; font-weight: 900; color: var(--primary); }
 
         /* TAMPILAN E-TICKET & ITINERARY */
-        .eticket-box { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .eticket-header { background: var(--secondary); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-        .eticket-header h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
-        .pnr-box { background: rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 8px; text-align: center; min-width: 150px; }
+        .eticket-box { border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+        .eticket-header { background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%); color: white; padding: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .eticket-header h2 { margin: 0 0 4px 0; font-size: 26px; font-weight: 900; letter-spacing: -0.5px; }
+        .pnr-box { background: rgba(255,255,255,0.15); padding: 16px 24px; border-radius: 12px; text-align: center; min-width: 160px; backdrop-filter: blur(10px); }
         
-        /* PEMBARUAN: Input PNR yang bisa diedit */
-        .pnr-input-editable { background: rgba(255,255,255,0.2); border: 1px dashed rgba(255,255,255,0.6); color: white; font-size: 22px; font-weight: 800; font-family: monospace; letter-spacing: 2px; text-align: center; width: 100%; border-radius: 6px; padding: 4px; box-sizing: border-box; transition: 0.3s; margin-top: 5px; outline: none; }
+        .pnr-input-editable { background: rgba(255,255,255,0.2); border: 2px dashed rgba(255,255,255,0.6); color: white; font-size: 26px; font-weight: 900; font-family: 'Inter', monospace; letter-spacing: 3px; text-align: center; width: 100%; border-radius: 8px; padding: 6px; box-sizing: border-box; transition: 0.3s; margin-top: 8px; outline: none; }
         .pnr-input-editable:focus { border-color: #fff; background: rgba(255,255,255,0.3); }
 
-        .eticket-body { padding: 25px; background: #fff; }
-        .detail-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
-        .detail-table th, .detail-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; text-align: left; vertical-align: top; }
+        .eticket-body { padding: 30px; background: var(--surface); }
+        .detail-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 15px; }
+        .detail-table th, .detail-table td { padding: 14px 10px; border-bottom: 1px solid #f1f5f9; text-align: left; vertical-align: top; }
         .detail-table th { color: var(--text-muted); font-weight: 600; width: 35%; }
         .detail-table td { font-weight: 700; color: var(--secondary); }
-        .qr-eticket-container { display: flex; justify-content: center; padding: 20px 0; border-top: 1px dashed var(--border-color); }
+        .qr-eticket-container { display: flex; justify-content: center; padding: 25px 0 10px 0; border-top: 2px dashed var(--border-color); }
 
         /* TAMPILAN BOARDING PASS (REPLIKA LION AIR) */
         .mobile-bp { 
             width: 100%; 
-            max-width: 420px; 
+            max-width: 440px; 
             margin: 0 auto; 
             background: #ffffff; 
             border-radius: 24px; 
-            border: 3px solid #cbd5e1; 
-            padding: 24px; 
+            border: 2px solid #cbd5e1; 
+            padding: 28px; 
             color: #0f172a; 
             box-sizing: border-box; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
             position: relative; 
         }
-        .bp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px; }
-        .bp-logo-img { height: 100px; object-fit: contain; } 
-        .bp-date { font-weight: 600; font-size: 15px; }
-        .bp-row2 { display: flex; justify-content: space-between; margin-bottom: 25px; align-items: flex-start; }
-        .bp-qr-container { width: 100px; height: 100px; }
-        .bp-pax { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-        .bp-pax-type { color: var(--text-muted); font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-        .bp-pax-name { font-weight: 600; font-size: 15px; max-width: 160px; text-transform: uppercase; line-height: 1.4; color: #334155; }
-        .bp-route-band { background: #f8fafc; margin: 0 -24px 24px -24px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; gap: 10px; }
+        .bp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 10px; }
+        .bp-logo-img { height: 60px; object-fit: contain; } 
+        .bp-date { font-weight: 700; font-size: 16px; color: var(--secondary); }
+        .bp-row2 { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-start; gap: 20px;}
+        .bp-qr-container { width: 110px; height: 110px; background: #fff; padding: 5px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .bp-pax { text-align: right; display: flex; flex-direction: column; align-items: flex-end; flex: 1;}
+        .bp-pax-type { color: var(--text-muted); font-size: 13px; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .bp-pax-name { font-weight: 800; font-size: 18px; max-width: 200px; text-transform: uppercase; line-height: 1.3; color: var(--secondary); }
+        .bp-route-band { background: #f8fafc; margin: 0 -28px 28px -28px; padding: 20px 28px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 10px; }
         .bp-route-left { text-align: left; }
         .bp-route-right { text-align: right; }
-        .bp-code { font-size: 38px; font-weight: 800; letter-spacing: -1px; color: var(--text-dark); line-height: 1; margin-bottom: 6px; }
-        .bp-city { color: var(--text-muted); font-size: 15px; font-weight: 500; margin-bottom: 12px; }
-        .bp-flight-seat { font-size: 17px; font-weight: 700; color: #334155; }
-        .bp-arrow svg { width: 28px; height: 28px; color: var(--secondary); }
-        .bp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .bp-code { font-size: 42px; font-weight: 900; letter-spacing: -2px; color: var(--secondary); line-height: 1; margin-bottom: 6px; }
+        .bp-city { color: var(--text-muted); font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+        .bp-flight-seat { font-size: 18px; font-weight: 800; color: var(--secondary); }
+        .bp-arrow svg { width: 32px; height: 32px; color: #cbd5e1; }
+        .bp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 16px; margin-bottom: 35px; }
         .bp-grid-item.right { text-align: right; }
-        .bp-label { color: var(--text-muted); font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-        .bp-value { font-size: 17px; font-weight: 700; color: var(--text-dark); }
+        .bp-label { color: var(--text-muted); font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .bp-value { font-size: 18px; font-weight: 800; color: var(--secondary); }
         .bp-barcode-container { text-align: center; margin-top: 20px; }
         #barcode-svg { width: 100%; max-height: 70px; }
 
         /* UTILITAS */
         .hidden { display: none !important; }
-        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; padding: 15px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; margin-bottom: 20px; }
-        .checkbox-group input { margin-top: 4px; }
-        .checkbox-group label { font-size: 13px; color: #92400e; font-weight: 500; line-height: 1.4; margin: 0; }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; margin-bottom: 24px; }
+        .checkbox-group input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+        .checkbox-group label { font-size: 14px; color: #92400e; font-weight: 500; line-height: 1.5; margin: 0; cursor: pointer; }
         
         /* RESPONSIVE MEDIA QUERIES */
-        @media (max-width: 600px) {
-            .stepper li { font-size: 12px; padding: 10px 5px; }
-            .module { padding: 20px 15px; }
-            .eticket-header { flex-direction: column; text-align: center; }
+        @media (max-width: 650px) {
+            body { padding: 15px 10px; }
+            .app-container { border-radius: 16px; }
+            .stepper li { font-size: 12px; padding: 12px 5px; min-width: auto;}
+            .module { padding: 25px 20px; }
+            .eticket-header { flex-direction: column; text-align: center; padding: 20px;}
             .pnr-box { width: 100%; }
             .bp-route-band { flex-direction: column; text-align: center; }
             .bp-route-left, .bp-route-right { text-align: center; width: 100%; }
-            .bp-arrow { transform: rotate(90deg); margin: 10px 0; }
-            .btn-group-responsive { flex-direction: column; }
+            .bp-arrow { transform: rotate(90deg); margin: 15px 0; }
+            .btn-group-responsive { flex-direction: column; gap: 15px; }
         }
 
         /* PEMBARUAN: STANDAR UKURAN CETAK (PRINT) BOARDING PASS LION AIR (ATB 82.55mm x 203.2mm) */
@@ -139,7 +234,7 @@
             }
             body { padding: 0; background: white; margin: 0; display: flex; justify-content: center; }
             .no-print { display: none !important; } 
-            .app-container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: 100%; width: 100%; }
+            .app-container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: 100%; width: 100%; border-radius: 0; }
             
             /* Penyesuaian Ukuran Cetak Boarding Pass Standar Lion Air (82.55mm x 203.2mm) */
             .mobile-bp { 
@@ -148,7 +243,7 @@
                 width: 82.55mm !important; 
                 height: 203.2mm !important; 
                 max-width: 82.55mm !important; 
-                border: 2px solid #0f172a !important; /* Garis batas cetak jelas */
+                border: 2px solid #000 !important; /* Garis batas cetak jelas & kontras */
                 border-radius: 12px !important;
                 padding: 6mm !important;
                 box-sizing: border-box !important;
@@ -156,28 +251,29 @@
             }
             
             /* Penyesuaian proporsi elemen agar pas di lebar cetak 82.55mm */
-            .bp-header { margin-bottom: 15px !important; }
-            .bp-logo-img { height: 28px !important; }
+            .bp-header { margin-bottom: 12px !important; }
+            .bp-logo-img { height: 26px !important; }
             .bp-date { font-size: 11px !important; }
-            .bp-row2 { margin-bottom: 15px !important; }
-            .bp-qr-container { width: 65px !important; height: 65px !important; }
-            .bp-pax-type { font-size: 10px !important; margin-bottom: 2px !important; }
-            .bp-pax-name { font-size: 12px !important; line-height: 1.2 !important; max-width: 120px !important; }
+            .bp-row2 { margin-bottom: 12px !important; gap: 10px !important;}
+            .bp-qr-container { width: 55px !important; height: 55px !important; padding: 2px !important; border-color: #000 !important;}
+            .bp-pax-type { font-size: 9px !important; margin-bottom: 2px !important; color: #000 !important; }
+            .bp-pax-name { font-size: 11px !important; line-height: 1.2 !important; max-width: 130px !important; color: #000 !important;}
             
-            .bp-route-band { padding: 8px 6mm !important; margin: 0 -6mm 15px -6mm !important; gap: 5px !important; }
-            .bp-code { font-size: 24px !important; margin-bottom: 4px !important; }
-            .bp-city { font-size: 11px !important; margin-bottom: 8px !important; }
-            .bp-flight-seat { font-size: 12px !important; }
-            .bp-arrow svg { width: 18px !important; height: 18px !important; }
+            .bp-route-band { padding: 8px 6mm !important; margin: 0 -6mm 12px -6mm !important; gap: 5px !important; border-color: #000 !important;}
+            .bp-code { font-size: 26px !important; margin-bottom: 2px !important; color: #000 !important;}
+            .bp-city { font-size: 11px !important; margin-bottom: 6px !important; color: #000 !important;}
+            .bp-flight-seat { font-size: 12px !important; color: #000 !important;}
+            .bp-arrow svg { width: 18px !important; height: 18px !important; color: #000 !important;}
             
-            .bp-grid { gap: 8px !important; margin-bottom: 15px !important; }
-            .bp-label { font-size: 10px !important; margin-bottom: 2px !important; }
-            .bp-value { font-size: 12px !important; }
+            .bp-grid { gap: 8px !important; margin-bottom: 12px !important; }
+            .bp-label { font-size: 9px !important; margin-bottom: 2px !important; color: #000 !important;}
+            .bp-value { font-size: 12px !important; color: #000 !important;}
             
             .bp-barcode-container { margin-top: 10px !important; }
-            #barcode-svg { max-height: 45px !important; width: 100% !important; }
+            #barcode-svg { max-height: 40px !important; width: 100% !important; }
 
-            .eticket-box { box-shadow: none; border: 2px solid #ccc; width: 100%; }
+            .eticket-box { box-shadow: none; border: 2px solid #000; width: 100%; border-radius: 0; }
+            .eticket-header, .eticket-body { color: #000 !important; background: #fff !important; }
         }
     </style>
 </head>
@@ -199,10 +295,9 @@
 
     <!-- ================= MODUL 1: PEMESANAN TIKET ================= -->
     <div id="mod-booking" class="module active no-print">
-        <h3 style="margin-top:0;">Pencarian & Pemesanan Rute</h3>
+        <h3 style="margin-top:0; color: var(--secondary);">Pencarian & Pemesanan Rute</h3>
         
         <div class="form-row">
-            <!-- PEMBARUAN: Input Manual Fleksibel (Datalist) -->
             <div class="form-group">
                 <label>Kota Asal (Kode - Kota)</label>
                 <input type="text" id="sel-asal" class="form-control" placeholder="Contoh: AMQ - Ambon" list="rute-asal-list" value="AMQ - Ambon">
@@ -213,7 +308,6 @@
                     <option value="DPS - Bali"></option>
                 </datalist>
             </div>
-            <!-- PEMBARUAN: Input Manual Fleksibel (Datalist) -->
             <div class="form-group">
                 <label>Kota Tujuan (Kode - Kota)</label>
                 <input type="text" id="sel-tujuan" class="form-control" placeholder="Contoh: SUB - Surabaya" list="rute-tujuan-list" value="SUB - Surabaya">
@@ -225,21 +319,21 @@
                 </datalist>
             </div>
         </div>
-        <div class="form-group" style="margin-bottom: 20px;">
+        <div class="form-group" style="margin-bottom: 25px;">
             <label>Tanggal Keberangkatan</label>
             <input type="date" id="sel-tanggal" class="form-control" value="2026-08-09">
         </div>
 
-        <button type="button" class="btn btn-secondary" onclick="cariPenerbangan()" style="margin-bottom: 25px;">🔍 Cari Penerbangan</button>
+        <button type="button" class="btn btn-secondary" onclick="cariPenerbangan()" style="margin-bottom: 30px;">🔍 Cari Penerbangan</button>
 
         <!-- Hasil Pencarian Mockup (Ditampilkan via JS) -->
         <div id="flight-results" class="hidden">
-            <label style="font-size: 13px; font-weight: 600; color: var(--secondary); margin-bottom: 10px; display: block;">Pilih Jadwal Penerbangan:</label>
+            <label style="font-size: 14px; font-weight: 700; color: var(--secondary); margin-bottom: 12px; display: block; text-transform: uppercase;">Pilih Jadwal Penerbangan:</label>
             
             <div class="flight-card" onclick="pilihPenerbangan(this, 'JT-880', '09:45', '11:00', 1250000)">
                 <div>
                     <div class="flight-time">09:45 - 11:00</div>
-                    <div class="flight-route">JT-880 • Langsung</div>
+                    <div class="flight-route">JT-880 • Penerbangan Langsung</div>
                 </div>
                 <div class="flight-price">Rp 1.250.000</div>
             </div>
@@ -247,19 +341,30 @@
             <div class="flight-card" onclick="pilihPenerbangan(this, 'JT-774', '13:20', '14:40', 1100000)">
                 <div>
                     <div class="flight-time">13:20 - 14:40</div>
-                    <div class="flight-route">JT-774 • Langsung</div>
+                    <div class="flight-route">JT-774 • Penerbangan Langsung</div>
                 </div>
                 <div class="flight-price">Rp 1.100.000</div>
             </div>
 
-            <div id="form-penumpang" class="hidden" style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px;">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Nama Penumpang (Sesuai KTP/Paspor):</label>
-                    <input type="text" id="inp-nama-pax" class="form-control" value="JAKRIZAL BAIHAQI TUHAREA">
+            <div id="form-penumpang" class="hidden" style="margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 25px;">
+                <!-- PEMBARUAN: Input Titel & Nama -->
+                <div class="form-row">
+                    <div class="form-group" style="flex: 0.3; min-width: 100px;">
+                        <label>Titel</label>
+                        <select id="inp-titel" class="form-control">
+                            <option value="MR">Mr.</option>
+                            <option value="MS">Ms.</option>
+                            <option value="MRS">Mrs.</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Nama Penumpang (Sesuai KTP/Paspor):</label>
+                        <input type="text" id="inp-nama-pax" class="form-control" value="JAKRIZAL BAIHAQI TUHAREA">
+                    </div>
                 </div>
                 <!-- Input Harga Manual -->
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label>Harga Tiket (Rp) - <i style="color:var(--text-muted); font-weight:normal;">Harga Dasar (Dapat diubah manual)</i></label>
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label>Harga Tiket (Rp) - <i style="color:var(--text-muted); font-weight:500; text-transform:none;">Harga Dasar (Dapat diubah manual)</i></label>
                     <input type="number" id="inp-harga-manual" class="form-control" value="0">
                 </div>
                 <button type="button" class="btn btn-primary" onclick="terbitkanETicket()">Pesan & Terbitkan E-Ticket 🎟️</button>
@@ -274,48 +379,45 @@
             <div class="eticket-header">
                 <div>
                     <h2>ITINERARY RECEIPT</h2>
-                    <span style="font-size: 13px; opacity: 0.9;">Dokumen E-Ticket Resmi</span>
+                    <span style="font-size: 14px; font-weight: 500; color: #cbd5e1;">Dokumen E-Ticket Resmi</span>
                 </div>
                 <div class="pnr-box">
-                    <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Booking Code (PNR)</div>
-                    <!-- PEMBARUAN: Input PNR Manual yang bisa diedit. Terhubung dengan onkeyup untuk QR Dinamis -->
+                    <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; color: #94a3b8;">Booking Code (PNR)</div>
                     <input type="text" id="et-pnr" class="pnr-input-editable" onkeyup="updateQRRealtime()">
                     
-                    <!-- PEMBARUAN: Format Waktu Pemesanan di Bawah PNR H-2 -->
-                    <div style="font-size: 11px; margin-top: 10px; color: #cbd5e1;">Waktu Pemesanan:</div>
-                    <div id="et-booking-time" style="font-size: 13px; font-weight: 700; color: #fde047;">(Tanggal, Waktu)</div>
+                    <div style="font-size: 11px; margin-top: 12px; color: #94a3b8; font-weight: 600;">Waktu Pemesanan:</div>
+                    <div id="et-booking-time" style="font-size: 13px; font-weight: 700; color: #fde047; margin-top: 4px;">(Tanggal, Waktu)</div>
                 </div>
             </div>
             <div class="eticket-body">
                 <table class="detail-table">
-                    <tr><th>No. Invoice</th><td id="et-invoice" style="font-family: monospace; font-size: 16px;"></td></tr>
+                    <tr><th>No. Invoice</th><td id="et-invoice" style="font-family: 'Inter', monospace; font-size: 16px;"></td></tr>
                     <tr><th>Nama Penumpang</th><td id="et-nama"></td></tr>
                     <tr><th>Rute Penerbangan</th><td id="et-rute"></td></tr>
                     <tr><th>Tanggal & Waktu</th><td id="et-waktu"></td></tr>
                     <tr><th>No. Penerbangan</th><td id="et-flight"></td></tr>
                     
-                    <!-- PEMBARUAN: Rincian Biaya Harga, Pajak & Ekstra -->
-                    <tr><td colspan="2" style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-                        <div style="font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; text-transform: uppercase;">Rincian Transaksi Pembayaran</div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Harga Dasar Tiket</span><strong id="et-harga-dasar"></strong></div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Pajak & Biaya Lainnya (10%)</span><strong id="et-pajak"></strong></div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #ccc; padding-bottom: 10px;"><span>Pajak Ekstra (5%)</span><strong id="et-pajak-ekstra"></strong></div>
-                        <div style="display: flex; justify-content: space-between; font-size: 16px; color: var(--primary);"><span>Total Keseluruhan</span><strong id="et-harga-total"></strong></div>
+                    <tr><td colspan="2" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div style="font-size: 14px; color: var(--secondary); font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian Transaksi Pembayaran</div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-muted); font-weight: 600;"><span>Harga Dasar Tiket</span><strong id="et-harga-dasar" style="color: var(--secondary);"></strong></div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-muted); font-weight: 600;"><span>Pajak & Biaya Lainnya (10%)</span><strong id="et-pajak" style="color: var(--secondary);"></strong></div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 15px; color: var(--text-muted); font-weight: 600;"><span>Pajak Ekstra (5%)</span><strong id="et-pajak-ekstra" style="color: var(--secondary);"></strong></div>
+                        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 900; color: var(--primary);"><span>Total Keseluruhan</span><strong id="et-harga-total"></strong></div>
                     </td></tr>
 
-                    <tr><th>Status Pembayaran</th><td style="color: #059669; font-size: 16px;">LUNAS (CONFIRMED) ✓</td></tr>
+                    <tr><th>Status Pembayaran</th><td style="color: #059669; font-size: 16px; font-weight: 800;">LUNAS (CONFIRMED) ✓</td></tr>
                 </table>
                 
                 <div class="qr-eticket-container">
                     <div id="eticket-qrcode"></div>
                 </div>
-                <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px;">
+                <p style="text-align: center; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-top: 15px;">
                     Tunjukkan E-Ticket ini (atau Kode PNR) saat melakukan Check-in di bandara.
                 </p>
             </div>
         </div>
 
-        <div class="no-print btn-group-responsive" style="display: flex; gap: 10px;">
+        <div class="no-print btn-group-responsive" style="display: flex; gap: 15px;">
             <button type="button" class="btn btn-secondary" onclick="window.print()" style="flex: 1;">🖨️ Cetak Itinerary</button>
             <button type="button" class="btn btn-primary" onclick="pindahKeCheckin()" style="flex: 1;">Lanjut Check-In ✈️</button>
         </div>
@@ -323,25 +425,24 @@
 
     <!-- ================= MODUL 3: CHECK-IN BANDARA ================= -->
     <div id="mod-checkin" class="module no-print">
-        <h3 style="margin-top:0;">Web Check-In Mandiri</h3>
-        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">Selesaikan proses check-in untuk memilih kursi dan mendapatkan Boarding Pass.</p>
+        <h3 style="margin-top:0; color: var(--secondary);">Web Check-In Mandiri</h3>
+        <p style="font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 25px;">Selesaikan proses check-in untuk memilih kursi dan mendapatkan Boarding Pass.</p>
         
         <div class="form-row">
             <div class="form-group">
                 <label>Kode Booking (PNR)</label>
-                <input type="text" id="ci-pnr" class="form-control" readonly style="background: #f1f5f9; font-weight: bold; text-align: center; font-size: 16px;">
+                <input type="text" id="ci-pnr" class="form-control" readonly style="background: #e2e8f0; font-weight: 800; text-align: center; font-size: 18px; letter-spacing: 2px;">
             </div>
             <div class="form-group">
                 <label>Nama Penumpang</label>
-                <input type="text" id="ci-nama" class="form-control" readonly style="background: #f1f5f9;">
+                <input type="text" id="ci-nama" class="form-control" readonly style="background: #e2e8f0; font-weight: 700;">
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
                 <label>Pilih Kursi (Seat Map Ekspansi)</label>
-                <!-- PEMBARUAN: Select Kursi akan diinjeksi via JS hingga banyak pilihan -->
-                <select id="ci-kursi" class="form-control" style="border-color: var(--primary); font-weight: bold;">
+                <select id="ci-kursi" class="form-control" style="border-color: var(--primary); font-weight: 800; color: var(--primary);">
                     <!-- Opsi dihasilkan otomatis melalui JavaScript -->
                 </select>
             </div>
@@ -356,7 +457,7 @@
             <label for="ci-aggrement">Saya menyatakan bahwa saya tidak membawa barang berbahaya (Dangerous Goods) seperti baterai lithium lepas, bahan mudah meledak, atau cairan korosif di dalam bagasi tercatat maupun kabin.</label>
         </div>
 
-        <button type="button" class="btn btn-secondary" onclick="terbitkanBoarding Pass()">Terbitkan Boarding Pass 🖨️</button>
+        <button type="button" class="btn btn-secondary" onclick="terbitkanBoardingPass()">Terbitkan Boarding Pass 🖨️</button>
     </div>
 
     <!-- ================= MODUL 4: BOARDING PASS (REPLIKA FINAL) ================= -->
@@ -433,7 +534,7 @@
             </div>
         </div>
 
-        <div class="no-print btn-group-responsive" style="margin-top: 30px; text-align: center; display: flex; gap: 10px; justify-content: center;">
+        <div class="no-print btn-group-responsive" style="margin-top: 40px; text-align: center; display: flex; gap: 15px; justify-content: center;">
             <button class="btn btn-secondary" onclick="window.print()" style="flex: 1;">🖨️ Cetak BP PDF</button>
             <button class="btn btn-primary" onclick="location.reload()" style="flex: 1;">🔄 Transaksi Baru</button>
         </div>
@@ -445,7 +546,8 @@
 <script>
     // State Management Global Database 
     let appData = {
-        invoice: '', pnr: '', nama: '',
+        invoice: '', pnr: '', 
+        titel: '', nama: '', namaLengkap: '',
         asalKode: '', asalKota: '',
         tujuanKode: '', tujuanKota: '',
         tanggal: '', formatTanggal: '',
@@ -526,6 +628,7 @@
         if(!appData.flight) { alert("Pilih jadwal penerbangan terlebih dahulu!"); return; }
         
         const namaInput = document.getElementById('inp-nama-pax').value;
+        const titelInput = document.getElementById('inp-titel').value;
         if(namaInput.trim() === '') { alert("Nama penumpang harus diisi!"); return; }
 
         // Menghitung Rincian Harga
@@ -539,7 +642,11 @@
         const tujuanObj = parseRuteManual(document.getElementById('sel-tujuan').value);
         const tglInput = document.getElementById('sel-tanggal').value;
 
+        // Integrasi Nama dan Titel
+        appData.titel = titelInput;
         appData.nama = namaInput.toUpperCase();
+        appData.namaLengkap = `${appData.titel} ${appData.nama}`;
+        
         appData.asalKode = asalObj.kode; appData.asalKota = asalObj.kota;
         appData.tujuanKode = tujuanObj.kode; appData.tujuanKota = tujuanObj.kota;
         appData.tanggal = tglInput;
@@ -565,7 +672,7 @@
         // Penulisan ke Layout
         document.getElementById('et-invoice').innerText = appData.invoice;
         document.getElementById('et-pnr').value = appData.pnr; // Ini form input agar bisa diedit
-        document.getElementById('et-nama').innerText = appData.nama;
+        document.getElementById('et-nama').innerText = appData.namaLengkap;
         document.getElementById('et-rute').innerText = `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
         document.getElementById('et-waktu').innerText = `${appData.formatTanggal} | ${appData.depTime} - ${appData.arrTime}`;
         document.getElementById('et-flight').innerText = appData.flight;
@@ -580,14 +687,14 @@
         switchTab(2);
     }
 
-    // PEMBARUAN: Fungsi Generator QR Real-time untuk Form Edit PNR E-Ticket
+    // Fungsi Generator QR Real-time untuk Form Edit PNR E-Ticket
     function updateQRRealtime() {
         appData.pnr = document.getElementById('et-pnr').value.toUpperCase();
         try {
             document.getElementById('eticket-qrcode').innerHTML = "";
             new QRCode(document.getElementById("eticket-qrcode"), {
-                text: `E-TICKET VALIDATION\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.nama}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
-                width: 120, height: 120, colorDark: "#1e293b", correctLevel: QRCode.CorrectLevel.M
+                text: `E-TICKET VALIDATION\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.namaLengkap}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
+                width: 130, height: 130, colorDark: "#0f172a", correctLevel: QRCode.CorrectLevel.M
             });
         } catch(e) { console.log(e); }
     }
@@ -598,7 +705,7 @@
         appData.pnr = document.getElementById('et-pnr').value.toUpperCase();
         
         document.getElementById('ci-pnr').value = appData.pnr;
-        document.getElementById('ci-nama').value = appData.nama;
+        document.getElementById('ci-nama').value = appData.namaLengkap;
         switchTab(3);
     }
 
@@ -611,7 +718,7 @@
         const waktuBoardingPendek = formatTanggalPendek(appData.tanggal) + ", " + hitungWaktuBoarding(appData.depTime);
 
         document.getElementById('bp-out-tanggal').innerText = appData.formatTanggal;
-        document.getElementById('bp-out-nama').innerText = (appData.nama.includes("MR") || appData.nama.includes("MS")) ? appData.nama : `MR ${appData.nama}`;
+        document.getElementById('bp-out-nama').innerText = appData.namaLengkap;
         
         document.getElementById('bp-out-asal-kode').innerText = appData.asalKode;
         document.getElementById('bp-out-asal-kota').innerText = appData.asalKota;
@@ -625,12 +732,12 @@
         document.getElementById('bp-out-waktu-dep').innerText = appData.depTime;
         document.getElementById('bp-out-waktu-arr').innerText = appData.arrTime;
 
-        // PEMBARUAN: Penambahan Detail Tanggal dan Waktu pada QR Boarding Pass
+        // Penambahan Detail Tanggal dan Waktu pada QR Boarding Pass
         try {
             document.getElementById('bp-qrcode-box').innerHTML = "";
             new QRCode(document.getElementById("bp-qrcode-box"), {
-                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.nama}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
-                width: 100, height: 100, colorDark: "#000000", correctLevel: QRCode.CorrectLevel.L
+                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.namaLengkap}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
+                width: 110, height: 110, colorDark: "#000000", correctLevel: QRCode.CorrectLevel.L
             });
         } catch(e) { console.log(e); }
 
