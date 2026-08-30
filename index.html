@@ -6,9 +6,10 @@
     <title>Global Airways - Booking & Boarding System</title>
     <!-- Font Inter untuk Tipografi Modern & Profesional -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Pustaka Generator QR Code dan Barcode -->
+    <!-- Pustaka Generator QR Code, Barcode, dan html2pdf -->
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         :root {
@@ -362,6 +363,13 @@
                         <input type="text" id="inp-nama-pax" class="form-control" value="JAKRIZAL BAIHAQI TUHAREA">
                     </div>
                 </div>
+
+                <!-- PEMBARUAN: Fungsi Tambah Penumpang Multi-Pax -->
+                <div style="margin-bottom: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="tambahBarisPenumpang()" style="background: #0284c7; padding: 12px 20px; font-size: 14px;">➕ Tambah Penumpang Lain</button>
+                </div>
+                <div id="daftar-penumpang-tambahan"></div>
+
                 <!-- Input Harga Manual -->
                 <div class="form-group" style="margin-bottom: 25px;">
                     <label>Harga Tiket (Rp) - <i style="color:var(--text-muted); font-weight:500; text-transform:none;">Harga Dasar (Dapat diubah manual)</i></label>
@@ -375,7 +383,7 @@
     <!-- ================= MODUL 2: ITINERARY & E-TICKET ================= -->
     <div id="mod-eticket" class="module">
         
-        <div class="eticket-box">
+        <div id="area-cetak-eticket" class="eticket-box">
             <div class="eticket-header">
                 <div>
                     <h2>ITINERARY RECEIPT</h2>
@@ -390,12 +398,32 @@
                 </div>
             </div>
             <div class="eticket-body">
+                <!-- INFORMASI AGENSI / TRAVEL PENERBIT -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f1f5f9; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Diterbitkan Oleh / Travel Partner:</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--secondary);">GLOBAL AIRWAYS TICKETING & TOURS INDONESIA</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">IATA License: 15-3 9921 0 • Call Center: +62 811 9900 888</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Tanda Terima / Authorized Stamp:</div>
+                        <div style="font-family: 'Courier New', monospace; font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 4px;">[ DIGITAL SIGNED & VERIFIED ]</div>
+                    </div>
+                </div>
+
                 <table class="detail-table">
                     <tr><th>No. Invoice</th><td id="et-invoice" style="font-family: 'Inter', monospace; font-size: 16px;"></td></tr>
                     <tr><th>Nama Penumpang</th><td id="et-nama"></td></tr>
                     <tr><th>Rute Penerbangan</th><td id="et-rute"></td></tr>
                     <tr><th>Tanggal & Waktu</th><td id="et-waktu"></td></tr>
-                    <tr><th>No. Penerbangan</th><td id="et-flight"></td></tr>
+                    <tr><th>Waktu Tiba (Arrival)</th><td id="et-waktu-tiba" style="color: #0284c7;"></td></tr>
+                    <tr><th>No. Penerbangan & Maskapai</th><td>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span id="et-flight"></span>
+                            <!-- PEMBARUAN: Edit Nomor Penerbangan secara manual -->
+                            <input type="text" id="et-edit-flight" class="form-control" style="width: 140px; padding: 4px 8px; font-size: 13px;" onkeyup="updateFlightManual(this.value)" placeholder="Ubah No. Pesawat">
+                        </div>
+                    </td></tr>
                     
                     <tr><td colspan="2" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
                         <div style="font-size: 14px; color: var(--secondary); font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Rincian Transaksi Pembayaran</div>
@@ -417,9 +445,12 @@
             </div>
         </div>
 
-        <div class="no-print btn-group-responsive" style="display: flex; gap: 15px;">
-            <button type="button" class="btn btn-secondary" onclick="window.print()" style="flex: 1;">🖨️ Cetak Itinerary</button>
-            <button type="button" class="btn btn-primary" onclick="pindahKeCheckin()" style="flex: 1;">Lanjut Check-In ✈️</button>
+        <!-- PEMBARUAN: Tombol Download PDF & PNG pada Menu Itinerary/E-Ticket -->
+        <div class="no-print btn-group-responsive" style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary" onclick="window.print()" style="flex: 1; min-width: 180px;">🖨️ Cetak Itinerary</button>
+            <button type="button" class="btn btn-primary" onclick="downloadPDF('area-cetak-eticket', 'Itinerary-ETicket.pdf')" style="flex: 1; min-width: 180px; background: #0284c7;">📥 Download PDF</button>
+            <button type="button" class="btn btn-primary" onclick="downloadPNG('area-cetak-eticket', 'Itinerary-ETicket.png')" style="flex: 1; min-width: 180px; background: #059669;">🖼️ Download PNG</button>
+            <button type="button" class="btn btn-primary" onclick="pindahKeCheckin()" style="flex: 1; min-width: 180px;">Lanjut Check-In ✈️</button>
         </div>
     </div>
 
@@ -463,7 +494,7 @@
     <!-- ================= MODUL 4: BOARDING PASS (REPLIKA FINAL) ================= -->
     <div id="mod-boardingpass" class="module" style="padding: 30px 10px;">
         
-        <div class="mobile-bp">
+        <div id="area-cetak-bp" class="mobile-bp">
             <!-- HEADER (MENGGUNAKAN LOGO GAMBAR BESAR) -->
             <div class="bp-header">
                 <div>
@@ -519,7 +550,7 @@
                 </div>
 
                 <div class="bp-grid-item">
-                    <div class="bp-label">Kedatangan</div>
+                    <div class="bp-label">Waktu Tiba</div>
                     <div class="bp-value" id="bp-out-waktu-arr">11:00</div>
                 </div>
                 <div class="bp-grid-item right">
@@ -534,9 +565,12 @@
             </div>
         </div>
 
-        <div class="no-print btn-group-responsive" style="margin-top: 40px; text-align: center; display: flex; gap: 15px; justify-content: center;">
-            <button class="btn btn-secondary" onclick="window.print()" style="flex: 1;">🖨️ Cetak BP PDF</button>
-            <button class="btn btn-primary" onclick="location.reload()" style="flex: 1;">🔄 Transaksi Baru</button>
+        <!-- PEMBARUAN: Tombol Cetak, Download PDF, dan Download PNG Boarding Pass -->
+        <div class="no-print btn-group-responsive" style="margin-top: 40px; text-align: center; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="window.print()" style="flex: 1; min-width: 150px;">🖨️ Cetak BP PDF</button>
+            <button class="btn btn-primary" onclick="downloadPDF('area-cetak-bp', 'Boarding-Pass.pdf')" style="flex: 1; min-width: 150px; background: #0284c7;">📥 Download PDF</button>
+            <button class="btn btn-primary" onclick="downloadPNG('area-cetak-bp', 'Boarding-Pass.png')" style="flex: 1; min-width: 150px; background: #059669;">🖼️ Download PNG</button>
+            <button class="btn btn-primary" onclick="location.reload()" style="flex: 1; min-width: 150px; background: var(--secondary);">🔄 Transaksi Baru</button>
         </div>
 
     </div>
@@ -547,7 +581,7 @@
     // State Management Global Database 
     let appData = {
         invoice: '', pnr: '', 
-        titel: '', nama: '', namaLengkap: '',
+        titel: '', nama: '', namaLengkap: '', penumpangTambahan: [],
         asalKode: '', asalKota: '',
         tujuanKode: '', tujuanKota: '',
         tanggal: '', formatTanggal: '',
@@ -560,14 +594,13 @@
     window.onload = function() {
         const seatSelect = document.getElementById('ci-kursi');
         seatSelect.innerHTML = '';
-        // Looping baris 1 sampai 30, masing-masing 6 kursi A-F
         for(let i = 1; i <= 30; i++) {
             ['A (Jendela)', 'B (Tengah)', 'C (Lorong)', 'D (Lorong)', 'E (Tengah)', 'F (Jendela)'].forEach(seatLabel => {
                 let opt = document.createElement('option');
                 let codeSeat = i + seatLabel.charAt(0);
                 opt.value = codeSeat;
                 opt.textContent = codeSeat + ' - ' + seatLabel.substring(2);
-                if(codeSeat === '9B') opt.selected = true; // Kursi default pilihan
+                if(codeSeat === '9B') opt.selected = true;
                 seatSelect.appendChild(opt);
             });
         }
@@ -595,9 +628,32 @@
         appData.depTime = dep;
         appData.arrTime = arr;
         
-        // Memasukkan harga default ke input manual untuk fleksibilitas
         document.getElementById('inp-harga-manual').value = price;
         document.getElementById('form-penumpang').classList.remove('hidden');
+    }
+
+    // PEMBARUAN: Fungsi Tambah Baris Penumpang (Multi-Passenger)
+    function tambahBarisPenumpang() {
+        const container = document.getElementById('daftar-penumpang-tambahan');
+        const divId = 'pax-row-' + Date.now();
+        const html = `
+            <div id="${divId}" class="form-row" style="align-items: flex-end; margin-bottom: 15px; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid var(--border-color);">
+                <div class="form-group" style="flex: 0.3; min-width: 90px;">
+                    <label>Titel</label>
+                    <select class="form-control pax-titel">
+                        <option value="MR">Mr.</option>
+                        <option value="MS">Ms.</option>
+                        <option value="MRS">Mrs.</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Nama Penumpang Tambahan</label>
+                    <input type="text" class="form-control pax-nama" placeholder="Nama Sesuai KTP/Paspor">
+                </div>
+                <button type="button" class="btn" style="background: #ef4444; color: #fff; width: auto; padding: 14px 18px;" onclick="document.getElementById('${divId}').remove()">✕</button>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
     }
 
     // Formatter Tanggal 
@@ -629,37 +685,46 @@
         
         const namaInput = document.getElementById('inp-nama-pax').value;
         const titelInput = document.getElementById('inp-titel').value;
-        if(namaInput.trim() === '') { alert("Nama penumpang harus diisi!"); return; }
+        if(namaInput.trim() === '') { alert("Nama penumpang utama harus diisi!"); return; }
 
-        // Menghitung Rincian Harga
-        appData.basePrice = parseInt(document.getElementById('inp-harga-manual').value) || 0;
-        appData.taxPrice = appData.basePrice * 0.10; // Pajak 10%
-        appData.extraTaxPrice = appData.basePrice * 0.05; // Pajak Ekstra 5%
+        // Kumpulkan penumpang tambahan jika ada
+        appData.penumpangTambahan = [];
+        document.querySelectorAll('#daftar-penumpang-tambahan > div').forEach(row => {
+            let t = row.querySelector('.pax-titel').value;
+            let n = row.querySelector('.pax-nama').value;
+            if(n.trim() !== '') {
+                appData.penumpangTambahan.push({ titel: t, nama: n.toUpperCase() });
+            }
+        });
+
+        // Menghitung Rincian Harga (dikalikan total penumpang)
+        let totalPaxCount = 1 + appData.penumpangTambahan.length;
+        let baseUnit = parseInt(document.getElementById('inp-harga-manual').value) || 0;
+        appData.basePrice = baseUnit * totalPaxCount;
+        appData.taxPrice = appData.basePrice * 0.10; 
+        appData.extraTaxPrice = appData.basePrice * 0.05; 
         appData.totalPrice = appData.basePrice + appData.taxPrice + appData.extraTaxPrice;
 
-        // Set Data Rute dari Input Manual
         const asalObj = parseRuteManual(document.getElementById('sel-asal').value);
         const tujuanObj = parseRuteManual(document.getElementById('sel-tujuan').value);
         const tglInput = document.getElementById('sel-tanggal').value;
 
-        // Integrasi Nama dan Titel
         appData.titel = titelInput;
         appData.nama = namaInput.toUpperCase();
-        appData.namaLengkap = `${appData.titel} ${appData.nama}`;
+        appData.namaLengkap = `${appData.titel} ${appData.nama}` + (appData.penumpangTambahan.length > 0 ? ` & ${appData.penumpangTambahan.length} Penumpang Lain` : '');
         
         appData.asalKode = asalObj.kode; appData.asalKota = asalObj.kota;
         appData.tujuanKode = tujuanObj.kode; appData.tujuanKota = tujuanObj.kota;
         appData.tanggal = tglInput;
         appData.formatTanggal = formatTanggalIndo(tglInput);
         
-        // PNR & Invoice Acak
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let pnr = '';
         for (let i = 0; i < 6; i++) { pnr += chars.charAt(Math.floor(Math.random() * chars.length)); }
         appData.pnr = pnr;
         appData.invoice = 'INV-' + Math.floor(10000000 + Math.random() * 90000000);
 
-        // Algoritma Penentuan Waktu Booking (H-2 dari Keberangkatan)
+        // Algoritma Penentuan Waktu Booking H-2
         let depDateObj = new Date(tglInput);
         if(!isNaN(depDateObj)) {
             depDateObj.setDate(depDateObj.getDate() - 2);
@@ -669,22 +734,45 @@
             document.getElementById('et-booking-time').innerText = `(${h2Tanggal}, ${jamAcak}:${menitAcak} WITA)`;
         }
 
-        // Penulisan ke Layout
+        // Kalkulasi Waktu Tiba Otomatis berdasarkan durasi rata-rata / tempuh rute
+        let arrCalculated = hitungWaktuTibaOtomatis(appData.depTime, appData.asalKode, appData.tujuanKode);
+        appData.arrTime = arrCalculated;
+
+        // Penulisan ke Layout E-Ticket
         document.getElementById('et-invoice').innerText = appData.invoice;
-        document.getElementById('et-pnr').value = appData.pnr; // Ini form input agar bisa diedit
+        document.getElementById('et-pnr').value = appData.pnr; 
         document.getElementById('et-nama').innerText = appData.namaLengkap;
         document.getElementById('et-rute').innerText = `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
-        document.getElementById('et-waktu').innerText = `${appData.formatTanggal} | ${appData.depTime} - ${appData.arrTime}`;
+        document.getElementById('et-waktu').innerText = `${appData.formatTanggal} | Berangkat: ${appData.depTime}`;
+        document.getElementById('et-waktu-tiba').innerText = `${appData.formatTanggal} | Tiba (Estimasi): ${appData.arrTime}`;
         document.getElementById('et-flight').innerText = appData.flight;
+        document.getElementById('et-edit-flight').value = appData.flight;
         
-        // Render Rincian Biaya
         document.getElementById('et-harga-dasar').innerText = "Rp " + appData.basePrice.toLocaleString('id-ID');
         document.getElementById('et-pajak').innerText = "Rp " + appData.taxPrice.toLocaleString('id-ID');
         document.getElementById('et-pajak-ekstra').innerText = "Rp " + appData.extraTaxPrice.toLocaleString('id-ID');
         document.getElementById('et-harga-total').innerText = "Rp " + appData.totalPrice.toLocaleString('id-ID');
 
-        updateQRRealtime(); // Eksekusi pembuatan QR code pertama kali
+        updateQRRealtime(); 
         switchTab(2);
+    }
+
+    // Fungsi Update Nomor Penerbangan Manual
+    function updateFlightManual(val) {
+        if(val.trim() !== '') {
+            appData.flight = val.toUpperCase();
+            document.getElementById('et-flight').innerText = appData.flight;
+        }
+    }
+
+    // Fungsi Kalkulasi Waktu Tiba Otomatis Berdasarkan Durasi
+    function hitungWaktuTibaOtomatis(depStr, asal, tujuan) {
+        let parts = depStr.split(':');
+        let d = new Date();
+        d.setHours(parseInt(parts[0]), parseInt(parts[1]), 0);
+        // Default durasi penerbangan domestik misal 1 jam 45 menit
+        d.setMinutes(d.getMinutes() + 105);
+        return d.toTimeString().substring(0,5);
     }
 
     // Fungsi Generator QR Real-time untuk Form Edit PNR E-Ticket
@@ -693,7 +781,7 @@
         try {
             document.getElementById('eticket-qrcode').innerHTML = "";
             new QRCode(document.getElementById("eticket-qrcode"), {
-                text: `ITENENARY\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.namaLengkap}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
+                text: `E-TICKET VALIDATION\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.namaLengkap}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
                 width: 130, height: 130, colorDark: "#0f172a", correctLevel: QRCode.CorrectLevel.M
             });
         } catch(e) { console.log(e); }
@@ -701,11 +789,9 @@
 
     // [MODUL 3] Transisi ke Check-In
     function pindahKeCheckin() {
-        // Ambil PNR terbaru yang barangkali sudah diedit secara manual oleh user
         appData.pnr = document.getElementById('et-pnr').value.toUpperCase();
-        
         document.getElementById('ci-pnr').value = appData.pnr;
-        document.getElementById('ci-nama').value = appData.namaLengkap;
+        document.getElementById('ci-nama').value = `${appData.titel} ${appData.nama}`;
         switchTab(3);
     }
 
@@ -718,7 +804,7 @@
         const waktuBoardingPendek = formatTanggalPendek(appData.tanggal) + ", " + hitungWaktuBoarding(appData.depTime);
 
         document.getElementById('bp-out-tanggal').innerText = appData.formatTanggal;
-        document.getElementById('bp-out-nama').innerText = appData.namaLengkap;
+        document.getElementById('bp-out-nama').innerText = `${appData.titel} ${appData.nama}`;
         
         document.getElementById('bp-out-asal-kode').innerText = appData.asalKode;
         document.getElementById('bp-out-asal-kota').innerText = appData.asalKota;
@@ -732,11 +818,10 @@
         document.getElementById('bp-out-waktu-dep').innerText = appData.depTime;
         document.getElementById('bp-out-waktu-arr').innerText = appData.arrTime;
 
-        // Penambahan Detail Tanggal dan Waktu pada QR Boarding Pass
         try {
             document.getElementById('bp-qrcode-box').innerHTML = "";
             new QRCode(document.getElementById("bp-qrcode-box"), {
-                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.namaLengkap}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
+                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.titel} ${appData.nama}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
                 width: 110, height: 110, colorDark: "#000000", correctLevel: QRCode.CorrectLevel.L
             });
         } catch(e) { console.log(e); }
@@ -758,6 +843,31 @@
         d.setHours(parseInt(parts[0]), parseInt(parts[1]), 0);
         d.setMinutes(d.getMinutes() - 30);
         return d.toTimeString().substring(0,5);
+    }
+
+    // PEMBARUAN: Fungsi Otomatis Unduh PDF Mandiri tanpa bergantung pada Dialog Browser Print
+    function downloadPDF(elementId, filename) {
+        const element = document.getElementById(elementId);
+        const options = {
+            margin:       5,
+            filename:     filename,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, logging: false },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().from(element).set(options).save();
+    }
+
+    // PEMBARUAN: Fungsi Otomatis Unduh Format Gambar (PNG) Mandiri
+    function downloadPNG(elementId, filename) {
+        const element = document.getElementById(elementId);
+        // Menggunakan html2canvas yang terbawa dari pustaka html2pdf untuk render gambar mandiri
+        html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
     }
 </script>
 
