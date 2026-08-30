@@ -131,12 +131,53 @@
             .btn-group-responsive { flex-direction: column; }
         }
 
+        /* PEMBARUAN: STANDAR UKURAN CETAK (PRINT) BOARDING PASS LION AIR (ATB 82.55mm x 203.2mm) */
         @media print { 
-            body { padding: 0; background: white; }
+            @page {
+                size: 82.55mm 203.2mm; /* Standar Ukuran ATB Kiosk/Thermal Lion Air */
+                margin: 0; 
+            }
+            body { padding: 0; background: white; margin: 0; display: flex; justify-content: center; }
             .no-print { display: none !important; } 
-            .app-container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: 100%; }
-            .mobile-bp { box-shadow: none; margin: 0; max-width: 100%; border: 2px solid #ccc; }
-            .eticket-box { box-shadow: none; border: 2px solid #ccc; }
+            .app-container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: 100%; width: 100%; }
+            
+            /* Penyesuaian Ukuran Cetak Boarding Pass Standar Lion Air (82.55mm x 203.2mm) */
+            .mobile-bp { 
+                box-shadow: none !important; 
+                margin: 0 auto !important; 
+                width: 82.55mm !important; 
+                height: 203.2mm !important; 
+                max-width: 82.55mm !important; 
+                border: 2px solid #0f172a !important; /* Garis batas cetak jelas */
+                border-radius: 12px !important;
+                padding: 6mm !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid;
+            }
+            
+            /* Penyesuaian proporsi elemen agar pas di lebar cetak 82.55mm */
+            .bp-header { margin-bottom: 15px !important; }
+            .bp-logo-img { height: 28px !important; }
+            .bp-date { font-size: 11px !important; }
+            .bp-row2 { margin-bottom: 15px !important; }
+            .bp-qr-container { width: 65px !important; height: 65px !important; }
+            .bp-pax-type { font-size: 10px !important; margin-bottom: 2px !important; }
+            .bp-pax-name { font-size: 12px !important; line-height: 1.2 !important; max-width: 120px !important; }
+            
+            .bp-route-band { padding: 8px 6mm !important; margin: 0 -6mm 15px -6mm !important; gap: 5px !important; }
+            .bp-code { font-size: 24px !important; margin-bottom: 4px !important; }
+            .bp-city { font-size: 11px !important; margin-bottom: 8px !important; }
+            .bp-flight-seat { font-size: 12px !important; }
+            .bp-arrow svg { width: 18px !important; height: 18px !important; }
+            
+            .bp-grid { gap: 8px !important; margin-bottom: 15px !important; }
+            .bp-label { font-size: 10px !important; margin-bottom: 2px !important; }
+            .bp-value { font-size: 12px !important; }
+            
+            .bp-barcode-container { margin-top: 10px !important; }
+            #barcode-svg { max-height: 45px !important; width: 100% !important; }
+
+            .eticket-box { box-shadow: none; border: 2px solid #ccc; width: 100%; }
         }
     </style>
 </head>
@@ -315,7 +356,7 @@
             <label for="ci-aggrement">Saya menyatakan bahwa saya tidak membawa barang berbahaya (Dangerous Goods) seperti baterai lithium lepas, bahan mudah meledak, atau cairan korosif di dalam bagasi tercatat maupun kabin.</label>
         </div>
 
-        <button type="button" class="btn btn-secondary" onclick="terbitkanBoardingPass()">Terbitkan Boarding Pass 🖨️</button>
+        <button type="button" class="btn btn-secondary" onclick="terbitkanBoarding Pass()">Terbitkan Boarding Pass 🖨️</button>
     </div>
 
     <!-- ================= MODUL 4: BOARDING PASS (REPLIKA FINAL) ================= -->
