@@ -236,41 +236,43 @@
             .no-print { display: none !important; } 
             .app-container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: 100%; width: 100%; border-radius: 0; }
             
-            /* Penyesuaian Ukuran Cetak Boarding Pass Standar Lion Air (82.55mm x 203.2mm) */
+            /* Penyesuaian Ukuran Cetak Boarding Pass Standar Lion Air agar Tidak Tumpang Tindih */
             .mobile-bp { 
                 box-shadow: none !important; 
                 margin: 0 auto !important; 
                 width: 82.55mm !important; 
                 height: 203.2mm !important; 
                 max-width: 82.55mm !important; 
-                border: 2px solid #000 !important; /* Garis batas cetak jelas & kontras */
+                border: 2px solid #000 !important;
                 border-radius: 12px !important;
-                padding: 6mm !important;
+                padding: 4mm !important;
                 box-sizing: border-box !important;
                 page-break-inside: avoid;
+                overflow: hidden !important; /* Mencegah konten luber */
             }
             
-            /* Penyesuaian proporsi elemen agar pas di lebar cetak 82.55mm */
-            .bp-header { margin-bottom: 12px !important; }
-            .bp-logo-img { height: 26px !important; }
-            .bp-date { font-size: 11px !important; }
-            .bp-row2 { margin-bottom: 12px !important; gap: 10px !important;}
-            .bp-qr-container { width: 55px !important; height: 55px !important; padding: 2px !important; border-color: #000 !important;}
-            .bp-pax-type { font-size: 9px !important; margin-bottom: 2px !important; color: #000 !important; }
-            .bp-pax-name { font-size: 11px !important; line-height: 1.2 !important; max-width: 130px !important; color: #000 !important;}
+            .bp-header { margin-bottom: 8px !important; }
+            .bp-logo-img { height: 22px !important; }
+            .bp-date { font-size: 10px !important; }
+            .bp-row2 { margin-bottom: 8px !important; gap: 5px !important;}
+            .bp-qr-container { width: 45px !important; height: 45px !important; padding: 2px !important; border-color: #000 !important;}
+            .bp-qr-container img, .bp-qr-container canvas { width: 100% !important; height: 100% !important; object-fit: contain !important; }
             
-            .bp-route-band { padding: 8px 6mm !important; margin: 0 -6mm 12px -6mm !important; gap: 5px !important; border-color: #000 !important;}
-            .bp-code { font-size: 26px !important; margin-bottom: 2px !important; color: #000 !important;}
-            .bp-city { font-size: 11px !important; margin-bottom: 6px !important; color: #000 !important;}
-            .bp-flight-seat { font-size: 12px !important; color: #000 !important;}
-            .bp-arrow svg { width: 18px !important; height: 18px !important; color: #000 !important;}
+            .bp-pax-type { font-size: 8px !important; margin-bottom: 2px !important; color: #000 !important; }
+            .bp-pax-name { font-size: 10px !important; line-height: 1.1 !important; max-width: 130px !important; color: #000 !important;}
             
-            .bp-grid { gap: 8px !important; margin-bottom: 12px !important; }
-            .bp-label { font-size: 9px !important; margin-bottom: 2px !important; color: #000 !important;}
-            .bp-value { font-size: 12px !important; color: #000 !important;}
+            .bp-route-band { padding: 6px 4mm !important; margin: 0 -4mm 8px -4mm !important; gap: 5px !important; border-color: #000 !important;}
+            .bp-code { font-size: 22px !important; margin-bottom: 2px !important; color: #000 !important;}
+            .bp-city { font-size: 10px !important; margin-bottom: 4px !important; color: #000 !important;}
+            .bp-flight-seat { font-size: 10px !important; color: #000 !important;}
+            .bp-arrow svg { width: 16px !important; height: 16px !important; color: #000 !important;}
             
-            .bp-barcode-container { margin-top: 10px !important; }
-            #barcode-svg { max-height: 40px !important; width: 100% !important; }
+            .bp-grid { gap: 4px 8px !important; margin-bottom: 8px !important; }
+            .bp-label { font-size: 8px !important; margin-bottom: 2px !important; color: #000 !important;}
+            .bp-value { font-size: 10px !important; color: #000 !important;}
+            
+            .bp-barcode-container { margin-top: 6px !important; }
+            #barcode-svg { max-height: 35px !important; width: 100% !important; object-fit: contain !important; }
 
             .eticket-box { box-shadow: none; border: 2px solid #000; width: 100%; border-radius: 0; }
             .eticket-header, .eticket-body { color: #000 !important; background: #fff !important; }
@@ -347,7 +349,6 @@
             </div>
 
             <div id="form-penumpang" class="hidden" style="margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 25px;">
-                <!-- PEMBARUAN: Input Titel & Nama -->
                 <div class="form-row">
                     <div class="form-group" style="flex: 0.3; min-width: 100px;">
                         <label>Titel</label>
@@ -362,10 +363,16 @@
                         <input type="text" id="inp-nama-pax" class="form-control" value="JAKRIZAL BAIHAQI TUHAREA">
                     </div>
                 </div>
-                <!-- Input Harga Manual -->
-                <div class="form-group" style="margin-bottom: 25px;">
-                    <label>Harga Tiket (Rp) - <i style="color:var(--text-muted); font-weight:500; text-transform:none;">Harga Dasar (Dapat diubah manual)</i></label>
-                    <input type="number" id="inp-harga-manual" class="form-control" value="0">
+                <!-- PEMBARUAN: Input Harga & Maskapai Manual -->
+                <div class="form-row" style="margin-bottom: 25px;">
+                    <div class="form-group">
+                        <label>Harga Tiket (Rp) - <i style="color:var(--text-muted); font-weight:500; text-transform:none;">Harga Dasar (Dapat diubah)</i></label>
+                        <input type="number" id="inp-harga-manual" class="form-control" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>No. Penerbangan / Maskapai - <i style="color:var(--text-muted); font-weight:500; text-transform:none;">Dapat diubah</i></label>
+                        <input type="text" id="inp-flight-manual" class="form-control" value="">
+                    </div>
                 </div>
                 <button type="button" class="btn btn-primary" onclick="terbitkanETicket()">Pesan & Terbitkan E-Ticket 🎟️</button>
             </div>
@@ -595,8 +602,9 @@
         appData.depTime = dep;
         appData.arrTime = arr;
         
-        // Memasukkan harga default ke input manual untuk fleksibilitas
+        // Memasukkan data ke input manual agar bisa diedit lebih lanjut oleh user
         document.getElementById('inp-harga-manual').value = price;
+        document.getElementById('inp-flight-manual').value = flight;
         document.getElementById('form-penumpang').classList.remove('hidden');
     }
 
@@ -641,6 +649,10 @@
         const asalObj = parseRuteManual(document.getElementById('sel-asal').value);
         const tujuanObj = parseRuteManual(document.getElementById('sel-tujuan').value);
         const tglInput = document.getElementById('sel-tanggal').value;
+
+        // Membaca Nilai Edit Nomor Penerbangan Manual
+        const manualFlight = document.getElementById('inp-flight-manual').value;
+        appData.flight = manualFlight ? manualFlight.toUpperCase() : appData.flight;
 
         // Integrasi Nama dan Titel
         appData.titel = titelInput;
