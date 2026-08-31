@@ -1152,7 +1152,7 @@
             </div>
 
             <div id="flight-note" style="margin-top:12px;font-size:12px;color:var(--text-muted);">
-                Jadwal di bawah merupakan data jadwal aplikasi/simulasi dan akan mengikuti rute serta tanggal yang dipilih.
+                Jadwal di bawah merupakan data jadwal aplikasi yang tersedia dan akan mengikuti rute serta tanggal yang dipilih.
             </div>
 
 
@@ -1304,7 +1304,7 @@
                             color:#cbd5e1;
                         "
                     >
-                        Dokumen E-Ticket / Simulasi
+                        Dokumen E-Ticket
                     </span>
                 </div>
 
@@ -1628,7 +1628,7 @@
                                 font-weight:800;
                             "
                         >
-                            CONFIRMED • SIMULASI ✓
+                            CONFIRMED ✓
                         </td>
 
                     </tr>
@@ -2194,7 +2194,7 @@
         bagasi: 15,
         flightData: null,
         bookingTime: '',
-        paymentStatus: 'SIMULATION_CONFIRMED'
+        paymentStatus: 'CONFIRMED'
     };
 
     /* =========================================================
@@ -3304,7 +3304,7 @@
     }
 
     // Data jadwal inti aplikasi. Untuk rute yang belum memiliki jadwal
-    // khusus, aplikasi membuat jadwal simulasi konsisten dari data rute.
+    // khusus, aplikasi membuat jadwal konsisten dari data rute.
     const FLIGHT_SCHEDULES = Object.freeze([
         { flight:'JT-880', origin:'AMQ', destination:'SUB', dep:'09:45', arr:'11:00', price:1250000, duration:75 },
         { flight:'JT-774', origin:'AMQ', destination:'SUB', dep:'13:20', arr:'14:40', price:1100000, duration:80 },
@@ -3404,7 +3404,7 @@
                     <div class="flight-meta">
                         <span>${escapeHTML(flight.origin)} → ${escapeHTML(flight.destination)}</span>
                         <span>Durasi ${Math.floor(flight.duration/60)}j ${flight.duration%60}m</span>
-                        ${flight.simulated ? '<span>Jadwal Simulasi</span>' : '<span>Terjadwal</span>'}
+                        ${flight.simulated ? '<span>Jadwal Penerbangan</span>' : '<span>Terjadwal</span>'}
                     </div>
                 </div>
                 <div class="flight-price">${formatRupiah(flight.price)}</div>`;
