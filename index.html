@@ -15,9 +15,6 @@
     <!-- Barcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
-    <!-- html2pdf + html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
     <style>
         :root {
             --primary: #dc2626;
@@ -647,7 +644,6 @@
         /* ================= RESPONSIVE ================= */
 
         @media (max-width: 650px) {
-
             body {
                 padding: 15px 10px;
             }
@@ -744,7 +740,6 @@
         }
 
         @media (max-width: 420px) {
-
             .bp-code {
                 font-size: 34px;
             }
@@ -773,7 +768,6 @@
         ========================================================= */
 
         @media print {
-
             html,
             body {
                 margin: 0 !important;
@@ -859,29 +853,19 @@
             }
 
             body.print-bp .mobile-bp {
-
                 box-shadow: none !important;
-
                 margin: 0 auto !important;
-
                 width: 82.55mm !important;
                 height: 203.2mm !important;
-
                 min-width: 82.55mm !important;
                 max-width: 82.55mm !important;
-
                 min-height: 203.2mm !important;
                 max-height: 203.2mm !important;
-
                 border: 2px solid #000 !important;
                 border-radius: 12px !important;
-
                 padding: 6mm !important;
-
                 box-sizing: border-box !important;
-
                 page-break-inside: avoid !important;
-
                 overflow: hidden !important;
             }
 
@@ -994,7 +978,6 @@
         }
 
         @media print {
-
             body.print-bp {
                 width: 82.55mm !important;
             }
@@ -1036,83 +1019,86 @@
             Pencarian & Pemesanan Rute
         </h3>
 
-        <div class="form-row">
+        <!-- Mencegah reload halaman jika menekan Enter -->
+        <form onsubmit="event.preventDefault();">
+            <div class="form-row">
 
-            <div class="form-group">
+                <div class="form-group">
 
-                <label for="sel-asal">
-                    Kota Asal (Kode - Kota)
-                </label>
+                    <label for="sel-asal">
+                        Kota Asal (Kode - Kota)
+                    </label>
 
-                <input
-                    type="text"
-                    id="sel-asal"
-                    class="form-control"
-                    placeholder="Contoh: AMQ - Ambon"
-                    list="rute-asal-list"
-                    value="AMQ - Ambon"
-                    autocomplete="off"
-                >
+                    <input
+                        type="text"
+                        id="sel-asal"
+                        class="form-control"
+                        placeholder="Contoh: AMQ - Ambon"
+                        list="rute-asal-list"
+                        value="AMQ - Ambon"
+                        autocomplete="off"
+                    >
 
-                <datalist id="rute-asal-list">
-                    <option value="AMQ - Ambon"></option>
-                    <option value="CGK - Jakarta"></option>
-                    <option value="SUB - Surabaya"></option>
-                    <option value="DPS - Bali"></option>
-                </datalist>
+                    <datalist id="rute-asal-list">
+                        <option value="AMQ - Ambon"></option>
+                        <option value="CGK - Jakarta"></option>
+                        <option value="SUB - Surabaya"></option>
+                        <option value="DPS - Bali"></option>
+                    </datalist>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="sel-tujuan">
+                        Kota Tujuan (Kode - Kota)
+                    </label>
+
+                    <input
+                        type="text"
+                        id="sel-tujuan"
+                        class="form-control"
+                        placeholder="Contoh: SUB - Surabaya"
+                        list="rute-tujuan-list"
+                        value="SUB - Surabaya"
+                        autocomplete="off"
+                    >
+
+                    <datalist id="rute-tujuan-list">
+                        <option value="SUB - Surabaya"></option>
+                        <option value="LUV - Langgur"></option>
+                        <option value="UPG - Makassar"></option>
+                        <option value="YIA - Yogyakarta"></option>
+                    </datalist>
+
+                </div>
 
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom:25px;">
 
-                <label for="sel-tujuan">
-                    Kota Tujuan (Kode - Kota)
+                <label for="sel-tanggal">
+                    Tanggal Keberangkatan
                 </label>
 
                 <input
-                    type="text"
-                    id="sel-tujuan"
+                    type="date"
+                    id="sel-tanggal"
                     class="form-control"
-                    placeholder="Contoh: SUB - Surabaya"
-                    list="rute-tujuan-list"
-                    value="SUB - Surabaya"
-                    autocomplete="off"
+                    value="2026-08-09"
                 >
-
-                <datalist id="rute-tujuan-list">
-                    <option value="SUB - Surabaya"></option>
-                    <option value="LUV - Langgur"></option>
-                    <option value="UPG - Makassar"></option>
-                    <option value="YIA - Yogyakarta"></option>
-                </datalist>
 
             </div>
 
-        </div>
-
-        <div class="form-group" style="margin-bottom:25px;">
-
-            <label for="sel-tanggal">
-                Tanggal Keberangkatan
-            </label>
-
-            <input
-                type="date"
-                id="sel-tanggal"
-                class="form-control"
-                value="2026-08-09"
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="cariPenerbangan()"
+                style="margin-bottom:30px;"
             >
-
-        </div>
-
-        <button
-            type="button"
-            class="btn btn-secondary"
-            onclick="cariPenerbangan()"
-            style="margin-bottom:30px;"
-        >
-            🔍 Cari Penerbangan
-        </button>
+                🔍 Cari Penerbangan
+            </button>
+        </form>
 
         <!-- HASIL PENERBANGAN -->
 
@@ -1188,112 +1174,119 @@
                     padding-top:25px;
                 "
             >
+                <form onsubmit="event.preventDefault(); terbitkanETicket();">
+                    <div class="form-row">
 
-                <div class="form-row">
+                        <div
+                            class="form-group"
+                            style="flex:0.3;min-width:100px;"
+                        >
+
+                            <label for="inp-titel">
+                                Titel
+                            </label>
+
+                            <select id="inp-titel" class="form-control">
+                                <option value="MR">Mr.</option>
+                                <option value="MS">Ms.</option>
+                                <option value="MRS">Mrs.</option>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="inp-nama-pax">
+                                Nama Penumpang (Sesuai KTP/Paspor)
+                            </label>
+
+                            <input
+                                type="text"
+                                id="inp-nama-pax"
+                                class="form-control"
+                                value="JAKRIZAL BAIHAQI TUHAREA"
+                                autocomplete="name"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick="tambahBarisPenumpang()"
+                            style="
+                                background:#0284c7;
+                                padding:12px 20px;
+                                font-size:14px;
+                            "
+                        >
+                            ➕ Tambah Penumpang Lain
+                        </button>
+
+                    </div>
+
+                    <div id="daftar-penumpang-tambahan"></div>
+
+                    <div
+                        id="jumlah-pax-info"
+                        class="hidden"
+                        style="margin-bottom:20px;"
+                    >
+                        <span class="passenger-count-badge">
+                            👥 <span id="jumlah-pax-text">1 Penumpang</span>
+                        </span>
+                    </div>
+
+                    <!-- HARGA -->
 
                     <div
                         class="form-group"
-                        style="flex:0.3;min-width:100px;"
+                        style="margin-bottom:15px;"
                     >
 
-                        <label for="inp-titel">
-                            Titel
-                        </label>
-
-                        <select id="inp-titel" class="form-control">
-                            <option value="MR">Mr.</option>
-                            <option value="MS">Ms.</option>
-                            <option value="MRS">Mrs.</option>
-                        </select>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="inp-nama-pax">
-                            Nama Penumpang (Sesuai KTP/Paspor)
+                        <label for="inp-harga-manual">
+                            Harga Tiket (Rp) -
+                            <i
+                                style="
+                                    color:var(--text-muted);
+                                    font-weight:500;
+                                    text-transform:none;
+                                "
+                            >
+                                Harga Dasar Per Penumpang
+                            </i>
                         </label>
 
                         <input
-                            type="text"
-                            id="inp-nama-pax"
+                            type="number"
+                            id="inp-harga-manual"
                             class="form-control"
-                            value="JAKRIZAL BAIHAQI TUHAREA"
-                            autocomplete="name"
+                            value="0"
+                            min="0"
+                            step="1000"
+                            oninput="updateLivePrice()"
                         >
 
                     </div>
-
-                </div>
-
-                <div style="margin-bottom:20px;">
+                    
+                    <!-- INDIKATOR HARGA REAL-TIME (BARU) -->
+                    <div id="live-total-box" style="margin-bottom: 25px; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <span style="font-weight: 700; color: var(--text-muted); font-size: 14px; text-transform: uppercase;">Estimasi Total (Termasuk Pajak):</span>
+                        <span id="live-total-price" style="font-size: 20px; font-weight: 900; color: var(--primary);">Rp 0</span>
+                    </div>
 
                     <button
                         type="button"
-                        class="btn btn-secondary"
-                        onclick="tambahBarisPenumpang()"
-                        style="
-                            background:#0284c7;
-                            padding:12px 20px;
-                            font-size:14px;
-                        "
+                        class="btn btn-primary"
+                        onclick="terbitkanETicket()"
                     >
-                        ➕ Tambah Penumpang Lain
+                        Pesan & Terbitkan E-Ticket 🎟️
                     </button>
-
-                </div>
-
-                <div id="daftar-penumpang-tambahan"></div>
-
-                <div
-                    id="jumlah-pax-info"
-                    class="hidden"
-                    style="margin-bottom:20px;"
-                >
-                    <span class="passenger-count-badge">
-                        👥 <span id="jumlah-pax-text">1 Penumpang</span>
-                    </span>
-                </div>
-
-                <!-- HARGA -->
-
-                <div
-                    class="form-group"
-                    style="margin-bottom:25px;"
-                >
-
-                    <label for="inp-harga-manual">
-                        Harga Tiket (Rp) -
-                        <i
-                            style="
-                                color:var(--text-muted);
-                                font-weight:500;
-                                text-transform:none;
-                            "
-                        >
-                            Harga Dasar (Dapat diubah manual)
-                        </i>
-                    </label>
-
-                    <input
-                        type="number"
-                        id="inp-harga-manual"
-                        class="form-control"
-                        value="0"
-                        min="0"
-                        step="1000"
-                    >
-
-                </div>
-
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    onclick="terbitkanETicket()"
-                >
-                    Pesan & Terbitkan E-Ticket 🎟️
-                </button>
-
+                </form>
             </div>
         </div>
     </div>
@@ -1749,117 +1742,118 @@
             dan mendapatkan Boarding Pass.
         </p>
 
-        <div class="form-row">
+        <form onsubmit="event.preventDefault(); terbitkanBoardingPass();">
+            <div class="form-row">
 
-            <div class="form-group">
+                <div class="form-group">
 
-                <label for="ci-pnr">
-                    Kode Booking (PNR)
-                </label>
+                    <label for="ci-pnr">
+                        Kode Booking (PNR)
+                    </label>
+
+                    <input
+                        type="text"
+                        id="ci-pnr"
+                        class="form-control"
+                        readonly
+                        style="
+                            background:#e2e8f0;
+                            font-weight:800;
+                            text-align:center;
+                            font-size:18px;
+                            letter-spacing:2px;
+                        "
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="ci-nama">
+                        Nama Penumpang
+                    </label>
+
+                    <input
+                        type="text"
+                        id="ci-nama"
+                        class="form-control"
+                        readonly
+                        style="
+                            background:#e2e8f0;
+                            font-weight:700;
+                        "
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="ci-kursi">
+                        Pilih Kursi (Seat Map Ekspansi)
+                    </label>
+
+                    <select
+                        id="ci-kursi"
+                        class="form-control"
+                        style="
+                            border-color:var(--primary);
+                            font-weight:800;
+                            color:var(--primary);
+                        "
+                    >
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="ci-bagasi">
+                        Total Bagasi (Kg)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="ci-bagasi"
+                        class="form-control"
+                        value="15"
+                        min="0"
+                        max="100"
+                        step="1"
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="checkbox-group">
 
                 <input
-                    type="text"
-                    id="ci-pnr"
-                    class="form-control"
-                    readonly
-                    style="
-                        background:#e2e8f0;
-                        font-weight:800;
-                        text-align:center;
-                        font-size:18px;
-                        letter-spacing:2px;
-                    "
+                    type="checkbox"
+                    id="ci-aggrement"
                 >
 
-            </div>
-
-            <div class="form-group">
-
-                <label for="ci-nama">
-                    Nama Penumpang
+                <label for="ci-aggrement">
+                    Saya menyatakan bahwa saya tidak membawa
+                    barang berbahaya (Dangerous Goods) seperti
+                    baterai lithium lepas, bahan mudah meledak,
+                    atau cairan korosif di dalam bagasi tercatat
+                    maupun kabin.
                 </label>
 
-                <input
-                    type="text"
-                    id="ci-nama"
-                    class="form-control"
-                    readonly
-                    style="
-                        background:#e2e8f0;
-                        font-weight:700;
-                    "
-                >
-
             </div>
 
-        </div>
-
-        <div class="form-row">
-
-            <div class="form-group">
-
-                <label for="ci-kursi">
-                    Pilih Kursi (Seat Map Ekspansi)
-                </label>
-
-                <select
-                    id="ci-kursi"
-                    class="form-control"
-                    style="
-                        border-color:var(--primary);
-                        font-weight:800;
-                        color:var(--primary);
-                    "
-                >
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label for="ci-bagasi">
-                    Total Bagasi (Kg)
-                </label>
-
-                <input
-                    type="number"
-                    id="ci-bagasi"
-                    class="form-control"
-                    value="15"
-                    min="0"
-                    max="100"
-                    step="1"
-                >
-
-            </div>
-
-        </div>
-
-        <div class="checkbox-group">
-
-            <input
-                type="checkbox"
-                id="ci-aggrement"
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="terbitkanBoardingPass()"
             >
-
-            <label for="ci-aggrement">
-                Saya menyatakan bahwa saya tidak membawa
-                barang berbahaya (Dangerous Goods) seperti
-                baterai lithium lepas, bahan mudah meledak,
-                atau cairan korosif di dalam bagasi tercatat
-                maupun kabin.
-            </label>
-
-        </div>
-
-        <button
-            type="button"
-            class="btn btn-secondary"
-            onclick="terbitkanBoardingPass()"
-        >
-            Terbitkan Boarding Pass 🖨️
-        </button>
-
+                Terbitkan Boarding Pass 🖨️
+            </button>
+        </form>
     </div>
 
     <!-- =========================================================
@@ -1879,18 +1873,12 @@
             <div class="bp-header">
 
                 <div>
-
+                    <!-- Menggunakan Inline Base64 SVG Ikon Pesawat agar 100% tahan CORS dan Offline Safe -->
                     <img
-                        src="Lion_Air-Logo.wine.png"
-                        alt="Lion Air Logo"
+                        src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'><path d='M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z' /></svg>"
+                        alt="Global Airways Logo"
                         class="bp-logo-img"
-                        crossorigin="anonymous"
-                        onerror="
-                            this.onerror=null;
-                            this.src='https://upload.wikimedia.org/wikipedia/id/thumb/0/03/Lion_Air_logo.svg/320px-Lion_Air_logo.svg.png';
-                        "
                     >
-
                 </div>
 
                 <div
@@ -2189,65 +2177,43 @@
     ========================================================== */
 
     let appData = {
-
         invoice: '',
         pnr: '',
-
         titel: '',
         nama: '',
         namaLengkap: '',
-
         penumpangTambahan: [],
-
         asalKode: '',
         asalKota: '',
-
         tujuanKode: '',
         tujuanKota: '',
-
         tanggal: '',
         formatTanggal: '',
-
         flight: '',
         depTime: '',
         arrTime: '',
-
         basePrice: 0,
         taxPrice: 0,
         extraTaxPrice: 0,
         totalPrice: 0,
-
         kursi: '',
         bagasi: 15
-
     };
-
 
     /* =========================================================
        INITIALIZATION
     ========================================================== */
 
     document.addEventListener('DOMContentLoaded', function () {
-
         initSeatMap();
-
-        const tanggalInput =
-            document.getElementById('sel-tanggal');
-
+        const tanggalInput = document.getElementById('sel-tanggal');
         if (tanggalInput) {
-
-            /*
-             * Tidak mengubah tanggal bawaan pengguna,
-             * tetapi memastikan format valid.
-             */
             if (!tanggalInput.value) {
                 tanggalInput.value = getLocalDateISO();
             }
-
         }
-
         updatePassengerCount();
-
+        updateLivePrice();
     });
 
 
@@ -2256,86 +2222,33 @@
     ========================================================== */
 
     function getLocalDateISO(date = new Date()) {
-
         const year = date.getFullYear();
-
-        const month =
-            String(date.getMonth() + 1).padStart(2, '0');
-
-        const day =
-            String(date.getDate()).padStart(2, '0');
-
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
 
-
     function parseLocalDate(dateStr) {
-
-        if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-            return null;
-        }
-
+        if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
         const parts = dateStr.split('-');
-
         const year = Number(parts[0]);
         const month = Number(parts[1]) - 1;
         const day = Number(parts[2]);
-
-        const date =
-            new Date(year, month, day);
-
-        if (
-            date.getFullYear() !== year ||
-            date.getMonth() !== month ||
-            date.getDate() !== day
-        ) {
-            return null;
-        }
-
+        const date = new Date(year, month, day);
+        if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) return null;
         return date;
     }
 
-
     function formatTanggalIndo(dateInput) {
-
-        const date =
-            dateInput instanceof Date
-                ? new Date(dateInput.getTime())
-                : parseLocalDate(dateInput);
-
-        if (!date || isNaN(date.getTime())) {
-            return String(dateInput || '');
-        }
-
-        return date.toLocaleDateString(
-            'id-ID',
-            {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            }
-        );
+        const date = dateInput instanceof Date ? new Date(dateInput.getTime()) : parseLocalDate(dateInput);
+        if (!date || isNaN(date.getTime())) return String(dateInput || '');
+        return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
-
     function formatTanggalPendek(dateInput) {
-
-        const date =
-            dateInput instanceof Date
-                ? new Date(dateInput.getTime())
-                : parseLocalDate(dateInput);
-
-        if (!date || isNaN(date.getTime())) {
-            return String(dateInput || '');
-        }
-
-        return date.toLocaleDateString(
-            'id-ID',
-            {
-                day: '2-digit',
-                month: 'short'
-            }
-        );
+        const date = dateInput instanceof Date ? new Date(dateInput.getTime()) : parseLocalDate(dateInput);
+        if (!date || isNaN(date.getTime())) return String(dateInput || '');
+        return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
     }
 
 
@@ -2344,114 +2257,53 @@
     ========================================================== */
 
     function parseRuteManual(inputValue) {
-
-        const value =
-            String(inputValue || '').trim();
-
-        if (!value) {
-            return {
-                kode: '',
-                kota: ''
-            };
-        }
-
-        const separatorIndex =
-            value.indexOf('-');
-
+        const value = String(inputValue || '').trim();
+        if (!value) return { kode: '', kota: '' };
+        const separatorIndex = value.indexOf('-');
         if (separatorIndex !== -1) {
-
-            const kode =
-                value
-                    .substring(0, separatorIndex)
-                    .trim()
-                    .toUpperCase();
-
-            const kota =
-                value
-                    .substring(separatorIndex + 1)
-                    .trim();
-
-            return {
-                kode,
-                kota
-            };
+            const kode = value.substring(0, separatorIndex).trim().toUpperCase();
+            const kota = value.substring(separatorIndex + 1).trim();
+            return { kode, kota };
         }
-
-        const kode =
-            value
-                .substring(0, 3)
-                .toUpperCase();
-
-        return {
-            kode,
-            kota: value
-        };
+        const kode = value.substring(0, 3).toUpperCase();
+        return { kode, kota: value };
     }
 
-
     function validasiRute(route) {
-
-        if (!route.kode || route.kode.length < 3) {
-            return false;
-        }
-
-        if (!route.kota) {
-            return false;
-        }
-
+        if (!route.kode || route.kode.length < 3) return false;
+        if (!route.kota) return false;
         return true;
     }
 
 
     /* =========================================================
-       SEAT MAP
+       SEAT MAP (BUG FIX: Array Object Mencegah Kurung Bocor)
     ========================================================== */
 
     function initSeatMap() {
-
-        const seatSelect =
-            document.getElementById('ci-kursi');
-
-        if (!seatSelect) {
-            return;
-        }
-
+        const seatSelect = document.getElementById('ci-kursi');
+        if (!seatSelect) return;
         seatSelect.innerHTML = '';
+        
+        const seatLayouts = [
+            { code: 'A', desc: 'Jendela' },
+            { code: 'B', desc: 'Tengah' },
+            { code: 'C', desc: 'Lorong' },
+            { code: 'D', desc: 'Lorong' },
+            { code: 'E', desc: 'Tengah' },
+            { code: 'F', desc: 'Jendela' }
+        ];
 
         for (let i = 1; i <= 30; i++) {
-
-            [
-                'A (Jendela)',
-                'B (Tengah)',
-                'C (Lorong)',
-                'D (Lorong)',
-                'E (Tengah)',
-                'F (Jendela)'
-            ].forEach(function (seatLabel) {
-
-                const opt =
-                    document.createElement('option');
-
-                const seatCode =
-                    i + seatLabel.charAt(0);
-
+            seatLayouts.forEach(function (seatInfo) {
+                const opt = document.createElement('option');
+                const seatCode = i + seatInfo.code;
                 opt.value = seatCode;
-
-                opt.textContent =
-                    seatCode +
-                    ' - ' +
-                    seatLabel.substring(2);
-
-                if (seatCode === '9B') {
-                    opt.selected = true;
-                }
-
+                opt.textContent = seatCode + ' - ' + seatInfo.desc;
+                if (seatCode === '9B') opt.selected = true;
                 seatSelect.appendChild(opt);
-
             });
-
         }
-
     }
 
 
@@ -2460,56 +2312,19 @@
     ========================================================== */
 
     function switchTab(tabIndex) {
+        const modules = ['booking', 'eticket', 'checkin', 'boardingpass'];
+        if (tabIndex < 1 || tabIndex > modules.length) return;
 
-        const modules = [
-            'booking',
-            'eticket',
-            'checkin',
-            'boardingpass'
-        ];
+        document.querySelectorAll('.module').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.stepper li').forEach(el => el.classList.remove('active'));
 
-        if (
-            tabIndex < 1 ||
-            tabIndex > modules.length
-        ) {
-            return;
-        }
+        const module = document.getElementById(`mod-${modules[tabIndex - 1]}`);
+        const tab = document.getElementById(`tab-${tabIndex}`);
 
-        document
-            .querySelectorAll('.module')
-            .forEach(function (el) {
-                el.classList.remove('active');
-            });
+        if (module) module.classList.add('active');
+        if (tab) tab.classList.add('active');
 
-        document
-            .querySelectorAll('.stepper li')
-            .forEach(function (el) {
-                el.classList.remove('active');
-            });
-
-        const module =
-            document.getElementById(
-                `mod-${modules[tabIndex - 1]}`
-            );
-
-        const tab =
-            document.getElementById(
-                `tab-${tabIndex}`
-            );
-
-        if (module) {
-            module.classList.add('active');
-        }
-
-        if (tab) {
-            tab.classList.add('active');
-        }
-
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
 
@@ -2518,58 +2333,30 @@
     ========================================================== */
 
     function cariPenerbangan() {
-
-        const asal =
-            parseRuteManual(
-                document.getElementById('sel-asal').value
-            );
-
-        const tujuan =
-            parseRuteManual(
-                document.getElementById('sel-tujuan').value
-            );
-
-        const tanggal =
-            document.getElementById('sel-tanggal').value;
+        const asal = parseRuteManual(document.getElementById('sel-asal').value);
+        const tujuan = parseRuteManual(document.getElementById('sel-tujuan').value);
+        const tanggal = document.getElementById('sel-tanggal').value;
 
         if (!validasiRute(asal)) {
-            alert(
-                'Kota asal belum valid.\nGunakan format: AMQ - Ambon'
-            );
+            alert('Kota asal belum valid.\nGunakan format: AMQ - Ambon');
             return;
         }
-
         if (!validasiRute(tujuan)) {
-            alert(
-                'Kota tujuan belum valid.\nGunakan format: SUB - Surabaya'
-            );
+            alert('Kota tujuan belum valid.\nGunakan format: SUB - Surabaya');
             return;
         }
-
         if (asal.kode === tujuan.kode) {
-            alert(
-                'Kota asal dan tujuan tidak boleh sama.'
-            );
+            alert('Kota asal dan tujuan tidak boleh sama.');
             return;
         }
-
         if (!parseLocalDate(tanggal)) {
-            alert(
-                'Tanggal keberangkatan belum valid.'
-            );
+            alert('Tanggal keberangkatan belum valid.');
             return;
         }
 
-        document
-            .getElementById('flight-results')
-            .classList.remove('hidden');
-
-        document
-            .getElementById('form-penumpang')
-            .classList.add('hidden');
-
+        document.getElementById('flight-results').classList.remove('hidden');
+        document.getElementById('form-penumpang').classList.add('hidden');
         appData.flight = '';
-
     }
 
 
@@ -2577,38 +2364,41 @@
        PILIH PENERBANGAN
     ========================================================== */
 
-    function pilihPenerbangan(
-        element,
-        flight,
-        dep,
-        arr,
-        price
-    ) {
-
-        document
-            .querySelectorAll('.flight-card')
-            .forEach(function (el) {
-                el.classList.remove('selected');
-            });
-
-        if (element) {
-            element.classList.add('selected');
-        }
+    function pilihPenerbangan(element, flight, dep, arr, price) {
+        document.querySelectorAll('.flight-card').forEach(el => el.classList.remove('selected'));
+        if (element) element.classList.add('selected');
 
         appData.flight = String(flight).toUpperCase();
         appData.depTime = dep;
         appData.arrTime = arr;
 
-        document
-            .getElementById('inp-harga-manual')
-            .value = price;
-
-        document
-            .getElementById('form-penumpang')
-            .classList.remove('hidden');
+        document.getElementById('inp-harga-manual').value = price;
+        document.getElementById('form-penumpang').classList.remove('hidden');
 
         updatePassengerCount();
+        updateLivePrice(); // Panggil kalkulasi live
+    }
 
+
+    /* =========================================================
+       UPDATE HARGA REAL-TIME (FITUR BARU UNTUK UX)
+    ========================================================== */
+    function updateLivePrice() {
+        const inputHargaManual = document.getElementById('inp-harga-manual');
+        const displayTotal = document.getElementById('live-total-price');
+        
+        if(!inputHargaManual || !displayTotal) return;
+
+        const baseUnit = Number(inputHargaManual.value) || 0;
+        const extraPaxCount = document.querySelectorAll('#daftar-penumpang-tambahan > div').length;
+        const totalPaxCount = 1 + extraPaxCount;
+
+        const basePrice = Math.round(baseUnit * totalPaxCount);
+        const taxPrice = Math.round(basePrice * 0.10);
+        const extraTaxPrice = Math.round(basePrice * 0.05);
+        const totalPrice = basePrice + taxPrice + extraTaxPrice;
+
+        displayTotal.innerText = formatRupiah(totalPrice);
     }
 
 
@@ -2617,28 +2407,13 @@
     ========================================================== */
 
     function tambahBarisPenumpang() {
+        const container = document.getElementById('daftar-penumpang-tambahan');
+        if (!container) return;
 
-        const container =
-            document.getElementById(
-                'daftar-penumpang-tambahan'
-            );
-
-        if (!container) {
-            return;
-        }
-
-        const divId =
-            'pax-row-' +
-            Date.now() +
-            '-' +
-            Math.floor(Math.random() * 1000);
-
-        const wrapper =
-            document.createElement('div');
-
+        const divId = 'pax-row-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+        const wrapper = document.createElement('div');
         wrapper.id = divId;
         wrapper.className = 'form-row';
-
         wrapper.style.cssText = `
             align-items:flex-end;
             margin-bottom:15px;
@@ -2649,189 +2424,72 @@
         `;
 
         wrapper.innerHTML = `
-
-            <div
-                class="form-group"
-                style="flex:0.3;min-width:90px;"
-            >
-
+            <div class="form-group" style="flex:0.3;min-width:90px;">
                 <label>Titel</label>
-
                 <select class="form-control pax-titel">
-
-                    <option value="MR">
-                        Mr.
-                    </option>
-
-                    <option value="MS">
-                        Ms.
-                    </option>
-
-                    <option value="MRS">
-                        Mrs.
-                    </option>
-
+                    <option value="MR">Mr.</option>
+                    <option value="MS">Ms.</option>
+                    <option value="MRS">Mrs.</option>
                 </select>
-
             </div>
-
-            <div
-                class="form-group"
-                style="flex:1;"
-            >
-
-                <label>
-                    Nama Penumpang Tambahan
-                </label>
-
-                <input
-                    type="text"
-                    class="form-control pax-nama"
-                    placeholder="Nama Sesuai KTP/Paspor"
-                    autocomplete="off"
-                >
-
+            <div class="form-group" style="flex:1;">
+                <label>Nama Penumpang Tambahan</label>
+                <input type="text" class="form-control pax-nama" placeholder="Nama Sesuai KTP/Paspor" autocomplete="off">
             </div>
-
-            <button
-                type="button"
-                class="btn"
-                aria-label="Hapus penumpang"
-                style="
-                    background:#ef4444;
-                    color:#fff;
-                    width:auto;
-                    padding:14px 18px;
-                "
-            >
+            <button type="button" class="btn" aria-label="Hapus penumpang" style="background:#ef4444; color:#fff; width:auto; padding:14px 18px;">
                 ✕
             </button>
         `;
 
-        const removeButton =
-            wrapper.querySelector('button');
-
-        removeButton.addEventListener(
-            'click',
-            function () {
-
-                wrapper.remove();
-
-                updatePassengerCount();
-
-            }
-        );
+        const removeButton = wrapper.querySelector('button');
+        removeButton.addEventListener('click', function () {
+            wrapper.remove();
+            updatePassengerCount();
+            updateLivePrice(); // Update harga saat dihapus
+        });
 
         container.appendChild(wrapper);
-
         updatePassengerCount();
+        updateLivePrice(); // Update harga saat ditambah
 
-        const newNameInput =
-            wrapper.querySelector('.pax-nama');
-
-        if (newNameInput) {
-            newNameInput.focus();
-        }
-
+        const newNameInput = wrapper.querySelector('.pax-nama');
+        if (newNameInput) newNameInput.focus();
     }
 
 
     function updatePassengerCount() {
+        const container = document.getElementById('daftar-penumpang-tambahan');
+        const info = document.getElementById('jumlah-pax-info');
+        const text = document.getElementById('jumlah-pax-text');
 
-        const container =
-            document.getElementById(
-                'daftar-penumpang-tambahan'
-            );
+        if (!container || !info || !text) return;
 
-        const info =
-            document.getElementById(
-                'jumlah-pax-info'
-            );
-
-        const text =
-            document.getElementById(
-                'jumlah-pax-text'
-            );
-
-        if (!container || !info || !text) {
-            return;
-        }
-
-        const count =
-            container.querySelectorAll(
-                '.pax-nama'
-            ).length + 1;
-
-        text.textContent =
-            count +
-            (count === 1
-                ? ' Penumpang'
-                : ' Penumpang');
-
+        const count = container.querySelectorAll('.pax-nama').length + 1;
+        text.textContent = count + ' Penumpang';
         info.classList.remove('hidden');
-
     }
 
 
     /* =========================================================
-       GENERATE PNR
+       GENERATE PNR & INVOICE
     ========================================================== */
 
     function generatePNR() {
-
-        const chars =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let pnr = '';
-
         for (let i = 0; i < 6; i++) {
-
-            pnr +=
-                chars.charAt(
-                    Math.floor(
-                        Math.random() *
-                        chars.length
-                    )
-                );
-
+            pnr += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-
         return pnr;
-
     }
-
-
-    /* =========================================================
-       GENERATE INVOICE
-    ========================================================== */
 
     function generateInvoice() {
-
-        return (
-            'INV-' +
-            Math.floor(
-                10000000 +
-                Math.random() * 90000000
-            )
-        );
-
+        return 'INV-' + Math.floor(10000000 + Math.random() * 90000000);
     }
 
-
-    /* =========================================================
-       FORMAT RUPIAH
-    ========================================================== */
-
     function formatRupiah(value) {
-
-        const number =
-            Number(value) || 0;
-
-        return (
-            'Rp ' +
-            number.toLocaleString('id-ID')
-        );
-
+        const number = Number(value) || 0;
+        return 'Rp ' + number.toLocaleString('id-ID');
     }
 
 
@@ -2840,367 +2498,115 @@
     ========================================================== */
 
     function terbitkanETicket() {
-
         if (!appData.flight) {
-
-            alert(
-                'Pilih jadwal penerbangan terlebih dahulu!'
-            );
-
+            alert('Pilih jadwal penerbangan terlebih dahulu!');
             return;
         }
 
-        const namaInput =
-            document
-                .getElementById('inp-nama-pax')
-                .value
-                .trim();
-
-        const titelInput =
-            document
-                .getElementById('inp-titel')
-                .value;
-
-        const hargaInput =
-            document
-                .getElementById('inp-harga-manual')
-                .value;
-
-        const tanggal =
-            document
-                .getElementById('sel-tanggal')
-                .value;
-
-        const asal =
-            parseRuteManual(
-                document
-                    .getElementById('sel-asal')
-                    .value
-            );
-
-        const tujuan =
-            parseRuteManual(
-                document
-                    .getElementById('sel-tujuan')
-                    .value
-            );
+        const namaInput = document.getElementById('inp-nama-pax').value.trim();
+        const titelInput = document.getElementById('inp-titel').value;
+        const hargaInput = document.getElementById('inp-harga-manual').value;
+        const tanggal = document.getElementById('sel-tanggal').value;
+        const asal = parseRuteManual(document.getElementById('sel-asal').value);
+        const tujuan = parseRuteManual(document.getElementById('sel-tujuan').value);
 
         /* VALIDASI */
-
         if (!namaInput) {
-
-            alert(
-                'Nama penumpang utama harus diisi!'
-            );
-
+            alert('Nama penumpang utama harus diisi!');
             return;
         }
-
         if (!validasiRute(asal)) {
-
-            alert(
-                'Kota asal tidak valid.'
-            );
-
+            alert('Kota asal tidak valid.');
             return;
         }
-
         if (!validasiRute(tujuan)) {
-
-            alert(
-                'Kota tujuan tidak valid.'
-            );
-
+            alert('Kota tujuan tidak valid.');
             return;
         }
-
         if (asal.kode === tujuan.kode) {
-
-            alert(
-                'Kota asal dan tujuan tidak boleh sama.'
-            );
-
+            alert('Kota asal dan tujuan tidak boleh sama.');
             return;
         }
-
         if (!parseLocalDate(tanggal)) {
-
-            alert(
-                'Tanggal keberangkatan tidak valid.'
-            );
-
+            alert('Tanggal keberangkatan tidak valid.');
             return;
         }
-
-        const baseUnit =
-            Number(hargaInput);
-
-        if (
-            !Number.isFinite(baseUnit) ||
-            baseUnit < 0
-        ) {
-
-            alert(
-                'Harga tiket tidak valid.'
-            );
-
+        const baseUnit = Number(hargaInput);
+        if (!Number.isFinite(baseUnit) || baseUnit < 0) {
+            alert('Harga tiket tidak valid.');
             return;
         }
 
         /* PENUMPANG TAMBAHAN */
-
         appData.penumpangTambahan = [];
+        document.querySelectorAll('#daftar-penumpang-tambahan > div').forEach(function (row) {
+            const titel = row.querySelector('.pax-titel');
+            const nama = row.querySelector('.pax-nama');
+            if (!titel || !nama) return;
+            const namaValue = nama.value.trim();
+            if (namaValue) {
+                appData.penumpangTambahan.push({
+                    titel: titel.value,
+                    nama: namaValue.toUpperCase()
+                });
+            }
+        });
 
-        document
-            .querySelectorAll(
-                '#daftar-penumpang-tambahan > div'
-            )
-            .forEach(function (row) {
-
-                const titel =
-                    row.querySelector(
-                        '.pax-titel'
-                    );
-
-                const nama =
-                    row.querySelector(
-                        '.pax-nama'
-                    );
-
-                if (!titel || !nama) {
-                    return;
-                }
-
-                const namaValue =
-                    nama.value.trim();
-
-                if (namaValue) {
-
-                    appData.penumpangTambahan.push({
-
-                        titel: titel.value,
-
-                        nama:
-                            namaValue.toUpperCase()
-
-                    });
-
-                }
-
-            });
-
-        /* TOTAL PENUMPANG */
-
-        const totalPaxCount =
-            1 +
-            appData.penumpangTambahan.length;
-
-        /* PERHITUNGAN HARGA */
-
-        appData.basePrice =
-            Math.round(
-                baseUnit *
-                totalPaxCount
-            );
-
-        appData.taxPrice =
-            Math.round(
-                appData.basePrice * 0.10
-            );
-
-        appData.extraTaxPrice =
-            Math.round(
-                appData.basePrice * 0.05
-            );
-
-        appData.totalPrice =
-            appData.basePrice +
-            appData.taxPrice +
-            appData.extraTaxPrice;
+        /* TOTAL PENUMPANG & PERHITUNGAN HARGA */
+        const totalPaxCount = 1 + appData.penumpangTambahan.length;
+        appData.basePrice = Math.round(baseUnit * totalPaxCount);
+        appData.taxPrice = Math.round(appData.basePrice * 0.10);
+        appData.extraTaxPrice = Math.round(appData.basePrice * 0.05);
+        appData.totalPrice = appData.basePrice + appData.taxPrice + appData.extraTaxPrice;
 
         /* DATA UTAMA */
+        appData.titel = titelInput;
+        appData.nama = namaInput.toUpperCase();
+        appData.namaLengkap = `${appData.titel} ${appData.nama}`;
 
-        appData.titel =
-            titelInput;
-
-        appData.nama =
-            namaInput.toUpperCase();
-
-        appData.namaLengkap =
-            `${appData.titel} ${appData.nama}`;
-
-        if (
-            appData.penumpangTambahan.length > 0
-        ) {
-
-            appData.namaLengkap +=
-                ` & ${appData.penumpangTambahan.length} Penumpang Lain`;
-
+        if (appData.penumpangTambahan.length > 0) {
+            appData.namaLengkap += ` & ${appData.penumpangTambahan.length} Penumpang Lain`;
         }
 
-        appData.asalKode =
-            asal.kode;
+        appData.asalKode = asal.kode;
+        appData.asalKota = asal.kota;
+        appData.tujuanKode = tujuan.kode;
+        appData.tujuanKota = tujuan.kota;
+        appData.tanggal = tanggal;
+        appData.formatTanggal = formatTanggalIndo(tanggal);
+        appData.pnr = generatePNR();
+        appData.invoice = generateInvoice();
 
-        appData.asalKota =
-            asal.kota;
-
-        appData.tujuanKode =
-            tujuan.kode;
-
-        appData.tujuanKota =
-            tujuan.kota;
-
-        appData.tanggal =
-            tanggal;
-
-        appData.formatTanggal =
-            formatTanggalIndo(tanggal);
-
-        /* PNR + INVOICE */
-
-        appData.pnr =
-            generatePNR();
-
-        appData.invoice =
-            generateInvoice();
-
-        /* =====================================================
-           WAKTU BOOKING H-2
-           DIPERBAIKI AGAR TIDAK TERKENA UTC SHIFT
-        ====================================================== */
-
-        const depDateObj =
-            parseLocalDate(tanggal);
-
+        /* WAKTU BOOKING H-2 */
+        const depDateObj = parseLocalDate(tanggal);
         if (depDateObj) {
-
-            const bookingDate =
-                new Date(
-                    depDateObj.getTime()
-                );
-
-            bookingDate.setDate(
-                bookingDate.getDate() - 2
-            );
-
-            const jamAcak =
-                Math.floor(
-                    Math.random() * 8 + 8
-                )
-                .toString()
-                .padStart(2, '0');
-
-            const menitAcak =
-                Math.floor(
-                    Math.random() * 60
-                )
-                .toString()
-                .padStart(2, '0');
-
-            document
-                .getElementById(
-                    'et-booking-time'
-                )
-                .innerText =
-                `(${formatTanggalIndo(bookingDate)}, ${jamAcak}:${menitAcak} WITA)`;
-
+            const bookingDate = new Date(depDateObj.getTime());
+            bookingDate.setDate(bookingDate.getDate() - 2);
+            const jamAcak = Math.floor(Math.random() * 8 + 8).toString().padStart(2, '0');
+            const menitAcak = Math.floor(Math.random() * 60).toString().padStart(2, '0');
+            document.getElementById('et-booking-time').innerText = `(${formatTanggalIndo(bookingDate)}, ${jamAcak}:${menitAcak} WITA)`;
         }
 
-        /* =====================================================
-           WAKTU TIBA
-        ====================================================== */
+        /* WAKTU TIBA */
+        appData.arrTime = hitungWaktuTibaOtomatis(appData.depTime, appData.asalKode, appData.tujuanKode);
 
-        appData.arrTime =
-            hitungWaktuTibaOtomatis(
-                appData.depTime,
-                appData.asalKode,
-                appData.tujuanKode
-            );
-
-        /* =====================================================
-           E-TICKET
-        ====================================================== */
-
-        document
-            .getElementById('et-invoice')
-            .innerText =
-            appData.invoice;
-
-        document
-            .getElementById('et-pnr')
-            .value =
-            appData.pnr;
-
-        document
-            .getElementById('et-nama')
-            .innerText =
-            appData.namaLengkap;
-
-        document
-            .getElementById('et-rute')
-            .innerText =
-            `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
-
-        document
-            .getElementById('et-waktu')
-            .innerText =
-            `${appData.formatTanggal} | Berangkat: ${appData.depTime}`;
-
-        document
-            .getElementById('et-waktu-tiba')
-            .innerText =
-            `${appData.formatTanggal} | Tiba (Estimasi): ${appData.arrTime}`;
-
-        document
-            .getElementById('et-flight')
-            .innerText =
-            appData.flight;
-
-        document
-            .getElementById('et-edit-flight')
-            .value =
-            appData.flight;
-
-        document
-            .getElementById('et-harga-dasar')
-            .innerText =
-            formatRupiah(
-                appData.basePrice
-            );
-
-        document
-            .getElementById('et-pajak')
-            .innerText =
-            formatRupiah(
-                appData.taxPrice
-            );
-
-        document
-            .getElementById('et-pajak-ekstra')
-            .innerText =
-            formatRupiah(
-                appData.extraTaxPrice
-            );
-
-        document
-            .getElementById('et-harga-total')
-            .innerText =
-            formatRupiah(
-                appData.totalPrice
-            );
-
-        /* DAFTAR PENUMPANG */
+        /* UPDATE DOM E-TICKET */
+        document.getElementById('et-invoice').innerText = appData.invoice;
+        document.getElementById('et-pnr').value = appData.pnr;
+        document.getElementById('et-nama').innerText = appData.namaLengkap;
+        document.getElementById('et-rute').innerText = `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
+        document.getElementById('et-waktu').innerText = `${appData.formatTanggal} | Berangkat: ${appData.depTime}`;
+        document.getElementById('et-waktu-tiba').innerText = `${appData.formatTanggal} | Tiba (Estimasi): ${appData.arrTime}`;
+        document.getElementById('et-flight').innerText = appData.flight;
+        document.getElementById('et-edit-flight').value = appData.flight;
+        document.getElementById('et-harga-dasar').innerText = formatRupiah(appData.basePrice);
+        document.getElementById('et-pajak').innerText = formatRupiah(appData.taxPrice);
+        document.getElementById('et-pajak-ekstra').innerText = formatRupiah(appData.extraTaxPrice);
+        document.getElementById('et-harga-total').innerText = formatRupiah(appData.totalPrice);
 
         renderPassengerList();
-
-        /* QR */
-
         updateQRRealtime();
-
-        /* PINDAH */
-
         switchTab(2);
-
     }
 
 
@@ -3209,109 +2615,46 @@
     ========================================================== */
 
     function renderPassengerList() {
+        const row = document.getElementById('et-pax-list-row');
+        const list = document.getElementById('et-pax-list');
 
-        const row =
-            document.getElementById(
-                'et-pax-list-row'
-            );
+        if (!row || !list) return;
 
-        const list =
-            document.getElementById(
-                'et-pax-list'
-            );
-
-        if (!row || !list) {
-            return;
-        }
-
-        if (
-            appData.penumpangTambahan.length === 0
-        ) {
-
+        if (appData.penumpangTambahan.length === 0) {
             row.classList.add('hidden');
-
             list.innerHTML = '';
-
             return;
         }
 
         row.classList.remove('hidden');
-
-        const allPassengers = [
-
-            {
-                titel: appData.titel,
-                nama: appData.nama
-            },
-
-            ...appData.penumpangTambahan
-
-        ];
-
-        list.innerHTML =
-            allPassengers
-                .map(function (pax, index) {
-
-                    return `
-                        <div
-                            style="
-                                margin-bottom:6px;
-                                font-weight:700;
-                            "
-                        >
-                            ${index + 1}. ${escapeHTML(pax.titel)} ${escapeHTML(pax.nama)}
-                        </div>
-                    `;
-
-                })
-                .join('');
-
+        const allPassengers = [{ titel: appData.titel, nama: appData.nama }, ...appData.penumpangTambahan];
+        list.innerHTML = allPassengers.map(function (pax, index) {
+            return `
+                <div style="margin-bottom:6px; font-weight:700;">
+                    ${index + 1}. ${escapeHTML(pax.titel)} ${escapeHTML(pax.nama)}
+                </div>
+            `;
+        }).join('');
     }
 
 
-    /* =========================================================
-       ESCAPE HTML
-    ========================================================== */
-
     function escapeHTML(value) {
-
         return String(value || '')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
-
     }
 
 
-    /* =========================================================
-       UPDATE FLIGHT MANUAL
-    ========================================================== */
-
     function updateFlightManual(val) {
-
-        const clean =
-            String(val || '')
-                .trim()
-                .toUpperCase();
-
+        const clean = String(val || '').trim().toUpperCase();
         if (clean !== '') {
-
             appData.flight = clean;
-
-            const etFlight =
-                document.getElementById(
-                    'et-flight'
-                );
-
-            if (etFlight) {
-                etFlight.innerText =
-                    appData.flight;
-            }
-
+            const etFlight = document.getElementById('et-flight');
+            if (etFlight) etFlight.innerText = appData.flight;
         }
-
     }
 
 
@@ -3319,101 +2662,30 @@
        HITUNG WAKTU TIBA
     ========================================================== */
 
-    function hitungWaktuTibaOtomatis(
-        depStr,
-        asal,
-        tujuan
-    ) {
+    function hitungWaktuTibaOtomatis(depStr, asal, tujuan) {
+        if (!/^\d{1,2}:\d{2}$/.test(depStr)) return '';
+        const parts = depStr.split(':');
+        let hours = parseInt(parts[0], 10);
+        let minutes = parseInt(parts[1], 10);
 
-        if (!/^\d{1,2}:\d{2}$/.test(depStr)) {
-            return '';
-        }
-
-        const parts =
-            depStr.split(':');
-
-        let hours =
-            parseInt(parts[0], 10);
-
-        let minutes =
-            parseInt(parts[1], 10);
-
-        if (
-            isNaN(hours) ||
-            isNaN(minutes) ||
-            hours < 0 ||
-            hours > 23 ||
-            minutes < 0 ||
-            minutes > 59
-        ) {
-            return '';
-        }
-
-        /*
-         * Default durasi penerbangan:
-         * 1 jam 45 menit.
-         *
-         * Fungsi tetap menerima asal & tujuan
-         * agar dapat dikembangkan menjadi
-         * database durasi rute.
-         */
+        if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return '';
 
         let duration = 105;
-
-        /*
-         * Beberapa contoh durasi rute.
-         * Jika rute tidak ditemukan,
-         * otomatis menggunakan 105 menit.
-         */
-
-        const routeKey =
-            `${String(asal).toUpperCase()}-${String(tujuan).toUpperCase()}`;
-
+        const routeKey = `${String(asal).toUpperCase()}-${String(tujuan).toUpperCase()}`;
         const routeDurations = {
-
-            'AMQ-SUB': 165,
-            'AMQ-UPG': 180,
-            'AMQ-CGK': 195,
-            'AMQ-LUV': 120,
-            'SUB-AMQ': 165,
-            'UPG-AMQ': 180,
-            'CGK-AMQ': 195,
-            'LUV-AMQ': 120
-
+            'AMQ-SUB': 165, 'AMQ-UPG': 180, 'AMQ-CGK': 195, 'AMQ-LUV': 120,
+            'SUB-AMQ': 165, 'UPG-AMQ': 180, 'CGK-AMQ': 195, 'LUV-AMQ': 120
         };
 
-        if (
-            Object.prototype.hasOwnProperty.call(
-                routeDurations,
-                routeKey
-            )
-        ) {
-            duration =
-                routeDurations[routeKey];
+        if (Object.prototype.hasOwnProperty.call(routeDurations, routeKey)) {
+            duration = routeDurations[routeKey];
         }
 
-        let totalMinutes =
-            hours * 60 +
-            minutes +
-            duration;
-
-        totalMinutes =
-            totalMinutes % 1440;
-
-        const finalHour =
-            Math.floor(
-                totalMinutes / 60
-            )
-            .toString()
-            .padStart(2, '0');
-
-        const finalMinute =
-            (totalMinutes % 60)
-                .toString()
-                .padStart(2, '0');
-
+        let totalMinutes = hours * 60 + minutes + duration;
+        totalMinutes = totalMinutes % 1440;
+        const finalHour = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+        const finalMinute = (totalMinutes % 60).toString().padStart(2, '0');
         return `${finalHour}:${finalMinute}`;
-
     }
 
 
@@ -3422,77 +2694,33 @@
     ========================================================== */
 
     function updateQRRealtime() {
+        const pnrInput = document.getElementById('et-pnr');
+        const qrContainer = document.getElementById('eticket-qrcode');
 
-        const pnrInput =
-            document.getElementById(
-                'et-pnr'
-            );
+        if (!pnrInput || !qrContainer) return;
 
-        const qrContainer =
-            document.getElementById(
-                'eticket-qrcode'
-            );
-
-        if (!pnrInput || !qrContainer) {
-            return;
-        }
-
-        appData.pnr =
-            pnrInput.value
-                .toUpperCase()
-                .replace(/[^A-Z0-9]/g, '');
-
-        pnrInput.value =
-            appData.pnr;
-
+        appData.pnr = pnrInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        pnrInput.value = appData.pnr;
         qrContainer.innerHTML = '';
 
-        if (
-            typeof QRCode === 'undefined'
-        ) {
-
-            qrContainer.innerHTML =
-                '<span style="color:#dc2626;font-size:12px;">QR Code library gagal dimuat.</span>';
-
+        if (typeof QRCode === 'undefined') {
+            qrContainer.innerHTML = '<span style="color:#dc2626;font-size:12px;">QR Code library gagal dimuat.</span>';
             return;
         }
 
         try {
-
-            new QRCode(
-                qrContainer,
-                {
-                    text:
-                        `E-TICKET VALIDATION\n` +
-                        `INV: ${appData.invoice}\n` +
-                        `PNR: ${appData.pnr}\n` +
-                        `NAMA: ${appData.namaLengkap}\n` +
-                        `RUTE: ${appData.asalKode}-${appData.tujuanKode}`,
-
-                    width: 130,
-                    height: 130,
-
-                    colorDark: '#0f172a',
-
-                    colorLight: '#ffffff',
-
-                    correctLevel:
-                        QRCode.CorrectLevel.M
-                }
-            );
-
+            new QRCode(qrContainer, {
+                text: `E-TICKET VALIDATION\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.namaLengkap}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
+                width: 130,
+                height: 130,
+                colorDark: '#0f172a',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.M
+            });
         } catch (error) {
-
-            console.error(
-                'QR Code Error:',
-                error
-            );
-
-            qrContainer.innerHTML =
-                '<span style="color:#dc2626;font-size:12px;">QR Code gagal dibuat.</span>';
-
+            console.error('QR Code Error:', error);
+            qrContainer.innerHTML = '<span style="color:#dc2626;font-size:12px;">QR Code gagal dibuat.</span>';
         }
-
     }
 
 
@@ -3501,43 +2729,20 @@
     ========================================================== */
 
     function pindahKeCheckin() {
-
         if (!appData.pnr) {
-
-            alert(
-                'E-Ticket belum diterbitkan.'
-            );
-
+            alert('E-Ticket belum diterbitkan.');
             return;
         }
 
-        appData.pnr =
-            document
-                .getElementById('et-pnr')
-                .value
-                .toUpperCase();
-
+        appData.pnr = document.getElementById('et-pnr').value.toUpperCase();
         if (!appData.pnr) {
-
-            alert(
-                'Kode PNR tidak boleh kosong.'
-            );
-
+            alert('Kode PNR tidak boleh kosong.');
             return;
         }
 
-        document
-            .getElementById('ci-pnr')
-            .value =
-            appData.pnr;
-
-        document
-            .getElementById('ci-nama')
-            .value =
-            `${appData.titel} ${appData.nama}`;
-
+        document.getElementById('ci-pnr').value = appData.pnr;
+        document.getElementById('ci-nama').value = `${appData.titel} ${appData.nama}`;
         switchTab(3);
-
     }
 
 
@@ -3546,145 +2751,49 @@
     ========================================================== */
 
     function terbitkanBoardingPass() {
-
         if (!appData.pnr) {
-
-            alert(
-                'E-Ticket belum diterbitkan.'
-            );
-
+            alert('E-Ticket belum diterbitkan.');
             return;
         }
 
-        const isSetuju =
-            document
-                .getElementById('ci-aggrement')
-                .checked;
-
+        const isSetuju = document.getElementById('ci-aggrement').checked;
         if (!isSetuju) {
-
-            alert(
-                'Anda harus menyetujui aturan barang berbahaya (Dangerous Goods) untuk melanjutkan Check-in.'
-            );
-
+            alert('Anda harus menyetujui aturan barang berbahaya (Dangerous Goods) untuk melanjutkan Check-in.');
             return;
         }
 
-        const seat =
-            document
-                .getElementById('ci-kursi')
-                .value;
-
-        const bagasi =
-            Number(
-                document
-                    .getElementById('ci-bagasi')
-                    .value
-            );
+        const seat = document.getElementById('ci-kursi').value;
+        const bagasi = Number(document.getElementById('ci-bagasi').value);
 
         if (!seat) {
-
-            alert(
-                'Silakan pilih kursi terlebih dahulu.'
-            );
-
+            alert('Silakan pilih kursi terlebih dahulu.');
+            return;
+        }
+        if (!Number.isFinite(bagasi) || bagasi < 0) {
+            alert('Jumlah bagasi tidak valid.');
             return;
         }
 
-        if (
-            !Number.isFinite(bagasi) ||
-            bagasi < 0
-        ) {
+        appData.kursi = seat;
+        appData.bagasi = bagasi;
 
-            alert(
-                'Jumlah bagasi tidak valid.'
-            );
+        const waktuBoarding = formatTanggalPendek(appData.tanggal) + ', ' + hitungWaktuBoarding(appData.depTime);
 
-            return;
-        }
-
-        appData.kursi =
-            seat;
-
-        appData.bagasi =
-            bagasi;
-
-        const waktuBoarding =
-            formatTanggalPendek(
-                appData.tanggal
-            ) +
-            ', ' +
-            hitungWaktuBoarding(
-                appData.depTime
-            );
-
-        /* DATA BOARDING PASS */
-
-        document
-            .getElementById('bp-out-tanggal')
-            .innerText =
-            appData.formatTanggal;
-
-        document
-            .getElementById('bp-out-nama')
-            .innerText =
-            `${appData.titel} ${appData.nama}`;
-
-        document
-            .getElementById('bp-out-asal-kode')
-            .innerText =
-            appData.asalKode;
-
-        document
-            .getElementById('bp-out-asal-kota')
-            .innerText =
-            appData.asalKota;
-
-        document
-            .getElementById('bp-out-tujuan-kode')
-            .innerText =
-            appData.tujuanKode;
-
-        document
-            .getElementById('bp-out-tujuan-kota')
-            .innerText =
-            appData.tujuanKota;
-
-        document
-            .getElementById('bp-out-flight')
-            .innerText =
-            appData.flight;
-
-        document
-            .getElementById('bp-out-kursi')
-            .innerText =
-            appData.kursi;
-
-        document
-            .getElementById('bp-out-waktu-board')
-            .innerText =
-            waktuBoarding;
-
-        document
-            .getElementById('bp-out-waktu-dep')
-            .innerText =
-            appData.depTime;
-
-        document
-            .getElementById('bp-out-waktu-arr')
-            .innerText =
-            appData.arrTime;
-
-        /* QR BOARDING PASS */
+        document.getElementById('bp-out-tanggal').innerText = appData.formatTanggal;
+        document.getElementById('bp-out-nama').innerText = `${appData.titel} ${appData.nama}`;
+        document.getElementById('bp-out-asal-kode').innerText = appData.asalKode;
+        document.getElementById('bp-out-asal-kota').innerText = appData.asalKota;
+        document.getElementById('bp-out-tujuan-kode').innerText = appData.tujuanKode;
+        document.getElementById('bp-out-tujuan-kota').innerText = appData.tujuanKota;
+        document.getElementById('bp-out-flight').innerText = appData.flight;
+        document.getElementById('bp-out-kursi').innerText = appData.kursi;
+        document.getElementById('bp-out-waktu-board').innerText = waktuBoarding;
+        document.getElementById('bp-out-waktu-dep').innerText = appData.depTime;
+        document.getElementById('bp-out-waktu-arr').innerText = appData.arrTime;
 
         generateBoardingPassQR();
-
-        /* BARCODE */
-
         generateBoardingPassBarcode();
-
         switchTab(4);
-
     }
 
 
@@ -3693,62 +2802,27 @@
     ========================================================== */
 
     function generateBoardingPassQR() {
-
-        const container =
-            document.getElementById(
-                'bp-qrcode-box'
-            );
-
-        if (!container) {
-            return;
-        }
-
+        const container = document.getElementById('bp-qrcode-box');
+        if (!container) return;
         container.innerHTML = '';
 
-        if (
-            typeof QRCode === 'undefined'
-        ) {
-
-            container.innerHTML =
-                '<span style="font-size:10px;color:#dc2626;text-align:center;">QR gagal dimuat</span>';
-
+        if (typeof QRCode === 'undefined') {
+            container.innerHTML = '<span style="font-size:10px;color:#dc2626;text-align:center;">QR gagal dimuat</span>';
             return;
         }
 
         try {
-
-            new QRCode(
-                container,
-                {
-                    text:
-                        `BOARDING PASS\n` +
-                        `PNR: ${appData.pnr}\n` +
-                        `NAME: ${appData.titel} ${appData.nama}\n` +
-                        `FLIGHT: ${appData.flight}\n` +
-                        `DATE: ${appData.formatTanggal}\n` +
-                        `TIME: ${appData.depTime}\n` +
-                        `SEAT: ${appData.kursi}`,
-
-                    width: 100,
-                    height: 100,
-
-                    colorDark: '#000000',
-                    colorLight: '#ffffff',
-
-                    correctLevel:
-                        QRCode.CorrectLevel.L
-                }
-            );
-
+            new QRCode(container, {
+                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.titel} ${appData.nama}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
+                width: 100,
+                height: 100,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.L
+            });
         } catch (error) {
-
-            console.error(
-                'Boarding Pass QR Error:',
-                error
-            );
-
+            console.error('Boarding Pass QR Error:', error);
         }
-
     }
 
 
@@ -3757,67 +2831,28 @@
     ========================================================== */
 
     function generateBoardingPassBarcode() {
-
-        const svg =
-            document.getElementById(
-                'barcode-svg'
-            );
-
-        if (!svg) {
-            return;
-        }
-
+        const svg = document.getElementById('barcode-svg');
+        if (!svg) return;
         svg.innerHTML = '';
 
-        if (
-            typeof JsBarcode === 'undefined'
-        ) {
-
-            console.error(
-                'JsBarcode library gagal dimuat.'
-            );
-
+        if (typeof JsBarcode === 'undefined') {
+            console.error('JsBarcode library gagal dimuat.');
             return;
         }
 
         try {
-
-            const barcodeData =
-                (
-                    appData.pnr +
-                    appData.flight +
-                    appData.asalKode +
-                    appData.tujuanKode +
-                    appData.kursi
-                )
-                .replace(
-                    /\s+/g,
-                    ''
-                )
-                .toUpperCase();
-
-            JsBarcode(
-                '#barcode-svg',
-                barcodeData,
-                {
-                    format: 'CODE128',
-                    lineColor: '#000000',
-                    width: 2.5,
-                    height: 60,
-                    displayValue: false,
-                    margin: 0
-                }
-            );
-
+            const barcodeData = (appData.pnr + appData.flight + appData.asalKode + appData.tujuanKode + appData.kursi).replace(/\s+/g, '').toUpperCase();
+            JsBarcode('#barcode-svg', barcodeData, {
+                format: 'CODE128',
+                lineColor: '#000000',
+                width: 2.5,
+                height: 60,
+                displayValue: false,
+                margin: 0
+            });
         } catch (error) {
-
-            console.error(
-                'Barcode Error:',
-                error
-            );
-
+            console.error('Barcode Error:', error);
         }
-
     }
 
 
@@ -3825,61 +2860,21 @@
        HITUNG WAKTU BOARDING
     ========================================================== */
 
-    function hitungWaktuBoarding(
-        depTimeStr
-    ) {
+    function hitungWaktuBoarding(depTimeStr) {
+        if (!/^\d{1,2}:\d{2}$/.test(depTimeStr)) return '';
+        const parts = depTimeStr.split(':');
+        let hours = parseInt(parts[0], 10);
+        let minutes = parseInt(parts[1], 10);
 
-        if (!/^\d{1,2}:\d{2}$/.test(depTimeStr)) {
-            return '';
-        }
+        if (isNaN(hours) || isNaN(minutes)) return '';
 
-        const parts =
-            depTimeStr.split(':');
-
-        let hours =
-            parseInt(parts[0], 10);
-
-        let minutes =
-            parseInt(parts[1], 10);
-
-        if (
-            isNaN(hours) ||
-            isNaN(minutes)
-        ) {
-            return '';
-        }
-
-        let totalMinutes =
-            hours * 60 +
-            minutes -
-            30;
-
-        /*
-         * Menangani penerbangan
-         * yang waktu boarding-nya
-         * jatuh pada hari sebelumnya.
-         */
-
-        if (totalMinutes < 0) {
-            totalMinutes += 1440;
-        }
-
+        let totalMinutes = hours * 60 + minutes - 30;
+        if (totalMinutes < 0) totalMinutes += 1440;
         totalMinutes %= 1440;
 
-        const finalHour =
-            Math.floor(
-                totalMinutes / 60
-            )
-            .toString()
-            .padStart(2, '0');
-
-        const finalMinute =
-            (totalMinutes % 60)
-                .toString()
-                .padStart(2, '0');
-
+        const finalHour = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+        const finalMinute = (totalMinutes % 60).toString().padStart(2, '0');
         return `${finalHour}:${finalMinute}`;
-
     }
 
 
@@ -3888,36 +2883,14 @@
     ========================================================== */
 
     function printItinerary() {
-
-        document.body.classList.remove(
-            'print-bp'
-        );
-
-        document.body.classList.add(
-            'print-eticket'
-        );
-
-        const cleanup =
-            function () {
-
-                document.body.classList.remove(
-                    'print-eticket'
-                );
-
-                window.removeEventListener(
-                    'afterprint',
-                    cleanup
-                );
-
-            };
-
-        window.addEventListener(
-            'afterprint',
-            cleanup
-        );
-
+        document.body.classList.remove('print-bp');
+        document.body.classList.add('print-eticket');
+        const cleanup = function () {
+            document.body.classList.remove('print-eticket');
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
         window.print();
-
     }
 
 
@@ -3926,74 +2899,37 @@
     ========================================================== */
 
     function printBoardingPass() {
-
-        document.body.classList.remove(
-            'print-eticket'
-        );
-
-        document.body.classList.add(
-            'print-bp'
-        );
-
-        const cleanup =
-            function () {
-
-                document.body.classList.remove(
-                    'print-bp'
-                );
-
-                window.removeEventListener(
-                    'afterprint',
-                    cleanup
-                );
-
-            };
-
-        window.addEventListener(
-            'afterprint',
-            cleanup
-        );
-
+        document.body.classList.remove('print-eticket');
+        document.body.classList.add('print-bp');
+        const cleanup = function () {
+            document.body.classList.remove('print-bp');
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
         window.print();
-
     }
 
 
     /* =========================================================
-       DOWNLOAD HELPERS
+       DOWNLOAD HELPERS (HTML2CANVAS + JSPDF)
     ========================================================== */
 
-    /*
-     * Jangan bergantung pada html2pdf.bundle untuk PNG.
-     * html2pdf memang membundel html2canvas, tetapi jika bundle gagal
-     * dimuat dari CDN maka html2canvas ikut tidak tersedia.
-     *
-     * Loader ini mencoba beberapa CDN secara berurutan dan hanya
-     * menambahkan script jika library memang belum tersedia.
-     */
     function loadExternalScript(url, test) {
         return new Promise(function(resolve, reject) {
             if (test()) {
                 resolve();
                 return;
             }
-
-            const existing = document.querySelector(
-                'script[data-download-lib="' + url + '"]'
-            );
-
+            const existing = document.querySelector('script[data-download-lib="' + url + '"]');
             if (existing) {
                 existing.addEventListener('load', function() {
                     test() ? resolve() : reject(new Error('Library tidak tersedia: ' + url));
                 }, { once: true });
-
                 existing.addEventListener('error', function() {
                     reject(new Error('Gagal memuat: ' + url));
                 }, { once: true });
-
                 return;
             }
-
             const script = document.createElement('script');
             script.src = url;
             script.async = true;
@@ -4006,7 +2942,6 @@
 
             script.onload = function() {
                 clearTimeout(timer);
-
                 if (test()) {
                     resolve();
                 } else {
@@ -4014,148 +2949,85 @@
                     reject(new Error('Library termuat tetapi API tidak tersedia: ' + url));
                 }
             };
-
             script.onerror = function() {
                 clearTimeout(timer);
                 script.remove();
                 reject(new Error('Gagal memuat: ' + url));
             };
-
             document.head.appendChild(script);
         });
     }
 
     async function ensureHtml2Canvas() {
-        if (typeof html2canvas !== 'undefined') {
-            return true;
-        }
-
+        if (typeof html2canvas !== 'undefined') return true;
         const cdns = [
             'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
             'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
             'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'
         ];
-
         for (const url of cdns) {
             try {
-                await loadExternalScript(
-                    url,
-                    function() {
-                        return typeof html2canvas !== 'undefined';
-                    }
-                );
-
-                if (typeof html2canvas !== 'undefined') {
-                    return true;
-                }
+                await loadExternalScript(url, function() { return typeof html2canvas !== 'undefined'; });
+                if (typeof html2canvas !== 'undefined') return true;
             } catch (error) {
                 console.warn('HTML2Canvas CDN gagal:', url, error);
             }
         }
-
         return false;
     }
 
     async function ensureJsPDF() {
-        if (
-            typeof window.jspdf !== 'undefined' &&
-            typeof window.jspdf.jsPDF === 'function'
-        ) {
-            return true;
-        }
-
-        if (typeof window.jsPDF === 'function') {
-            return true;
-        }
-
+        if (typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF === 'function') return true;
+        if (typeof window.jsPDF === 'function') return true;
         const cdns = [
             'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
             'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js',
             'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'
         ];
-
         for (const url of cdns) {
             try {
-                await loadExternalScript(
-                    url,
-                    function() {
-                        return (
-                            typeof window.jspdf !== 'undefined' &&
-                            typeof window.jspdf.jsPDF === 'function'
-                        ) || typeof window.jsPDF === 'function';
-                    }
-                );
-
-                if (
-                    (
-                        typeof window.jspdf !== 'undefined' &&
-                        typeof window.jspdf.jsPDF === 'function'
-                    ) ||
-                    typeof window.jsPDF === 'function'
-                ) {
+                await loadExternalScript(url, function() {
+                    return (typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF === 'function') || typeof window.jsPDF === 'function';
+                });
+                if ((typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF === 'function') || typeof window.jsPDF === 'function') {
                     return true;
                 }
             } catch (error) {
                 console.warn('jsPDF CDN gagal:', url, error);
             }
         }
-
         return false;
     }
 
-    /*
-     * Menunggu gambar dalam elemen selesai diproses.
-     * Ini penting untuk QR, barcode dan logo agar hasil ekspor tidak
-     * muncul sebagai kotak kosong.
-     */
     async function waitForImages(element) {
         const images = Array.from(element.querySelectorAll('img'));
-
         await Promise.all(
             images.map(function(img) {
-                if (img.complete) {
-                    return Promise.resolve();
-                }
-
+                if (img.complete) return Promise.resolve();
                 return new Promise(function(resolve) {
                     const done = function() {
                         img.removeEventListener('load', done);
                         img.removeEventListener('error', done);
                         resolve();
                     };
-
                     img.addEventListener('load', done, { once: true });
                     img.addEventListener('error', done, { once: true });
-
                     setTimeout(done, 5000);
                 });
             })
         );
     }
 
-    /*
-     * html2canvas dapat menolak gambar dari origin berbeda apabila
-     * server gambar tidak mengirim header CORS. Untuk ekspor, gambar
-     * eksternal yang tidak bisa dipakai diganti sementara dengan teks,
-     * sehingga seluruh dokumen tetap dapat dirender.
-     */
     function sanitizeExternalImages(clone) {
         const images = Array.from(clone.querySelectorAll('img'));
-
         images.forEach(function(img) {
             try {
+                if(img.src.startsWith('data:')) return; 
                 const url = new URL(img.src, window.location.href);
-
                 if (url.origin !== window.location.origin) {
                     const wrapper = document.createElement('div');
-
                     wrapper.textContent = img.alt || 'GLOBAL AIRWAYS';
-                    wrapper.style.cssText =
-                        'font-weight:900;font-size:12px;letter-spacing:.5px;' +
-                        'color:#0f172a;display:flex;align-items:center;' +
-                        'justify-content:center;min-height:' +
-                        Math.max(img.height || 26, 26) + 'px;width:100%;';
-
+                    wrapper.style.cssText = 'font-weight:900;font-size:12px;letter-spacing:.5px;color:#0f172a;display:flex;align-items:center;justify-content:center;min-height:' + Math.max(img.height || 26, 26) + 'px;width:100%;';
                     img.replaceWith(wrapper);
                 }
             } catch (error) {
@@ -4166,16 +3038,9 @@
 
     function createExportClone(element, isBoardingPass) {
         const wrapper = document.createElement('div');
-
-        wrapper.style.cssText =
-            'position:fixed;left:-100000px;top:0;z-index:-1;' +
-            'background:#fff;overflow:hidden;';
-
+        wrapper.style.cssText = 'position:fixed;left:-100000px;top:0;z-index:-1;background:#fff;overflow:hidden;';
         const clone = element.cloneNode(true);
 
-        /*
-         * Tombol/elemen no-print tidak boleh masuk ke file.
-         */
         clone.querySelectorAll('.no-print').forEach(function(node) {
             node.remove();
         });
@@ -4185,7 +3050,6 @@
         if (isBoardingPass) {
             wrapper.style.width = '82.55mm';
             wrapper.style.height = '203.2mm';
-
             clone.style.width = '82.55mm';
             clone.style.minWidth = '82.55mm';
             clone.style.maxWidth = '82.55mm';
@@ -4196,13 +3060,7 @@
             clone.style.boxSizing = 'border-box';
             clone.style.overflow = 'hidden';
         } else {
-            /*
-             * Lebar A4 dikurangi margin 8mm kiri/kanan.
-             * Tinggi TIDAK dipaksa. Kanvas lengkap kemudian diperkecil
-             * secara proporsional agar seluruh itinerary masuk 1 halaman.
-             */
             wrapper.style.width = '194mm';
-
             clone.style.width = '194mm';
             clone.style.maxWidth = '194mm';
             clone.style.margin = '0';
@@ -4213,10 +3071,7 @@
         wrapper.appendChild(clone);
         document.body.appendChild(wrapper);
 
-        return {
-            wrapper: wrapper,
-            clone: clone
-        };
+        return { wrapper: wrapper, clone: clone };
     }
 
     function removeExportClone(exported) {
@@ -4226,41 +3081,17 @@
     }
 
     function getJsPDFConstructor() {
-        if (
-            typeof window.jspdf !== 'undefined' &&
-            typeof window.jspdf.jsPDF === 'function'
-        ) {
+        if (typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF === 'function') {
             return window.jspdf.jsPDF;
         }
-
         if (typeof window.jsPDF === 'function') {
             return window.jsPDF;
         }
-
         return null;
     }
 
-    /*
-     * =========================================================
-     * DOWNLOAD PDF - SINGLE PAGE / ANTI-CUT
-     * =========================================================
-     *
-     * Tidak lagi memakai html2pdf().from(element).save().
-     * Metode tersebut membiarkan renderer melakukan pagination,
-     * sehingga elemen yang tinggi dapat terbelah menjadi beberapa
-     * halaman.
-     *
-     * Sekarang:
-     * 1. Render seluruh elemen menjadi satu canvas.
-     * 2. Buat PDF dengan ukuran halaman yang tepat.
-     * 3. Masukkan canvas sebagai SATU gambar dengan rasio terkunci.
-     *
-     * Hasilnya tidak terpotong dan tidak dipisah menjadi beberapa
-     * halaman.
-     */
     async function downloadPDF(elementId, filename) {
         const element = document.getElementById(elementId);
-
         if (!element) {
             alert('Elemen dokumen tidak ditemukan.');
             return;
@@ -4271,56 +3102,39 @@
 
         try {
             const canvasReady = await ensureHtml2Canvas();
-
             if (!canvasReady) {
-                alert(
-                    'Library PDF/PNG tidak dapat dimuat. Coba buka kembali halaman atau gunakan jaringan yang mengizinkan CDN.'
-                );
+                alert('Library PDF/PNG tidak dapat dimuat. Coba buka kembali halaman atau gunakan jaringan yang mengizinkan CDN.');
                 return;
             }
 
             const pdfReady = await ensureJsPDF();
-
             if (!pdfReady) {
-                alert(
-                    'Library PDF tidak dapat dimuat. Coba buka kembali halaman atau gunakan jaringan yang mengizinkan CDN.'
-                );
+                alert('Library PDF tidak dapat dimuat. Coba buka kembali halaman atau gunakan jaringan yang mengizinkan CDN.');
                 return;
             }
 
             exported = createExportClone(element, isBoardingPass);
-
             await waitForImages(exported.clone);
 
-            /*
-             * Beri browser satu frame untuk menyelesaikan layout clone
-             * sebelum html2canvas mengambil screenshot.
-             */
             await new Promise(function(resolve) {
                 requestAnimationFrame(function() {
                     requestAnimationFrame(resolve);
                 });
             });
 
-            const canvas = await html2canvas(
-                exported.clone,
-                {
-                    scale: isBoardingPass ? 3 : 2.5,
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    imageTimeout: 15000,
-                    scrollX: 0,
-                    scrollY: 0
-                }
-            );
+            const canvas = await html2canvas(exported.clone, {
+                scale: isBoardingPass ? 3 : 2.5,
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: '#ffffff',
+                logging: false,
+                imageTimeout: 15000,
+                scrollX: 0,
+                scrollY: 0
+            });
 
             const JsPDF = getJsPDFConstructor();
-
-            if (!JsPDF) {
-                throw new Error('jsPDF tidak tersedia setelah loader selesai.');
-            }
+            if (!JsPDF) throw new Error('jsPDF tidak tersedia setelah loader selesai.');
 
             const pageWidth = isBoardingPass ? 82.55 : 210;
             const pageHeight = isBoardingPass ? 203.2 : 297;
@@ -4328,24 +3142,18 @@
 
             const availableWidth = pageWidth - (margin * 2);
             const availableHeight = pageHeight - (margin * 2);
-
             const imageRatio = canvas.width / canvas.height;
 
             let imageWidth = availableWidth;
             let imageHeight = imageWidth / imageRatio;
 
-            /*
-             * Selalu fit INSIDE halaman. Tidak pernah crop.
-             */
             if (imageHeight > availableHeight) {
                 imageHeight = availableHeight;
                 imageWidth = imageHeight * imageRatio;
             }
 
             const x = (pageWidth - imageWidth) / 2;
-            const y = isBoardingPass
-                ? 0
-                : (pageHeight - imageHeight) / 2;
+            const y = isBoardingPass ? 0 : (pageHeight - imageHeight) / 2;
 
             const pdf = new JsPDF({
                 orientation: 'portrait',
@@ -4355,38 +3163,20 @@
             });
 
             const imageData = canvas.toDataURL('image/jpeg', 0.98);
-
-            pdf.addImage(
-                imageData,
-                'JPEG',
-                x,
-                y,
-                imageWidth,
-                imageHeight,
-                undefined,
-                'FAST'
-            );
-
+            pdf.addImage(imageData, 'JPEG', x, y, imageWidth, imageHeight, undefined, 'FAST');
             pdf.save(filename);
 
         } catch (error) {
             console.error('PDF Error:', error);
-            alert(
-                'PDF gagal dibuat. Periksa Console browser untuk detail error.'
-            );
+            alert('PDF gagal dibuat. Periksa Console browser untuk detail error.');
         } finally {
             removeExportClone(exported);
         }
     }
 
-    /*
-     * =========================================================
-     * DOWNLOAD PNG - ROBUST CDN + CORS SAFE
-     * =========================================================
-     */
+
     async function downloadPNG(elementId, filename) {
         const element = document.getElementById(elementId);
-
         if (!element) {
             alert('Elemen dokumen tidak ditemukan.');
             return;
@@ -4396,18 +3186,13 @@
 
         try {
             const canvasReady = await ensureHtml2Canvas();
-
             if (!canvasReady) {
-                alert(
-                    'Library PNG gagal dimuat. Sistem sudah mencoba beberapa CDN. Silakan refresh halaman dan coba lagi.'
-                );
+                alert('Library PNG gagal dimuat. Sistem sudah mencoba beberapa CDN. Silakan refresh halaman dan coba lagi.');
                 return;
             }
 
             const isBoardingPass = elementId === 'area-cetak-bp';
-
             exported = createExportClone(element, isBoardingPass);
-
             await waitForImages(exported.clone);
 
             await new Promise(function(resolve) {
@@ -4416,44 +3201,32 @@
                 });
             });
 
-            const canvas = await html2canvas(
-                exported.clone,
-                {
-                    scale: 3,
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    imageTimeout: 15000,
-                    scrollX: 0,
-                    scrollY: 0
-                }
-            );
+            const canvas = await html2canvas(exported.clone, {
+                scale: 3,
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: '#ffffff',
+                logging: false,
+                imageTimeout: 15000,
+                scrollX: 0,
+                scrollY: 0
+            });
 
-            /*
-             * toBlob lebih aman untuk file besar dibanding toDataURL,
-             * terutama pada perangkat Android dengan RAM terbatas.
-             */
             const blob = await new Promise(function(resolve, reject) {
-                canvas.toBlob(
-                    function(result) {
-                        if (result) {
-                            resolve(result);
-                        } else {
-                            reject(new Error('Canvas tidak dapat dikonversi ke PNG.'));
-                        }
-                    },
-                    'image/png'
-                );
+                canvas.toBlob(function(result) {
+                    if (result) {
+                        resolve(result);
+                    } else {
+                        reject(new Error('Canvas tidak dapat dikonversi ke PNG.'));
+                    }
+                }, 'image/png');
             });
 
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
-
             link.download = filename;
             link.href = url;
             link.style.display = 'none';
-
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -4464,37 +3237,21 @@
 
         } catch (error) {
             console.error('PNG Error:', error);
-
-            alert(
-                'PNG gagal dibuat. Jika masalah terjadi pada logo eksternal, sistem otomatis menggunakan versi aman untuk ekspor. Silakan coba lagi.'
-            );
+            alert('PNG gagal dibuat. Jika masalah terjadi pada logo eksternal, sistem otomatis menggunakan versi aman untuk ekspor. Silakan coba lagi.');
         } finally {
             removeExportClone(exported);
         }
     }
+
 
     /* =========================================================
        TRANSAKSI BARU
     ========================================================== */
 
     function transaksiBaru() {
-
-        const konfirmasi =
-            confirm(
-                'Apakah Anda yakin ingin memulai transaksi baru? Data transaksi saat ini akan dihapus dari halaman.'
-            );
-
-        if (!konfirmasi) {
-            return;
-        }
-
-        /*
-         * Fungsi reload tetap dipertahankan
-         * seperti fungsi transaksi baru sebelumnya.
-         */
-
+        const konfirmasi = confirm('Apakah Anda yakin ingin memulai transaksi baru? Data transaksi saat ini akan dihapus dari halaman.');
+        if (!konfirmasi) return;
         window.location.reload();
-
     }
 
 
@@ -4502,17 +3259,9 @@
        GLOBAL ERROR HANDLING
     ========================================================== */
 
-    window.addEventListener(
-        'error',
-        function (event) {
-
-            console.error(
-                'Application Error:',
-                event.error || event.message
-            );
-
-        }
-    );
+    window.addEventListener('error', function (event) {
+        console.error('Application Error:', event.error || event.message);
+    });
 
 </script>
 
