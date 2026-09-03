@@ -1492,10 +1492,11 @@
 
                                 <span id="et-flight"></span>
 
+                                <!-- Class no-print ditambahkan untuk sembunyikan input saat download/print -->
                                 <input
                                     type="text"
                                     id="et-edit-flight"
-                                    class="form-control"
+                                    class="form-control no-print"
                                     style="
                                         width:140px;
                                         padding:4px 8px;
@@ -1867,10 +1868,10 @@
             <div class="bp-header">
 
                 <div>
-                    <!-- Menggunakan Inline Base64 SVG Ikon Pesawat agar 100% tahan CORS dan Offline Safe -->
+                    <!-- Logo Maskapai Lion Air -->
                     <img
-                        src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'><path d='M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z' /></svg>"
-                        alt="Global Airways Logo"
+                        src="Lion_Air-Logo.wine.png"
+                        alt="Lion Air Logo"
                         class="bp-logo-img"
                     >
                 </div>
@@ -2206,7 +2207,7 @@
         const tanggalInput = document.getElementById('sel-tanggal');
         if (tanggalInput) {
             const today = getLocalDateISO();
-            tanggalInput.min = today;
+            // tanggalInput.min = today; // Dihapus agar bisa pilih tanggal mundur
             tanggalInput.value = today;
         }
         updatePassengerCount();
@@ -2269,12 +2270,6 @@
         return { kode, kota: value };
     }
 
-    function validasiRute(route) {
-        if (!route.kode || route.kode.length < 3) return false;
-        if (!route.kota) return false;
-        return true;
-    }
-
 
     /* =========================================================
        SEAT MAP (BUG FIX: Array Object Mencegah Kurung Bocor)
@@ -2304,101 +2299,6 @@
                 seatSelect.appendChild(opt);
             });
         }
-    }
-
-
-    /* =========================================================
-       NAVIGATION
-    ========================================================== */
-
-    function switchTab(tabIndex) {
-        const modules = ['booking', 'eticket', 'checkin', 'boardingpass'];
-        if (tabIndex < 1 || tabIndex > modules.length) return;
-
-        document.querySelectorAll('.module').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.stepper li').forEach(el => el.classList.remove('active'));
-
-        const module = document.getElementById(`mod-${modules[tabIndex - 1]}`);
-        const tab = document.getElementById(`tab-${tabIndex}`);
-
-        if (module) module.classList.add('active');
-        if (tab) tab.classList.add('active');
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-
-    /* =========================================================
-       CARI PENERBANGAN
-    ========================================================== */
-
-    function cariPenerbangan() {
-        const asal = parseRuteManual(document.getElementById('sel-asal').value);
-        const tujuan = parseRuteManual(document.getElementById('sel-tujuan').value);
-        const tanggal = document.getElementById('sel-tanggal').value;
-
-        if (!validasiRute(asal)) {
-            alert('Kota asal belum valid.\nGunakan format: AMQ - Ambon');
-            return;
-        }
-        if (!validasiRute(tujuan)) {
-            alert('Kota tujuan belum valid.\nGunakan format: SUB - Surabaya');
-            return;
-        }
-        if (asal.kode === tujuan.kode) {
-            alert('Kota asal dan tujuan tidak boleh sama.');
-            return;
-        }
-        if (!parseLocalDate(tanggal)) {
-            alert('Tanggal keberangkatan belum valid.');
-            return;
-        }
-
-        document.getElementById('flight-results').classList.remove('hidden');
-        document.getElementById('form-penumpang').classList.add('hidden');
-        appData.flight = '';
-    }
-
-
-    /* =========================================================
-       PILIH PENERBANGAN
-    ========================================================== */
-
-    function pilihPenerbangan(element, flight, dep, arr, price) {
-        document.querySelectorAll('.flight-card').forEach(el => el.classList.remove('selected'));
-        if (element) element.classList.add('selected');
-
-        appData.flight = String(flight).toUpperCase();
-        appData.depTime = dep;
-        appData.arrTime = arr;
-
-        document.getElementById('inp-harga-manual').value = price;
-        document.getElementById('form-penumpang').classList.remove('hidden');
-
-        updatePassengerCount();
-        updateLivePrice(); // Panggil kalkulasi live
-    }
-
-
-    /* =========================================================
-       UPDATE HARGA REAL-TIME (FITUR BARU UNTUK UX)
-    ========================================================== */
-    function updateLivePrice() {
-        const inputHargaManual = document.getElementById('inp-harga-manual');
-        const displayTotal = document.getElementById('live-total-price');
-        
-        if(!inputHargaManual || !displayTotal) return;
-
-        const baseUnit = Number(inputHargaManual.value) || 0;
-        const extraPaxCount = document.querySelectorAll('#daftar-penumpang-tambahan > div').length;
-        const totalPaxCount = 1 + extraPaxCount;
-
-        const basePrice = Math.round(baseUnit * totalPaxCount);
-        const taxPrice = Math.round(basePrice * 0.10);
-        const extraTaxPrice = Math.round(basePrice * 0.05);
-        const totalPrice = basePrice + taxPrice + extraTaxPrice;
-
-        displayTotal.innerText = formatRupiah(totalPrice);
     }
 
 
@@ -2474,139 +2374,9 @@
        GENERATE PNR & INVOICE
     ========================================================== */
 
-    function generatePNR() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let pnr = '';
-        for (let i = 0; i < 6; i++) {
-            pnr += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return pnr;
-    }
-
-    function generateInvoice() {
-        return 'INV-' + Math.floor(10000000 + Math.random() * 90000000);
-    }
-
     function formatRupiah(value) {
         const number = Number(value) || 0;
         return 'Rp ' + number.toLocaleString('id-ID');
-    }
-
-
-    /* =========================================================
-       MODUL 2 : TERBITKAN E-TICKET
-    ========================================================== */
-
-    function terbitkanETicket() {
-        if (!appData.flight) {
-            alert('Pilih jadwal penerbangan terlebih dahulu!');
-            return;
-        }
-
-        const namaInput = document.getElementById('inp-nama-pax').value.trim();
-        const titelInput = document.getElementById('inp-titel').value;
-        const hargaInput = document.getElementById('inp-harga-manual').value;
-        const tanggal = document.getElementById('sel-tanggal').value;
-        const asal = parseRuteManual(document.getElementById('sel-asal').value);
-        const tujuan = parseRuteManual(document.getElementById('sel-tujuan').value);
-
-        /* VALIDASI */
-        if (!namaInput) {
-            alert('Nama penumpang utama harus diisi!');
-            return;
-        }
-        if (!validasiRute(asal)) {
-            alert('Kota asal tidak valid.');
-            return;
-        }
-        if (!validasiRute(tujuan)) {
-            alert('Kota tujuan tidak valid.');
-            return;
-        }
-        if (asal.kode === tujuan.kode) {
-            alert('Kota asal dan tujuan tidak boleh sama.');
-            return;
-        }
-        if (!parseLocalDate(tanggal)) {
-            alert('Tanggal keberangkatan tidak valid.');
-            return;
-        }
-        const baseUnit = Number(hargaInput);
-        if (!Number.isFinite(baseUnit) || baseUnit < 0) {
-            alert('Harga tiket tidak valid.');
-            return;
-        }
-
-        /* PENUMPANG TAMBAHAN */
-        appData.penumpangTambahan = [];
-        document.querySelectorAll('#daftar-penumpang-tambahan > div').forEach(function (row) {
-            const titel = row.querySelector('.pax-titel');
-            const nama = row.querySelector('.pax-nama');
-            if (!titel || !nama) return;
-            const namaValue = nama.value.trim();
-            if (namaValue) {
-                appData.penumpangTambahan.push({
-                    titel: titel.value,
-                    nama: namaValue.toUpperCase()
-                });
-            }
-        });
-
-        /* TOTAL PENUMPANG & PERHITUNGAN HARGA */
-        const totalPaxCount = 1 + appData.penumpangTambahan.length;
-        appData.basePrice = Math.round(baseUnit * totalPaxCount);
-        appData.taxPrice = Math.round(appData.basePrice * 0.10);
-        appData.extraTaxPrice = Math.round(appData.basePrice * 0.05);
-        appData.totalPrice = appData.basePrice + appData.taxPrice + appData.extraTaxPrice;
-
-        /* DATA UTAMA */
-        appData.titel = titelInput;
-        appData.nama = namaInput.toUpperCase();
-        appData.namaLengkap = `${appData.titel} ${appData.nama}`;
-
-        if (appData.penumpangTambahan.length > 0) {
-            appData.namaLengkap += ` & ${appData.penumpangTambahan.length} Penumpang Lain`;
-        }
-
-        appData.asalKode = asal.kode;
-        appData.asalKota = asal.kota;
-        appData.tujuanKode = tujuan.kode;
-        appData.tujuanKota = tujuan.kota;
-        appData.tanggal = tanggal;
-        appData.formatTanggal = formatTanggalIndo(tanggal);
-        appData.pnr = generatePNR();
-        appData.invoice = generateInvoice();
-
-        /* WAKTU BOOKING H-2 */
-        const depDateObj = parseLocalDate(tanggal);
-        if (depDateObj) {
-            const bookingDate = new Date(depDateObj.getTime());
-            bookingDate.setDate(bookingDate.getDate() - 2);
-            const jamAcak = Math.floor(Math.random() * 8 + 8).toString().padStart(2, '0');
-            const menitAcak = Math.floor(Math.random() * 60).toString().padStart(2, '0');
-            document.getElementById('et-booking-time').innerText = `(${formatTanggalIndo(bookingDate)}, ${jamAcak}:${menitAcak} WITA)`;
-        }
-
-        /* WAKTU TIBA */
-        appData.arrTime = hitungWaktuTibaOtomatis(appData.depTime, appData.asalKode, appData.tujuanKode);
-
-        /* UPDATE DOM E-TICKET */
-        document.getElementById('et-invoice').innerText = appData.invoice;
-        document.getElementById('et-pnr').value = appData.pnr;
-        document.getElementById('et-nama').innerText = appData.namaLengkap;
-        document.getElementById('et-rute').innerText = `${appData.asalKota} (${appData.asalKode}) ➡️ ${appData.tujuanKota} (${appData.tujuanKode})`;
-        document.getElementById('et-waktu').innerText = `${appData.formatTanggal} | Berangkat: ${appData.depTime}`;
-        document.getElementById('et-waktu-tiba').innerText = `${appData.formatTanggal} | Tiba (Estimasi): ${appData.arrTime}`;
-        document.getElementById('et-flight').innerText = appData.flight;
-        document.getElementById('et-edit-flight').value = appData.flight;
-        document.getElementById('et-harga-dasar').innerText = formatRupiah(appData.basePrice);
-        document.getElementById('et-pajak').innerText = formatRupiah(appData.taxPrice);
-        document.getElementById('et-pajak-ekstra').innerText = formatRupiah(appData.extraTaxPrice);
-        document.getElementById('et-harga-total').innerText = formatRupiah(appData.totalPrice);
-
-        renderPassengerList();
-        updateQRRealtime();
-        switchTab(2);
     }
 
 
@@ -2645,268 +2415,6 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
-    }
-
-
-    function updateFlightManual(val) {
-        const clean = String(val || '').trim().toUpperCase();
-        if (clean !== '') {
-            appData.flight = clean;
-            const etFlight = document.getElementById('et-flight');
-            if (etFlight) etFlight.innerText = appData.flight;
-        }
-    }
-
-
-    /* =========================================================
-       HITUNG WAKTU TIBA
-    ========================================================== */
-
-    function hitungWaktuTibaOtomatis(depStr, asal, tujuan) {
-        if (!/^\d{1,2}:\d{2}$/.test(depStr)) return '';
-        const parts = depStr.split(':');
-        let hours = parseInt(parts[0], 10);
-        let minutes = parseInt(parts[1], 10);
-
-        if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return '';
-
-        let duration = 105;
-        const routeKey = `${String(asal).toUpperCase()}-${String(tujuan).toUpperCase()}`;
-        const routeDurations = {
-            'AMQ-SUB': 165, 'AMQ-UPG': 180, 'AMQ-CGK': 195, 'AMQ-LUV': 120,
-            'SUB-AMQ': 165, 'UPG-AMQ': 180, 'CGK-AMQ': 195, 'LUV-AMQ': 120
-        };
-
-        if (Object.prototype.hasOwnProperty.call(routeDurations, routeKey)) {
-            duration = routeDurations[routeKey];
-        }
-
-        let totalMinutes = hours * 60 + minutes + duration;
-        totalMinutes = totalMinutes % 1440;
-        const finalHour = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
-        const finalMinute = (totalMinutes % 60).toString().padStart(2, '0');
-        return `${finalHour}:${finalMinute}`;
-    }
-
-
-    /* =========================================================
-       QR CODE E-TICKET
-    ========================================================== */
-
-    function updateQRRealtime() {
-        const pnrInput = document.getElementById('et-pnr');
-        const qrContainer = document.getElementById('eticket-qrcode');
-
-        if (!pnrInput || !qrContainer) return;
-
-        appData.pnr = pnrInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-        pnrInput.value = appData.pnr;
-        qrContainer.innerHTML = '';
-
-        if (typeof QRCode === 'undefined') {
-            qrContainer.innerHTML = '<span style="color:#dc2626;font-size:12px;">QR Code library gagal dimuat.</span>';
-            return;
-        }
-
-        try {
-            new QRCode(qrContainer, {
-                text: `E-TICKET VALIDATION\nINV: ${appData.invoice}\nPNR: ${appData.pnr}\nNAMA: ${appData.namaLengkap}\nRUTE: ${appData.asalKode}-${appData.tujuanKode}`,
-                width: 130,
-                height: 130,
-                colorDark: '#0f172a',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.M
-            });
-        } catch (error) {
-            console.error('QR Code Error:', error);
-            qrContainer.innerHTML = '<span style="color:#dc2626;font-size:12px;">QR Code gagal dibuat.</span>';
-        }
-    }
-
-
-    /* =========================================================
-       PINDAH KE CHECK-IN
-    ========================================================== */
-
-    function pindahKeCheckin() {
-        if (!appData.pnr) {
-            alert('E-Ticket belum diterbitkan.');
-            return;
-        }
-
-        appData.pnr = document.getElementById('et-pnr').value.toUpperCase();
-        if (!appData.pnr) {
-            alert('Kode PNR tidak boleh kosong.');
-            return;
-        }
-
-        document.getElementById('ci-pnr').value = appData.pnr;
-        document.getElementById('ci-nama').value = `${appData.titel} ${appData.nama}`;
-        switchTab(3);
-    }
-
-
-    /* =========================================================
-       TERBITKAN BOARDING PASS
-    ========================================================== */
-
-    function terbitkanBoardingPass() {
-        if (!appData.pnr) {
-            alert('E-Ticket belum diterbitkan.');
-            return;
-        }
-
-        const isSetuju = document.getElementById('ci-aggrement').checked;
-        if (!isSetuju) {
-            alert('Anda harus menyetujui aturan barang berbahaya (Dangerous Goods) untuk melanjutkan Check-in.');
-            return;
-        }
-
-        const seat = document.getElementById('ci-kursi').value;
-        const bagasi = Number(document.getElementById('ci-bagasi').value);
-
-        if (!seat) {
-            alert('Silakan pilih kursi terlebih dahulu.');
-            return;
-        }
-        if (!Number.isFinite(bagasi) || bagasi < 0) {
-            alert('Jumlah bagasi tidak valid.');
-            return;
-        }
-
-        appData.kursi = seat;
-        appData.bagasi = bagasi;
-
-        const waktuBoarding = formatTanggalPendek(appData.tanggal) + ', ' + hitungWaktuBoarding(appData.depTime);
-
-        document.getElementById('bp-out-tanggal').innerText = appData.formatTanggal;
-        document.getElementById('bp-out-nama').innerText = `${appData.titel} ${appData.nama}`;
-        document.getElementById('bp-out-asal-kode').innerText = appData.asalKode;
-        document.getElementById('bp-out-asal-kota').innerText = appData.asalKota;
-        document.getElementById('bp-out-tujuan-kode').innerText = appData.tujuanKode;
-        document.getElementById('bp-out-tujuan-kota').innerText = appData.tujuanKota;
-        document.getElementById('bp-out-flight').innerText = appData.flight;
-        document.getElementById('bp-out-kursi').innerText = appData.kursi;
-        document.getElementById('bp-out-waktu-board').innerText = waktuBoarding;
-        document.getElementById('bp-out-waktu-dep').innerText = appData.depTime;
-        document.getElementById('bp-out-waktu-arr').innerText = appData.arrTime;
-
-        generateBoardingPassQR();
-        generateBoardingPassBarcode();
-        switchTab(4);
-    }
-
-
-    /* =========================================================
-       QR BOARDING PASS
-    ========================================================== */
-
-    function generateBoardingPassQR() {
-        const container = document.getElementById('bp-qrcode-box');
-        if (!container) return;
-        container.innerHTML = '';
-
-        if (typeof QRCode === 'undefined') {
-            container.innerHTML = '<span style="font-size:10px;color:#dc2626;text-align:center;">QR gagal dimuat</span>';
-            return;
-        }
-
-        try {
-            new QRCode(container, {
-                text: `BOARDING PASS\nPNR: ${appData.pnr}\nNAME: ${appData.titel} ${appData.nama}\nFLIGHT: ${appData.flight}\nDATE: ${appData.formatTanggal}\nTIME: ${appData.depTime}\nSEAT: ${appData.kursi}`,
-                width: 100,
-                height: 100,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.L
-            });
-        } catch (error) {
-            console.error('Boarding Pass QR Error:', error);
-        }
-    }
-
-
-    /* =========================================================
-       BARCODE BOARDING PASS
-    ========================================================== */
-
-    function generateBoardingPassBarcode() {
-        const svg = document.getElementById('barcode-svg');
-        if (!svg) return;
-        svg.innerHTML = '';
-
-        if (typeof JsBarcode === 'undefined') {
-            console.error('JsBarcode library gagal dimuat.');
-            return;
-        }
-
-        try {
-            const barcodeData = (appData.pnr + appData.flight + appData.asalKode + appData.tujuanKode + appData.kursi).replace(/\s+/g, '').toUpperCase();
-            JsBarcode('#barcode-svg', barcodeData, {
-                format: 'CODE128',
-                lineColor: '#000000',
-                width: 2.5,
-                height: 60,
-                displayValue: false,
-                margin: 0
-            });
-        } catch (error) {
-            console.error('Barcode Error:', error);
-        }
-    }
-
-
-    /* =========================================================
-       HITUNG WAKTU BOARDING
-    ========================================================== */
-
-    function hitungWaktuBoarding(depTimeStr) {
-        if (!/^\d{1,2}:\d{2}$/.test(depTimeStr)) return '';
-        const parts = depTimeStr.split(':');
-        let hours = parseInt(parts[0], 10);
-        let minutes = parseInt(parts[1], 10);
-
-        if (isNaN(hours) || isNaN(minutes)) return '';
-
-        let totalMinutes = hours * 60 + minutes - 30;
-        if (totalMinutes < 0) totalMinutes += 1440;
-        totalMinutes %= 1440;
-
-        const finalHour = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
-        const finalMinute = (totalMinutes % 60).toString().padStart(2, '0');
-        return `${finalHour}:${finalMinute}`;
-    }
-
-
-    /* =========================================================
-       CETAK ITINERARY
-    ========================================================== */
-
-    function printItinerary() {
-        document.body.classList.remove('print-bp');
-        document.body.classList.add('print-eticket');
-        const cleanup = function () {
-            document.body.classList.remove('print-eticket');
-            window.removeEventListener('afterprint', cleanup);
-        };
-        window.addEventListener('afterprint', cleanup);
-        window.print();
-    }
-
-
-    /* =========================================================
-       CETAK BOARDING PASS
-    ========================================================== */
-
-    function printBoardingPass() {
-        document.body.classList.remove('print-eticket');
-        document.body.classList.add('print-bp');
-        const cleanup = function () {
-            document.body.classList.remove('print-bp');
-            window.removeEventListener('afterprint', cleanup);
-        };
-        window.addEventListener('afterprint', cleanup);
-        window.print();
     }
 
 
@@ -3243,6 +2751,31 @@
         }
     }
 
+    /* =========================================================
+       CETAK ITINERARY & BOARDING PASS
+    ========================================================== */
+
+    function printItinerary() {
+        document.body.classList.remove('print-bp');
+        document.body.classList.add('print-eticket');
+        const cleanup = function () {
+            document.body.classList.remove('print-eticket');
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
+        window.print();
+    }
+
+    function printBoardingPass() {
+        document.body.classList.remove('print-eticket');
+        document.body.classList.add('print-bp');
+        const cleanup = function () {
+            document.body.classList.remove('print-bp');
+            window.removeEventListener('afterprint', cleanup);
+        };
+        window.addEventListener('afterprint', cleanup);
+        window.print();
+    }
 
     /* =========================================================
        TRANSAKSI BARU
@@ -3338,8 +2871,7 @@
 
     function validateBookingDate(dateStr) {
         const selected = parseLocalDate(dateStr);
-        const today = parseLocalDate(getLocalDateISO());
-        return !!selected && !!today && selected >= today;
+        return !!selected; // Validasi diubah agar menerima semua tanggal, termasuk mundur
     }
 
     function routeDurationMinutes(origin, destination) {
@@ -3445,7 +2977,7 @@
             return;
         }
         if (!validateBookingDate(tanggal)) {
-            alert('Tanggal keberangkatan tidak valid atau sudah lewat. Pilih tanggal hari ini atau setelahnya.');
+            alert('Tanggal keberangkatan tidak valid.');
             return;
         }
 
@@ -3528,7 +3060,7 @@
         if (!/^[A-Za-zÀ-ÿ0-9 .,'-]+$/.test(namaInput)) { alert('Nama penumpang utama mengandung karakter yang tidak didukung.'); return; }
         if (!validasiRute(asal) || !validasiRute(tujuan)) { alert('Kota asal/tujuan tidak valid.'); return; }
         if (asal.kode === tujuan.kode) { alert('Kota asal dan tujuan tidak boleh sama.'); return; }
-        if (!validateBookingDate(tanggal)) { alert('Tanggal keberangkatan tidak valid atau sudah lewat.'); return; }
+        if (!validateBookingDate(tanggal)) { alert('Tanggal keberangkatan tidak valid.'); return; }
         const baseUnit = Number(hargaInput);
         if (!Number.isFinite(baseUnit) || baseUnit <= 0) { alert('Harga tiket harus lebih besar dari Rp 0.'); return; }
 
@@ -3584,9 +3116,10 @@
         document.getElementById('et-flight').textContent = appData.flight;
         const editFlight = document.getElementById('et-edit-flight');
         editFlight.value = appData.flight;
-        editFlight.readOnly = true;
-        editFlight.setAttribute('aria-readonly','true');
-        editFlight.title = 'Nomor penerbangan dikunci agar data E-Ticket, QR, dan Boarding Pass tetap konsisten.';
+        // Dihapus agar form edit maskapai bisa berfungsi
+        // editFlight.readOnly = true; 
+        // editFlight.setAttribute('aria-readonly','true');
+        editFlight.title = 'Ubah Nomor Penerbangan Jika Diperlukan';
         document.getElementById('et-harga-dasar').textContent = formatRupiah(appData.basePrice);
         document.getElementById('et-pajak').textContent = formatRupiah(appData.taxPrice);
         document.getElementById('et-pajak-ekstra').textContent = formatRupiah(appData.extraTaxPrice);
@@ -3603,7 +3136,7 @@
         if (!pnrInput || !qrContainer) return;
         if (!appData.pnr) return;
         if (!force && pnrInput.readOnly) { pnrInput.value = appData.pnr; }
-        pnrInput.value = appData.pnr;
+        appData.pnr = pnrInput.value;
         qrContainer.innerHTML = '';
         if (typeof QRCode === 'undefined') { qrContainer.innerHTML = '<span style="color:#dc2626;font-size:12px;">QR Code library gagal dimuat.</span>'; return; }
         try {
@@ -3673,7 +3206,11 @@
 
     function updateFlightManual(val) {
         const clean=String(val||'').trim().toUpperCase();
-        if(clean){appData.flight=clean; const el=document.getElementById('et-flight'); if(el) el.textContent=clean;}
+        if(clean){
+            appData.flight=clean; 
+            const el=document.getElementById('et-flight'); 
+            if(el) el.textContent=clean;
+        }
     }
 
     /* =========================================================
